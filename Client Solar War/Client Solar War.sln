@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client_Solar_War", "Client Solar War\Client_Solar_War\Client_Solar_War.csproj", "{2FA5716D-0307-4659-AB83-00ECF1A4B067}"
+EndProject
+Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "Client_Solar_WarContent", "Client Solar War\Client_Solar_WarContent\Client_Solar_WarContent.contentproj", "{2554002E-62F4-4E13-942C-98A8EB4C683D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2FA5716D-0307-4659-AB83-00ECF1A4B067}.Debug|x86.ActiveCfg = Debug|x86
+		{2FA5716D-0307-4659-AB83-00ECF1A4B067}.Debug|x86.Build.0 = Debug|x86
+		{2FA5716D-0307-4659-AB83-00ECF1A4B067}.Release|x86.ActiveCfg = Release|x86
+		{2FA5716D-0307-4659-AB83-00ECF1A4B067}.Release|x86.Build.0 = Release|x86
+		{2554002E-62F4-4E13-942C-98A8EB4C683D}.Debug|x86.ActiveCfg = Debug|x86
+		{2554002E-62F4-4E13-942C-98A8EB4C683D}.Release|x86.ActiveCfg = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
