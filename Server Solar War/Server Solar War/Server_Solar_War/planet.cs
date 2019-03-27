@@ -15,7 +15,7 @@ namespace planetary
     class planet
     {
         //-1 will be replace with some resonable value
-        private Random rand = new Random();
+        private Random rand;
         private Texture2D image;
         private Rectangle position;
         private bool capture;
@@ -24,29 +24,36 @@ namespace planetary
         private int Ships_settle = -1;//temp wanting to implement a class
         public ContentManager Content
         {
+          
             get { return content; }
         }
         ContentManager content;
+        
 
-
-
-        public planet(string name, Rectangle pos)
+        //can someone look at this class bc i need to kknow what to implement for some method
+        public planet()
+        {
+            rand = new Random();
+            //invade_Capacity = rand 
+        }
+        public planet(string name, Rectangle pos, IServiceProvider d)
         {
             position = pos;
             capture = false;
             Incontrol = Color.Gray;
-            //load
+            load(d, name);
         }
         
-        public planet(string name,Rectangle position, Color faction)
+        public planet(string name,Rectangle position, Color faction,IServiceProvider iservis)
         {
             //this.image = image;
             this.position = position;
             Incontrol = faction;
             capture = true; 
-            //load(Iservis,name);
-        }     
-
+            //i want too implement a class to this bc makes it efficient to proccess invasion and capture 
+            load(iservis,name);
+        }
+       
         private void load(IServiceProvider _serviceProvider , string name)
         {
             content = new ContentManager(_serviceProvider, "Content");
@@ -58,14 +65,15 @@ namespace planetary
 
 
         //if it being invaded by a a 
-        public void invade() //some class or paerameter like color
+        public void invade(int numShip) //some class or paerameter like color
         {
             if (capture)
             {
                 //fight and determine the winner
+
             }
             else
-                invasion(-1);
+                invasion(numShip);
                 
         }
         private Boolean invasion(int numS)
@@ -73,7 +81,7 @@ namespace planetary
             if(numS >= invade_Capacity)
             {
                 Incontrol = Color.Gray;
-                Ships_settle = numS / -1;  //aplly statistic or probility depending of number dead or lost...
+                Ships_settle = numS;  //aplly statistic or probility depending of number dead or lost...
                    return true;
             }
             return false;
