@@ -36,12 +36,9 @@ namespace planetary
             rand = new Random();
             //invade_Capacity = rand 
         }
-        public planet(string name, Rectangle pos, Texture2D image, IServiceProvider d)
+        public planet(string name, Rectangle pos, IServiceProvider d)
         {
-            //invade_Capacity = rand 
-            rand = new Random();
             position = pos;
-            image = this.image;
             capture = false;
             Incontrol = Color.Gray;
             load(d, name);
@@ -84,7 +81,7 @@ namespace planetary
             if(numS >= invade_Capacity)
             {
                 Incontrol = Color.Gray;
-                Ships_settle = numS;  //apply statistic or probility depending of number dead or lost...
+                Ships_settle = numS;  //aplly statistic or probility depending of number dead or lost...
                    return true;
             }
             return false;
