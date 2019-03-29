@@ -24,15 +24,23 @@ namespace Client
 
         private void Submit_Click(object sender, EventArgs e)
         {
-            TcpClient client = new TcpClient("localhost" , 8080);
-            int bytecount = Encoding.ASCII.GetByteCount(message.Text);
+			try
+			{
+				TcpClient client = new TcpClient("localhost", 8080);
+				int bytecount = Encoding.ASCII.GetByteCount(message.Text);
 
-            byte[] sendData = new byte[bytecount];
-            sendData = Encoding.ASCII.GetBytes(message.Text);
-            NetworkStream stream = client.GetStream();
-            stream.Write(sendData , 0 , sendData.Length);
-            stream.Close();
-            client.Close();
+				byte[] sendData = new byte[bytecount];
+				sendData = Encoding.ASCII.GetBytes(message.Text);
+				NetworkStream stream = client.GetStream();
+				stream.Write(sendData, 0, sendData.Length);
+				stream.Close();
+				client.Close();
+			}
+			catch (Exception ex) {
+				Console.WriteLine(ex.Message);
+				
+			}
+
         }
     }
 }

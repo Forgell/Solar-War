@@ -25,7 +25,7 @@ namespace Server
             catch (Exception e)
             {
                 Console.WriteLine("server failed \n"+ e.Message);
-                Console.Read();
+                //Console.Read();
             }
 
             while (true)
@@ -36,8 +36,10 @@ namespace Server
                 NetworkStream stream = client.GetStream();
 
                 stream.Read(recieveBuffer , 0 , recieveBuffer.Length);
-                string msg = Encoding.ASCII.GetString(recieveBuffer, 0, recieveBuffer.Length);
-                Console.WriteLine(msg);
+				recieveBuffer = recieveBuffer.Where(x => !(x == 0)).ToArray();
+				string msg = Encoding.ASCII.GetString(recieveBuffer, 0, recieveBuffer.Length);
+
+                Console.WriteLine(msg + " " + recieveBuffer.Length);
                 
             }
         }
