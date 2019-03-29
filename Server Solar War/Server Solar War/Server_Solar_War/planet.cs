@@ -84,7 +84,7 @@ namespace Server_Solar_War
 
         public void Draw(SpriteBatch spritebatch)
         {
-            spritebatch.Draw(tex, pos, Incontrol);
+          //  spritebatch.Draw(tex, pos, Incontrol);
         }
 
 

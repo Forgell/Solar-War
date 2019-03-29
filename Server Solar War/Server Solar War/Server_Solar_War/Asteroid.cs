@@ -13,10 +13,15 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Server_Solar_War
 {
-    class Astroid
+    class Asteroid
     {
+        private Texture2D image;
+        private Rectangle rect;
+        private Vector2 speeed;
         
-      
-
+        public Asteroid(int GUI_width, int GUI_height, Texture2D i)
+        {
+            image = i; 
+        }
     }
 }
