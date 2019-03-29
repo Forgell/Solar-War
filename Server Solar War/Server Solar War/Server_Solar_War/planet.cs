@@ -10,18 +10,16 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
 
-namespace planetary
+namespace Server_Solar_War
 {
-    class planet
+    class Planet
     {
         //-1 will be replace with some resonable value
-        private Random rand;
-        private Texture2D image;
-        private Rectangle position;
-        private bool capture;
-        private Color Incontrol;
-        private int invade_Capacity = 1; // need to -use random
-        private int Ships_settle = -1;//temp wanting to implement a class
+        private Random r;
+        private Texture2D tex;
+        private Rectangle pos;
+		private int owner;
+		private int[] ships;
         public ContentManager Content
         {
           
@@ -31,65 +29,62 @@ namespace planetary
         
 
         //can someone look at this class bc i need to kknow what to implement for some method
-        public planet()
+        public Planet()
         {
-            rand = new Random();
+            r = new Random();
             //invade_Capacity = rand 
         }
-        public planet(string name, Rectangle pos, IServiceProvider d)
+        public Planet(string name, Rectangle pos, IServiceProvider d)
         {
-            position = pos;
-            capture = false;
-            Incontrol = Color.Gray;
+            this.pos = pos;
+			owner = 0;
             load(d, name);
         }
         
-        public planet(string name,Rectangle position, Color faction,IServiceProvider iservis)
+        public Planet(string name,Rectangle position, Color faction,IServiceProvider serve)
         {
             //this.image = image;
-            this.position = position;
-            Incontrol = faction;
-            capture = true; 
+            this.pos = position;
+			owner = 0;
             //i want too implement a class to this bc makes it efficient to proccess invasion and capture 
-            load(iservis,name);
+            load(serve,name);
         }
        
-        private void load(IServiceProvider _serviceProvider , string name)
+        private void load(IServiceProvider serve , string name)
         {
-            content = new ContentManager(_serviceProvider, "Content");
-            image = content.Load<Texture2D>(name);
-            
-
+            content = new ContentManager(serve, "Content");
+            tex = content.Load<Texture2D>(name);
         }
 
 
 
         //if it being invaded by a a 
-        public void invade(int numShip) //some class or paerameter like color
+        public void add(int team, int amnt) //some class or paerameter like color
         {
-            if (capture)
-            {
-                //fight and determine the winner
+			ships[team] += amnt;
+        }
+        private void attack()
+        {
+			int[] newShips = new int[5];
+			
+			for (int i = 0; i < ships.Length; i++)
+			{
+				int enemy = 0;
+				for (int x = 0; x < ships.Length; x++)
+				{
+					if (owner == i)
+						continue;
+					enemy += ships[i];
+				}
 
-            }
-            else
-                invasion(numShip);
-                
-        }
-        private Boolean invasion(int numS)
-        {
-            if(numS >= invade_Capacity)
-            {
-                Incontrol = Color.Gray;
-                Ships_settle = numS;  //aplly statistic or probility depending of number dead or lost...
-                   return true;
-            }
-            return false;
-        }
+				
+			}
+			ships = newShips;
+		}
 
         public void Draw(SpriteBatch spritebatch)
         {
-            spritebatch.Draw(image, position, Incontrol);
+            spritebatch.Draw(tex, pos, Incontrol);
         }
 
 
