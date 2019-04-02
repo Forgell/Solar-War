@@ -26,7 +26,9 @@ namespace Client
         {
 			try
 			{
-				TcpClient client = new TcpClient("localhost", 8080);
+				IPAddress ip = new IPAddress(0x1c41880a);
+				IPEndPoint end = new IPEndPoint(ip, 5001);
+				TcpClient client = new TcpClient(end);
 				int bytecount = Encoding.ASCII.GetByteCount(message.Text);
 
 				byte[] sendData = new byte[bytecount];
