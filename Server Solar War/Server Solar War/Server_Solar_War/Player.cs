@@ -34,11 +34,11 @@ namespace Server_Solar_War
             //move Ship toward planet2
         }
 
-        //public void moveShips(Ship ship1, Planet planet2)//Ship is moving from, planet2 is moving to
-        //{
-        //    //move Ship toward planet2
-        //}
-        
+        public void moveShips(Ship ship1, Planet planet2)//Ship is moving from, planet2 is moving to
+        {
+            //move Ship toward planet2
+        }
+
         public void addPlanet(Planet planet1)
         {
             planets.Add(planet1);
