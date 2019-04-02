@@ -15,13 +15,28 @@ namespace Server_Solar_War
 {
     class Asteroid
     {
+        Random rand;
         private Texture2D image;
         private Rectangle rect;
-        private Vector2 speeed;
-        
-        public Asteroid(int GUI_width, int GUI_height, Texture2D i)
+        private Vector2 speed;
+        protected Vector2 origin;
+        private int radius;
+         
+        public Asteroid(Texture2D img ,Vector2 origin,int radius )
         {
-            image = i; 
+            image = img;
+            this.origin = origin;
+            this.radius = radius;
+            rand = new Random();
+            speed = new Vector2(rand.Next(1, 5), rand.Next(1, 5));
         }
+
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(image, rect, Color.White);
+        }
+
+        
     }
 }
