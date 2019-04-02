@@ -29,6 +29,9 @@ namespace Server_Solar_War
             this.radius = radius;
             rand = new Random();
             speed = new Vector2(rand.Next(1, 5), rand.Next(1, 5));
+            //bool = ran
+            rect = new Rectangle(rand.Next((int)origin.X, (int)origin.X + radius+2)
+                                    , rand.Next((int)origin.Y, (int)origin.Y + radius), 50, 50);
         }
 
 
