@@ -17,18 +17,19 @@ namespace Server_Solar_War
     {
         //All planets controlled by this player
         List<Planet> planets;
-        //Should we also create a list for groups of ships that are not at a planet?
-        //List<Ship> ships
+        //A list for groups of ships that are not at a planet
+        List<Ship> ships;
 
 
         public Player()
         {
             planets = new List<Planet>();
-            
+            ships = new List<Ship>();
         }
 
-        public void moveShips(Planet planet, Planet planet2)//planet1 is moving from, planet2 is moving to
+        public void moveShips(Planet planet, Planet planet2, int numberOfShips, Rectangle position)//planet1 is moving from, planet2 is moving to
         {
+            ships.Add(new Ship(numberOfShips, position));
             //add a Ship to the ship list class at the position that the planet is at
             //move Ship toward planet2
         }
