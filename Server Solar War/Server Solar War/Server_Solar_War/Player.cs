@@ -35,7 +35,6 @@ namespace Server_Solar_War
 
         //public void moveShips(Ship ship1, Planet planet2)//Ship is moving from, planet2 is moving to
         //{
-        //    //add a Ship to the ship list class at the position that the planet is at
         //    //move Ship toward planet2
         //}
         
