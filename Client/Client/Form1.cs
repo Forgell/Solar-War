@@ -24,7 +24,9 @@ namespace Client
 
         private void Submit_Click(object sender, EventArgs e)
         {
-            TcpClient client = new TcpClient("localhost" , 8080);
+            IPAddress ip = new IPAddress(0x1c41880a);
+            IPEndPoint end = new IPEndPoint(IPAddress.Any, 5001);
+            TcpClient client = new TcpClient(end);
             int bytecount = Encoding.ASCII.GetByteCount(message.Text);
 
             byte[] sendData = new byte[bytecount];
