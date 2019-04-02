@@ -76,7 +76,28 @@ namespace Server_Solar_War
 						continue;
 					enemy += ships[i];
 				}
+				double chance = ships[i] / enemy * 50;
+				int num = r.Next((int)chance);
+				switch (num)
+				{
+					case 0:
+						newShips[i] = ships[i] - 5;
+						break;
+					case 1:
+						newShips[i] = ships[i] - 4;
+						break;
+					case 2:
+						newShips[i] = ships[i] - 3;
+						break;
+					case 3:
+						newShips[i] = ships[i] - 2;
+						break;
+					case 4:
+						newShips[i] = ships[i] - 1;
+						break;
+				}
 
+				
 				
 			}
 			ships = newShips;
