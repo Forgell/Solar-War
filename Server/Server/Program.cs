@@ -10,38 +10,101 @@ namespace Server
 {
     class Program
     {
+
+        private static readonly Socket serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        private static readonly List<Socket> clientSockets = new List<Socket>();
+        private const int BUFFER_SIZE = 2048;
+        private const int PORT = 100;
+        private static readonly byte[] buffer = new byte[BUFFER_SIZE];
+
         static void Main(string[] args)
         {
-            IPAddress ip = Dns.GetHostEntry("localhost").AddressList[0];
-            TcpListener server = new TcpListener(ip , 8080);
-            TcpClient client = default(TcpClient);
+            Console.Title = "Server";
+            SetupServer();
+            Console.ReadLine(); // press endter to close Server
+            CloseAllSockets();
+
+        }
+
+        public static void SetupServer()
+        {
+            Console.WriteLine("Setting up server...");
+            serverSocket.Bind(new IPEndPoint(IPAddress.Any , PORT));
+            serverSocket.Listen(0);
+            serverSocket.BeginAccept( AcceptCallback, null);
+            Console.WriteLine("Server setup complete");
+        }
+
+        public static void CloseAllSockets()
+        {
+            foreach (Socket socket in clientSockets)
+            {
+                socket.Shutdown(SocketShutdown.Both);
+                socket.Close();
+            }
+            serverSocket.Close();
+        }
+
+        private static void AcceptCallback(IAsyncResult AR)
+        {
+            Socket socket;
 
             try
             {
-                server.Start();
-                Console.WriteLine("Server started");
-                //Console.Read();
+                socket = serverSocket.EndAccept(AR);
             }
-            catch (Exception e)
+            catch (ObjectDisposedException) // I cannot seem to avoid this (on exit when properly closing sockets)
             {
-                Console.WriteLine("server failed \n"+ e.Message);
-                //Console.Read();
+                return;
             }
 
-            while (true)
+            clientSockets.Add(socket);
+            socket.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, socket);
+            Console.WriteLine("Client connected, waiting for request...");
+            serverSocket.BeginAccept(AcceptCallback, null);
+        }
+
+        private static void ReceiveCallback(IAsyncResult AR)
+        {
+            Socket current = (Socket)AR.AsyncState;
+            int received;
+
+            try
             {
-                client = server.AcceptTcpClient();
-
-                byte[] recieveBuffer = new byte[100];
-                NetworkStream stream = client.GetStream();
-
-                stream.Read(recieveBuffer , 0 , recieveBuffer.Length);
-				recieveBuffer = recieveBuffer.Where(x => !(x == 0)).ToArray();
-				string msg = Encoding.ASCII.GetString(recieveBuffer, 0, recieveBuffer.Length);
-
-                Console.WriteLine(msg + " " + recieveBuffer.Length);
-                
+                received = current.EndReceive(AR);
             }
+            catch (SocketException)
+            {
+                Console.WriteLine("Client forcefully disconnected");
+                // Don't shutdown because the socket may be disposed and its disconnected anyway.
+                current.Close();
+                clientSockets.Remove(current);
+                return;
+            }
+
+            byte[] recBuf = new byte[received];
+            Array.Copy(buffer, recBuf, received);
+            string text = Encoding.ASCII.GetString(recBuf);
+            Console.WriteLine("Received Text: " + text);
+            
+            if (text.ToLower() == "exit") // Client wants to exit gracefully
+            {
+                // Always Shutdown before closing
+                current.Shutdown(SocketShutdown.Both);
+                current.Close();
+                clientSockets.Remove(current);
+                Console.WriteLine("Client disconnected");
+                return;
+            }
+            else
+            {
+                //Console.WriteLine("Text is an invalid request");
+                byte[] data = Encoding.ASCII.GetBytes("Recieved");
+                current.Send(data);
+                //Console.WriteLine("Warning Sent");
+            }
+            
+            current.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, current);
         }
     }
 }
