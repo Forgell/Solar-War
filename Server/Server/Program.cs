@@ -12,7 +12,8 @@ namespace Server
     {
         static void Main(string[] args)
         {
-            IPAddress ip = Dns.GetHostEntry("localhost").AddressList[0];
+			IPAddress ip = new IPAddress(new byte[] { 10 , 0 , 0 , 3});//Dns.GetHostEntry("localhost").AddressList[0];
+			Console.WriteLine(ip.ToString());
             TcpListener server = new TcpListener(ip , 8080);
             TcpClient client = default(TcpClient);
 

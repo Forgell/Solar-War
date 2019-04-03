@@ -24,9 +24,13 @@ namespace Client
 
         private void Submit_Click(object sender, EventArgs e)
         {
+			int port = 8080;
 			try
 			{
-				TcpClient client = new TcpClient("localhost", 8080);
+				byte[] adress = new byte[] { 10 , 0 , 0, 3};
+				IPAddress ip_adress = new IPAddress(adress);
+				IPEndPoint end = new IPEndPoint(ip_adress, port);
+				TcpClient client = new TcpClient(end);
 				int bytecount = Encoding.ASCII.GetByteCount(message.Text);
 
 				byte[] sendData = new byte[bytecount];
@@ -38,9 +42,7 @@ namespace Client
 			}
 			catch (Exception ex) {
 				Console.WriteLine(ex.Message);
-				
 			}
-
         }
     }
 }
