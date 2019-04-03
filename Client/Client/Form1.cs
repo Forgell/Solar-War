@@ -18,7 +18,7 @@ namespace Client
 
         private static readonly Socket ClientSocket = new Socket
             (AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-
+		private int port = 100;
 
         public Form1()
         {
@@ -54,7 +54,8 @@ namespace Client
                 array[i] = Byte.Parse(parts[i]);
             }
 
-            ClientSocket.Connect(new IPAddress(array), 100);
+            ClientSocket.Connect(new IPAddress(array), port);
+			port++;
         }
     }
 }
