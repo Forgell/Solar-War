@@ -17,8 +17,13 @@ namespace Server_Solar_War
         //-1 will be replace with some resonable value
         private Random r;
         private Texture2D tex;
+        public Rectangle position
+        {
+
+            get { return pos; }
+        }
         private Rectangle pos;
-		private int owner;
+        private int owner;
         //There is also a ship class, but this is the number of ships at this planet.
 		private int[] ships;
         public ContentManager Content

@@ -35,6 +35,8 @@ namespace Server_Solar_War
         {
             //move
             //select planet or ship to move to planet location
+            Rectangle mousePos = new Rectangle(Mouse.GetState().X, Mouse.GetState().Y, 1, 1);
+            //if(mousePos.Intersects(Planet 1) or planet 2 or etc.)
 
             //if mouse position isButtonDown over a planet position
             //keep the value/planet that the mouse start at
