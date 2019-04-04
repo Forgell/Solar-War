@@ -19,6 +19,7 @@ namespace Server_Solar_War
         private Texture2D tex;
         private Rectangle pos;
 		private int owner;
+        //There is also a ship class, but this is the number of ships at this planet.
 		private int[] ships;
         public ContentManager Content
         {
