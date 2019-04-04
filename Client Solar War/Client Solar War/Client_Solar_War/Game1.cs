@@ -114,16 +114,9 @@ namespace Client_Solar_War
 					getConnectingInput(console, old);
 					break;
 				case State.WAITING_FOR_ALL_PLAYERS:
-					//recieveServerMessage();
-					if (player_number == 0)
-					{
-						//player_number_label.updateText("No number assigned");
-					}
-					else
-					{
-						//player_number_label.updateText("You are player: " + player_number);
-					}
-					break;
+                    //recieveServerMessage();
+                    recieveServerMessage();
+                    break;
 			}
 
 			
@@ -141,13 +134,15 @@ namespace Client_Solar_War
             string server_message_as_string = Encoding.ASCII.GetString(server_message_as_bytes);
 			if (!server_message_as_string.Equals(""))
 			{
-				Console.WriteLine(server_message_as_string);
+				//Console.WriteLine(server_message_as_string);
 				if (server_message_as_string.Contains("You are player: "))
 				{
 					player_number = server_message_as_string[server_message_as_string.Length - 1] - '0';
 					player_number_label.updateText("You are player: " + player_number);
 				}
-			}
+
+                ClientSocket.Send(Encoding.ASCII.GetBytes("buffer"));
+            }
 			
 		}
 
@@ -176,7 +171,7 @@ namespace Client_Solar_War
 			{
 				ClientSocket.Connect(new IPEndPoint(new IPAddress(ip_adress_as_byte_array), PORT));
 				state = State.WAITING_FOR_ALL_PLAYERS;
-                recieveServerMessage();
+                
             }
 			catch (Exception e)
 			{

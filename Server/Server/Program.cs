@@ -86,7 +86,11 @@ namespace Server
             byte[] recBuf = new byte[received];
             Array.Copy(buffer, recBuf, received);
             string text = Encoding.ASCII.GetString(recBuf);
-            Console.WriteLine("Received Text: " + text);
+            if (!text.Equals("buffer"))
+            {
+                Console.WriteLine("Received Text: " + text);
+            }
+            
             
             if (text.ToLower() == "exit") // Client wants to exit gracefully
             {
