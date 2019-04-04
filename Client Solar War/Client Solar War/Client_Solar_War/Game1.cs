@@ -11,9 +11,15 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using System.Net.Sockets;
 using System.Net;
-
+using System.Text;
 namespace Client_Solar_War
 {
+	enum State
+	{
+		CONNECTING , WAITING_FOR_ALL_PLAYERS
+	}
+
+
     /// <summary>
     /// This is the main type for your game
     /// </summary>
@@ -22,7 +28,8 @@ namespace Client_Solar_War
 		//Networking varibles
 		public static readonly Socket ClientSocket = new Socket(AddressFamily.InterNetwork , SocketType.Stream, ProtocolType.Tcp);
 		public static readonly int PORT = 100;
-		bool isConnecting;
+		//bool isConnecting;
+		State state;
 		//ArrayList ip_address_list;
 		//Vector2 position_of_ip_text_box;
 		// Other varibles that might be useful that is not networking
@@ -30,6 +37,12 @@ namespace Client_Solar_War
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 		TextBox text_box;
+		Label player_number_label;
+		// To see what player you are when all the players are connecting
+		int player_number;
+		Label label;
+
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -45,11 +58,13 @@ namespace Client_Solar_War
         protected override void Initialize()
         {
 			// instancience of network varibles
-			isConnecting = true;
-			//ip_address_list = new ArrayList();
+			//isConnecting = true;
+			state = State.CONNECTING;
+			//waiting for all computer to connect
 			// gneric varibles
 			old = Keyboard.GetState();
 			IsMouseVisible = true;
+			player_number = 0;
 			//Console.WriteLine("\n\n\n" + (char)(0) + "\n\n\n");
             base.Initialize();
         }
@@ -63,6 +78,7 @@ namespace Client_Solar_War
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 			text_box = new TextBox(new Vector2(10, 10), Content.Load<SpriteFont>("font"));
+			player_number_label = new Label("" ,new Vector2(10 , 10) , Color.White ,Content.Load<SpriteFont>("font"));
             // TODO: use this.Content to load your game content here
         }
 
@@ -91,14 +107,48 @@ namespace Client_Solar_War
 				this.Exit();
 			}
 			// Still connecting to ip adress
-			if (isConnecting)
+			
+
+			switch (state)
 			{
-				getConnectingInput(console);
+				case State.CONNECTING:
+					getConnectingInput(console, old);
+					break;
+				case State.WAITING_FOR_ALL_PLAYERS:
+					if (player_number == 0)
+					{
+						player_number_label.updateText("No number assigned");
+					}
+					else
+					{
+						player_number_label.updateText("You are player: " + player_number);
+					}
+					break;
 			}
+
+			recieveServerMessage();
+
 			// update input feed
-			old = console;
+			this.old = console;
             base.Update(gameTime);
         }
+
+		public void recieveServerMessage()
+		{
+			byte[] server_message_as_bytes = new byte[100];
+			ClientSocket.Receive(server_message_as_bytes, 0, server_message_as_bytes.Length, SocketFlags.None);
+			server_message_as_bytes = server_message_as_bytes.Where(val => val != 0).ToArray();
+            string server_message_as_string = Encoding.ASCII.GetString(server_message_as_bytes);
+			if (!server_message_as_string.Equals(""))
+			{
+				Console.WriteLine(server_message_as_string);
+				if (server_message_as_string.Contains("You are player: "))
+				{
+					player_number = server_message_as_string[server_message_as_string.Length - 1] - '0';
+				}
+			}
+			
+		}
 
 		public void closeStream()
 		{
@@ -124,7 +174,7 @@ namespace Client_Solar_War
 			try
 			{
 				ClientSocket.Connect(new IPEndPoint(new IPAddress(ip_adress_as_byte_array), PORT));
-				isConnecting = false;
+				state = State.WAITING_FOR_ALL_PLAYERS;
 			}
 			catch (Exception e)
 			{
@@ -137,7 +187,7 @@ namespace Client_Solar_War
 		/// handels  the input from the KeyboardHelper class
 		/// </summary>
 		/// <param name="console"></param>
-		public void getConnectingInput(KeyboardState console)
+		public void getConnectingInput(KeyboardState console , KeyboardState old)
 		{
 			char input_as_char = KeyboardHelper.getIPInput(console , old);
 			switch ((int)input_as_char)
@@ -166,9 +216,20 @@ namespace Client_Solar_War
 
 			// TODO: Add your drawing code here
 			spriteBatch.Begin();
-			if(isConnecting) 
-				text_box.Draw(spriteBatch);
+			switch (state)
+			{
+				case State.CONNECTING:
+					text_box.Draw(spriteBatch);
+					break;
+				case State.WAITING_FOR_ALL_PLAYERS:
+					label.Draw(spriteBatch);
+					break;
+			}
+
+			
+			
 			spriteBatch.End();
+			
             base.Draw(gameTime);
         }
     }
