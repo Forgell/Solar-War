@@ -114,7 +114,7 @@ namespace Client_Solar_War
 					getConnectingInput(console, old);
 					break;
 				case State.WAITING_FOR_ALL_PLAYERS:
-					recieveServerMessage();
+					//recieveServerMessage();
 					if (player_number == 0)
 					{
 						//player_number_label.updateText("No number assigned");
@@ -176,7 +176,8 @@ namespace Client_Solar_War
 			{
 				ClientSocket.Connect(new IPEndPoint(new IPAddress(ip_adress_as_byte_array), PORT));
 				state = State.WAITING_FOR_ALL_PLAYERS;
-			}
+                recieveServerMessage();
+            }
 			catch (Exception e)
 			{
 				Console.WriteLine(e.Message);
