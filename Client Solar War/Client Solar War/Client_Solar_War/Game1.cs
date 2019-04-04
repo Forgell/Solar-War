@@ -221,7 +221,6 @@ namespace Client_Solar_War
 			{
 				case State.CONNECTING:
 					text_box.Draw(spriteBatch);
-					player_number_label.Draw(spriteBatch);
 					break;
 				case State.WAITING_FOR_ALL_PLAYERS:
 					player_number_label.Draw(spriteBatch);
