@@ -38,6 +38,7 @@ namespace Client_Solar_War
 			this.text = text;
 			this.position = position;
 			this.font = font;
+            this.color = color;
 		}
 
 		public void updateText(string new_text)
