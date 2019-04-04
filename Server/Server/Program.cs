@@ -16,7 +16,7 @@ namespace Server
         private const int BUFFER_SIZE = 2048;
         private const int PORT = 100;
         private static readonly byte[] buffer = new byte[BUFFER_SIZE];
-
+		private static int TOTAL_PLAYER_NUMBER = 0;
         static void Main(string[] args)
         {
             Console.Title = "Server";
@@ -61,6 +61,7 @@ namespace Server
             clientSockets.Add(socket);
             socket.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, socket);
             Console.WriteLine("Client connected, waiting for request...");
+			clientSockets[clientSockets.Count - 1].Send(Encoding.ASCII.GetBytes("You are player: " + (++TOTAL_PLAYER_NUMBER)));
             serverSocket.BeginAccept(AcceptCallback, null);
         }
 
