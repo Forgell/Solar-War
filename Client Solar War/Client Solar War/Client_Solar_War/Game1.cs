@@ -136,7 +136,7 @@ namespace Client_Solar_War
 		public void recieveServerMessage()
 		{
 			byte[] server_message_as_bytes = new byte[100];
-			ClientSocket.Receive(server_message_as_bytes, 0, server_message_as_bytes.Length, SocketFlags.None);
+			ClientSocket.Receive(server_message_as_bytes); //(server_message_as_bytes, 0, server_message_as_bytes.Length, SocketFlags.None);
 			server_message_as_bytes = server_message_as_bytes.Where(val => val != 0).ToArray();
             string server_message_as_string = Encoding.ASCII.GetString(server_message_as_bytes);
 			if (!server_message_as_string.Equals(""))
@@ -225,8 +225,8 @@ namespace Client_Solar_War
 				case State.WAITING_FOR_ALL_PLAYERS:
 					player_number_label.Draw(spriteBatch);
 					break;
+				default: break;
 			}
-
 			
 			
 			spriteBatch.End();
