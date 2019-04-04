@@ -83,22 +83,38 @@ namespace Client_Solar_War
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+			// Get raw keyboard input
+			KeyboardState console = Keyboard.GetState();
             // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                this.Exit();
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || console.IsKeyDown(Keys.Escape))
+			{
+				closeStream();
+				this.Exit();
+			}
+               
 
 			// TODO: Add your update logic here
 			if (isConnecting)
 			{
-				getConnectingInput();
+				getConnectingInput(console);
 			}
 
             base.Update(gameTime);
         }
 
-		public void getConnectingInput()
+		public void closeStream()
 		{
-			KeyboardState console = Keyboard.GetState();
+			if (ClientSocket.IsBound)
+			{
+				byte[] exit_message_as_bytes = System.Text.Encoding.ASCII.GetBytes("exit");
+				ClientSocket.Send(exit_message_as_bytes , 0 , exit_message_as_bytes.Length , SocketFlags.None);
+				ClientSocket.Close();
+			}
+		}
+
+		public void getConnectingInput(KeyboardState console)
+		{
+			//KeyboardState console = Keyboard.GetState();
 			//Keys[] current_list = console.GetPressedKeys();
 			//Keys[] old_list = old.GetPressedKeys();
 			if(console.IsKeyDown(Keys.NumPad0) && !old.IsKeyDown(Keys.NumPad0))
