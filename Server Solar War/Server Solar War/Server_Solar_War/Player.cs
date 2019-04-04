@@ -31,6 +31,26 @@ namespace Server_Solar_War
         //and move a number of ships to another location (at a planet, group of ships, or spot on the map)?
         //answer: have player click and hold mouse over planet/ group of ship then drag object to only a planet 
 
+        public void action()
+        {
+            //move
+            //select planet or ship to move to planet location
+
+            //if mouse position isButtonDown over a planet position
+            //keep the value/planet that the mouse start at
+            //check if the location that the mouse is released at is a different planet position
+            //moveShips(Planet planet, Planet planet2, int numberOfShips, Rectangle position)
+
+            //if mouse position isButtonDown over a ship position
+            //keep the value/ship that the mouse start at
+            //check if the location that the mouse is released at is a different planet position
+            //moveShips(Ship ship1, Planet planet2)
+
+
+            //if at opponent/neutral planet, attack planet
+
+        }
+
         public void moveShips(Planet planet, Planet planet2, int numberOfShips, Rectangle position)//planet1 is moving from, planet2 is moving to
         {
             //ships.Add(new Ship(numberOfShips, position)); //fix later
