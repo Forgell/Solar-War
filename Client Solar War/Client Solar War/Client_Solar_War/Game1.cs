@@ -150,7 +150,7 @@ namespace Client_Solar_War
 		{
 			if (ClientSocket.IsBound)
 			{
-				byte[] exit_message_as_bytes = System.Text.Encoding.ASCII.GetBytes("exit");
+				byte[] exit_message_as_bytes = Encoding.ASCII.GetBytes("exit");
 				ClientSocket.Send(exit_message_as_bytes , 0 , exit_message_as_bytes.Length , SocketFlags.None);
 				ClientSocket.Close();
 			}
