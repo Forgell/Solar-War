@@ -16,7 +16,7 @@ namespace Client_Solar_War
 {
 	enum State
 	{
-		CONNECTING , WAITING_FOR_ALL_PLAYERS
+		CONNECTING , WAITING_FOR_ALL_PLAYERS , CLOSING
 	}
 
 
@@ -114,16 +114,12 @@ namespace Client_Solar_War
 					getConnectingInput(console, old);
 					break;
 				case State.WAITING_FOR_ALL_PLAYERS:
-					recieveServerMessage();
-					if (player_number == 0)
-					{
-						//player_number_label.updateText("No number assigned");
-					}
-					else
-					{
-						//player_number_label.updateText("You are player: " + player_number);
-					}
-					break;
+                    //recieveServerMessage();
+                    recieveServerMessage();
+                    break;
+				case State.CLOSING:
+					// do nothing as the program is closing
+					return;
 			}
 
 			
@@ -141,13 +137,15 @@ namespace Client_Solar_War
             string server_message_as_string = Encoding.ASCII.GetString(server_message_as_bytes);
 			if (!server_message_as_string.Equals(""))
 			{
-				Console.WriteLine(server_message_as_string);
+				//Console.WriteLine(server_message_as_string);
 				if (server_message_as_string.Contains("You are player: "))
 				{
 					player_number = server_message_as_string[server_message_as_string.Length - 1] - '0';
 					player_number_label.updateText("You are player: " + player_number);
 				}
-			}
+
+                ClientSocket.Send(Encoding.ASCII.GetBytes("buffer"));
+            }
 			
 		}
 
@@ -155,10 +153,11 @@ namespace Client_Solar_War
 		{
 			if (ClientSocket.IsBound)
 			{
-				byte[] exit_message_as_bytes = System.Text.Encoding.ASCII.GetBytes("exit");
+				byte[] exit_message_as_bytes = Encoding.ASCII.GetBytes("exit");
 				ClientSocket.Send(exit_message_as_bytes , 0 , exit_message_as_bytes.Length , SocketFlags.None);
 				ClientSocket.Close();
 			}
+			state = State.CLOSING;
 		}
 
 		/// <summary>
@@ -176,7 +175,8 @@ namespace Client_Solar_War
 			{
 				ClientSocket.Connect(new IPEndPoint(new IPAddress(ip_adress_as_byte_array), PORT));
 				state = State.WAITING_FOR_ALL_PLAYERS;
-			}
+                
+            }
 			catch (Exception e)
 			{
 				Console.WriteLine(e.Message);

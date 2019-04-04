@@ -86,7 +86,11 @@ namespace Server
             byte[] recBuf = new byte[received];
             Array.Copy(buffer, recBuf, received);
             string text = Encoding.ASCII.GetString(recBuf);
-            Console.WriteLine("Received Text: " + text);
+            if (!text.Equals("buffer"))
+            {
+                Console.WriteLine("Received Text: " + text);
+            }
+            
             
             if (text.ToLower() == "exit") // Client wants to exit gracefully
             {
@@ -100,8 +104,9 @@ namespace Server
             else
             {
                 //Console.WriteLine("Text is an invalid request");
-                byte[] data = Encoding.ASCII.GetBytes("Recieved");
+                byte[] data = Encoding.ASCII.GetBytes(text);
                 current.Send(data);
+                
                 //Console.WriteLine("Warning Sent");
             }
             //buffer messages
