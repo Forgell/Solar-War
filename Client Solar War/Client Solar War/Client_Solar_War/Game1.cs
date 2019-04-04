@@ -40,7 +40,6 @@ namespace Client_Solar_War
 		Label player_number_label;
 		// To see what player you are when all the players are connecting
 		int player_number;
-		Label label;
 
 
         public Game1()
@@ -223,7 +222,7 @@ namespace Client_Solar_War
 					text_box.Draw(spriteBatch);
 					break;
 				case State.WAITING_FOR_ALL_PLAYERS:
-					label.Draw(spriteBatch);
+					player_number_label.Draw(spriteBatch);
 					break;
 			}
 
