@@ -115,6 +115,7 @@ namespace Client_Solar_War
 					getConnectingInput(console, old);
 					break;
 				case State.WAITING_FOR_ALL_PLAYERS:
+					recieveServerMessage();
 					if (player_number == 0)
 					{
 						player_number_label.updateText("No number assigned");
@@ -126,7 +127,7 @@ namespace Client_Solar_War
 					break;
 			}
 
-			recieveServerMessage();
+			
 
 			// update input feed
 			this.old = console;
