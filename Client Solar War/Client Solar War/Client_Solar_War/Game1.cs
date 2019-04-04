@@ -77,7 +77,7 @@ namespace Client_Solar_War
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 			text_box = new TextBox(new Vector2(10, 10), Content.Load<SpriteFont>("font"));
-			player_number_label = new Label("" ,new Vector2(10 , 10) , Color.White ,Content.Load<SpriteFont>("font"));
+			player_number_label = new Label("No number assigned", new Vector2(10 , 10) , Color.White ,Content.Load<SpriteFont>("font"));
             // TODO: use this.Content to load your game content here
         }
 
@@ -117,11 +117,11 @@ namespace Client_Solar_War
 					recieveServerMessage();
 					if (player_number == 0)
 					{
-						player_number_label.updateText("No number assigned");
+						//player_number_label.updateText("No number assigned");
 					}
 					else
 					{
-						player_number_label.updateText("You are player: " + player_number);
+						//player_number_label.updateText("You are player: " + player_number);
 					}
 					break;
 			}
@@ -145,6 +145,7 @@ namespace Client_Solar_War
 				if (server_message_as_string.Contains("You are player: "))
 				{
 					player_number = server_message_as_string[server_message_as_string.Length - 1] - '0';
+					player_number_label.updateText("You are player: " + player_number);
 				}
 			}
 			
@@ -220,6 +221,7 @@ namespace Client_Solar_War
 			{
 				case State.CONNECTING:
 					text_box.Draw(spriteBatch);
+					player_number_label.Draw(spriteBatch);
 					break;
 				case State.WAITING_FOR_ALL_PLAYERS:
 					player_number_label.Draw(spriteBatch);
