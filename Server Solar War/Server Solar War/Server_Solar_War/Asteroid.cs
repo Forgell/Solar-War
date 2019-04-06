@@ -18,9 +18,9 @@ namespace Server_Solar_War
         Random rand;
         private Texture2D image;
         private Rectangle rect;
-        private Vector2 speed;
         protected Vector2 origin;
-        private int radius;
+        private int radius,time,timer, speed;
+        private double angle;
          
         public Asteroid(Texture2D img ,Vector2 origin,int radius )
         {
@@ -28,13 +28,39 @@ namespace Server_Solar_War
             this.origin = origin;
             this.radius = radius;
             rand = new Random();
-            speed = new Vector2(rand.Next(1, 5), rand.Next(1, 5));
+            
+            angle = Math.PI / 180.0 * 5.0; 
             //bool = ran
             rect = new Rectangle(rand.Next((int)origin.X, (int)origin.X + radius+2)
                                     , rand.Next((int)origin.Y, (int)origin.Y + radius), 50, 50);
         }
+        private Asteroid()
+        {
+            angle = Math.PI / 180.0 * 5.0;
+            speed = rand.Next(1, 5);
+            double distance = angle * Math.Pow(radius, 2);
+            time = (int)(distance / speed);
+        }
+        private void Orbit()
+        {
+            
+            double x = (origin.X + Math.Cos(angle) * radius);
+            double y = (origin.Y + Math.Sin(angle) * radius);
+            rect.X = (int)x;
+            rect.Y = (int)y;
 
 
+        }
+        public Boolean hit(Rectangle pos)
+        {
+            if (rect.Intersects(pos)
+                return true;
+            return false;
+        }
+        public void Update(GameTime gameTime)
+        {
+            Orbit();
+        }
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(image, rect, Color.White);
