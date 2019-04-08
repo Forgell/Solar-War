@@ -18,12 +18,14 @@ namespace Server_Solar_War
         List<Player> players;
         //contains all planets and players
 
+        //used to create planet
+        IServiceProvider d;
 
         public Game()
         {
             planets = new List<Planet>();
             players = new List<Player>();
-            //later, write number of planets and players
+            //later, write number of/each planets and players
         }
 
         public Planet getPlanet(Rectangle pos) 
@@ -36,8 +38,8 @@ namespace Server_Solar_War
                 }
             }
             //this shouldn't happen:
-            return new Planet();
-            //how do we prevent this
+            return new Planet("", new Rectangle(-2, -2, 1, 1), d);
+            //how do we prevent this or how do we get in fo that this happened
         }
     }
 }
