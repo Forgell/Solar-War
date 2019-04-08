@@ -40,7 +40,8 @@ namespace Server_Solar_War
             angle = Math.PI / 180.0 * 5.0;
             //bool = ran
             position();
-            speed = rand.Next(50, 150);
+            speed = rand.Next(50, 100);
+            timer = 0;
             double distance = angle * Math.Pow(radius, 2);
             time = (int)(distance / speed);
         }
@@ -84,9 +85,12 @@ namespace Server_Solar_War
         public void Update(GameTime gameTime)
         {
             timer++;
-            if(timer%time ==0)
-                   Orbit();
-
+            if (timer % time == 0)
+            {
+                angle += .55;
+                Orbit();
+                Console.WriteLine("Aster time: " + timer);
+            }
 
         }
         public void Draw(SpriteBatch spriteBatch)
