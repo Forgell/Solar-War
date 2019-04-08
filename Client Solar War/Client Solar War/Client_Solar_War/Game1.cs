@@ -40,9 +40,12 @@ namespace Client_Solar_War
 		Label player_number_label;
 		// To see what player you are when all the players are connecting
 		int player_number;
+		Star[] stars;
+		Random r;
+		int x;
+		Rectangle screen;
 
-
-        public Game1()
+		public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -58,6 +61,11 @@ namespace Client_Solar_War
         {
 			// instancience of network varibles
 			//isConnecting = true;
+			screen = new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+			r = new Random();
+			x = 0;
+			Star.defaultTex = this.Content.Load<Texture2D>("Star");
+			stars = new Star[150];
 			state = State.CONNECTING;
 			//waiting for all computer to connect
 			// gneric varibles
@@ -105,8 +113,35 @@ namespace Client_Solar_War
 				closeStream();
 				this.Exit();
 			}
+			if (x < stars.Length)
+			{
+				for (int i = 0; i < 25 && i + x < stars.Length; i++)
+					stars[x + i] = newStar();
+				x += 25;
+			}
+			if (!graphics.IsFullScreen && Keyboard.GetState().IsKeyDown(Keys.Escape))
+				this.Exit();
+			if (Keyboard.GetState().IsKeyDown(Keys.LeftAlt) && Keyboard.GetState().IsKeyDown(Keys.Enter))
+			{
+				graphics.ToggleFullScreen();
+			}
+			for (int i = 0; i < stars.Length; i++)
+			{
+				try
+				{
+					stars[i].move();
+				}
+				catch (NullReferenceException)
+				{
+					break;
+				}
+				if (!screen.Contains(new Point((int)stars[i].Pos.X, (int)stars[i].Pos.Y)))
+				{
+					stars[i] = newStar();
+				}
+			}
 			// Still connecting to ip adress
-			
+
 
 			switch (state)
 			{
@@ -209,7 +244,7 @@ namespace Client_Solar_War
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
 			// TODO: Add your drawing code here
 			spriteBatch.Begin();
@@ -223,11 +258,35 @@ namespace Client_Solar_War
 					break;
 			}
 
-			
-			
+			for (int i = 0; i < stars.Length; i++)
+			{
+				try
+				{
+					spriteBatch.Draw(stars[i].Tex, stars[i].Pos, stars[i].Rect, stars[i].Col);
+				}
+				catch (ArgumentNullException)
+				{
+					stars[i].Tex = Star.defaultTex;
+				}
+				catch (NullReferenceException)
+				{
+					break;
+				}
+			}
+
 			spriteBatch.End();
 			
             base.Draw(gameTime);
         }
-    }
+		protected Star newStar()
+		{
+			//Star temp = new Star(new Rectangle(0, 0, 6, 6), new Color(r.Next(255), r.Next(255), r.Next(255)), new Vector2(r.Next(GraphicsDevice.Viewport.Width - 50), r.Next(GraphicsDevice.Viewport.Height - 50)), new Vector2(r.Next(20) - 10, r.Next(20) - 10));
+			return new Star(new Rectangle(0, 0, 3, 3), new Color(r.Next(255), r.Next(255), r.Next(255), r.Next(255)), new Vector2(r.Next(0), r.Next(GraphicsDevice.Viewport.Height + 1)), new Vector2(r.Next(17) + 5, 0));
+			//if (temp.Vel.Equals(Vector2.Zero))
+			//{
+			//	temp.Vel = new Vector2(1, 1);
+			//}
+			//return temp;
+		}
+	}
 }
