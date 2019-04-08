@@ -16,25 +16,78 @@ namespace Server_Solar_War
     class Asteroid
     {
         Random rand;
-        private Texture2D image;
+        private Texture2D image,explode;
         private Rectangle rect;
-        private Vector2 speed;
         protected Vector2 origin;
-        private int radius;
-         
-        public Asteroid(Texture2D img ,Vector2 origin,int radius )
+        private int radius,time,timer, speed;
+        private double angle;
+
+        public ContentManager Content
         {
-            image = img;
+
+            get { return content; }
+        }
+        ContentManager content;
+
+
+        public Asteroid(Vector2 origin,int radius )
+        {
+            
             this.origin = origin;
             this.radius = radius;
             rand = new Random();
-            speed = new Vector2(rand.Next(1, 5), rand.Next(1, 5));
+            
+            angle = Math.PI / 180.0 * 5.0; 
             //bool = ran
-            rect = new Rectangle(rand.Next((int)origin.X, (int)origin.X + radius+2)
-                                    , rand.Next((int)origin.Y, (int)origin.Y + radius), 50, 50);
+          
+            speed = rand.Next(50, 150);
+            double distance = angle * Math.Pow(radius, 2);
+            time = (int)(distance / speed);
         }
+        private void position()
+        {
+            Vector2 pos = new Vector2(rand.Next((int)origin.X - radius, (int)origin.X + radius), rand.Next((int)origin.Y - radius, (int)origin.Y + radius));
+            double dis = Math.Sqrt(Math.Pow(origin.X - pos.X, 2) + Math.Pow(origin.Y + pos.Y, 2));
+            int d = radius - (int)dis;
+            rect = new Rectangle(d + (int)dis, d + (int)dis, rand.Next(25, 50), rand.Next(25, 50));
+                
+        }
+        public void Load(IServiceProvider server)
+        {
+            content = new ContentManager(server, "Content");
+            image = content.Load<Texture2D>("");
+            explode = content.Load<Texture2D>("");
+        }
+        private void Orbit()
+        {
+            
+            double x = (origin.X + Math.Cos(angle) * radius);
+            double y = (origin.Y + Math.Sin(angle) * radius);
+            rect.X = (int)x;
+            rect.Y = (int)y;
+
+        }
+        public Boolean hit(Rectangle pos)
+        {
+            if (rect.Intersects(pos))
+            {
+                explosion();
+                return true;
+            }
+            return false;
+        }
+        private void explosion()
+        {
+            image = explode;
+        }
+        public void Update(GameTime gameTime)
+        {
+            timer++;
+            if(timer%time ==0)
+                   Orbit();
 
 
+        }
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(image, rect, Color.White);
