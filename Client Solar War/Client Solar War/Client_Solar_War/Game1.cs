@@ -16,7 +16,7 @@ namespace Client_Solar_War
 {
 	enum State
 	{
-		CONNECTING , WAITING_FOR_ALL_PLAYERS , CLOSING
+		CONNECTING , WAITING_FOR_ALL_PLAYERS , CLOSING , NULL
 	}
 
 
@@ -25,11 +25,9 @@ namespace Client_Solar_War
     /// </summary>
     public class Game1 : Microsoft.Xna.Framework.Game
     {
-		//Networking varibles
-		public static readonly Socket ClientSocket = new Socket(AddressFamily.InterNetwork , SocketType.Stream, ProtocolType.Tcp);
-		public static readonly int PORT = 100;
-		//bool isConnecting;
-		State state;
+        //Networking varibles
+        State state;
+        Networking network;
 		//ArrayList ip_address_list;
 		//Vector2 position_of_ip_text_box;
 		// Other varibles that might be useful that is not networking
@@ -60,8 +58,8 @@ namespace Client_Solar_War
             // instancience of network varibles
             // star field varibles 
             starfield = new Starfield(GraphicsDevice, this.Content.Load<Texture2D>("Star"));
-            
 
+            network = new Networking();
             state = State.CONNECTING;
 			//waiting for all computer to connect
 			// gneric varibles
@@ -106,7 +104,7 @@ namespace Client_Solar_War
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || console.IsKeyDown(Keys.Escape))
 			{
-				closeStream();
+				network.closeStream();
 				this.Exit();
 			}
 
@@ -116,11 +114,19 @@ namespace Client_Solar_War
 			switch (state)
 			{
 				case State.CONNECTING:
-					getConnectingInput(console, old);
+					State temp_state = network.getConnectingInput(console, old , text_box);
+                    if(temp_state != State.NULL)
+                    {
+                        state = temp_state;
+                    }
 					break;
 				case State.WAITING_FOR_ALL_PLAYERS:
                     //recieveServerMessage();
-                    recieveServerMessage();
+                    int temp = network.recieveServerMessage(player_number_label);
+                    if(temp != 0)
+                    {
+                        player_number = temp;
+                    }
                     break;
 				case State.CLOSING:
 					// do nothing as the program is closing
@@ -135,83 +141,12 @@ namespace Client_Solar_War
             base.Update(gameTime);
         }
 
-		public void recieveServerMessage()
-		{
-			byte[] server_message_as_bytes = new byte[100];
-			ClientSocket.Receive(server_message_as_bytes); //(server_message_as_bytes, 0, server_message_as_bytes.Length, SocketFlags.None);
-			server_message_as_bytes = server_message_as_bytes.Where(val => val != 0).ToArray();
-            string server_message_as_string = Encoding.ASCII.GetString(server_message_as_bytes);
-			if (!server_message_as_string.Equals(""))
-			{
-				//Console.WriteLine(server_message_as_string);
-				if (server_message_as_string.Contains("You are player: "))
-				{
-					player_number = server_message_as_string[server_message_as_string.Length - 1] - '0';
-					player_number_label.updateText("You are player: " + player_number);
-				}
+		
 
-                ClientSocket.Send(Encoding.ASCII.GetBytes("buffer"));
-            }
-			
-		}
+		
 
-		public void closeStream()
-		{
-			if (ClientSocket.IsBound)
-			{
-				byte[] exit_message_as_bytes = Encoding.ASCII.GetBytes("exit");
-				ClientSocket.Send(exit_message_as_bytes , 0 , exit_message_as_bytes.Length , SocketFlags.None);
-				ClientSocket.Close();
-			}
-			state = State.CLOSING;
-		}
-
-		/// <summary>
-		/// is run only when the enter key is pressed and attempts to connect to the ip that is inputed by th custom text box
-		/// </summary>
-		public void attemptConnectionToServer()
-		{
-			string[] parts_of_ip_address = text_box.Text.Split('.');
-			byte[] ip_adress_as_byte_array = new byte[parts_of_ip_address.Length];
-			for (int i = 0; i < parts_of_ip_address.Length; i++)
-			{
-				ip_adress_as_byte_array[i] = Byte.Parse(parts_of_ip_address[i]);
-			}
-			try
-			{
-				ClientSocket.Connect(new IPEndPoint(new IPAddress(ip_adress_as_byte_array), PORT));
-				state = State.WAITING_FOR_ALL_PLAYERS;
-                
-            }
-			catch (Exception e)
-			{
-				Console.WriteLine(e.Message);
-
-			}
-
-		}
-		/// <summary>
-		/// handels  the input from the KeyboardHelper class
-		/// </summary>
-		/// <param name="console"></param>
-		public void getConnectingInput(KeyboardState console , KeyboardState old)
-		{
-			char input_as_char = KeyboardHelper.getIPInput(console , old);
-			switch ((int)input_as_char)
-			{
-				case 000: break; // nothing is pressed
-				case 004: // is transmitted if enter key is pressed
-					attemptConnectionToServer();
-					break;
-
-				default:
-					text_box.updateText(input_as_char);
-					break;
-
-
-			}
-
-        }
+		
+		
 
         /// <summary>
         /// This is called when the game should draw itself.
