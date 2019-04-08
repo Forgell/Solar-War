@@ -60,12 +60,13 @@ namespace Client_Solar_War
         protected override void Initialize()
         {
 			// instancience of network varibles
-			//isConnecting = true;
+			// star field varibles
 			screen = new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
 			r = new Random();
 			x = 0;
 			Star.defaultTex = this.Content.Load<Texture2D>("Star");
 			stars = new Star[150];
+
 			state = State.CONNECTING;
 			//waiting for all computer to connect
 			// gneric varibles
