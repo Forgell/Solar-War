@@ -40,10 +40,8 @@ namespace Client_Solar_War
 		Label player_number_label;
 		// To see what player you are when all the players are connecting
 		int player_number;
-		Star[] stars;
-		Random r;
-		int x;
-		Rectangle screen;
+
+        Starfield starfield;
 
 		public Game1()
         {
@@ -59,15 +57,12 @@ namespace Client_Solar_War
         /// </summary>
         protected override void Initialize()
         {
-			// instancience of network varibles
-			// star field varibles
-			screen = new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
-			r = new Random();
-			x = 0;
-			Star.defaultTex = this.Content.Load<Texture2D>("Star");
-			stars = new Star[150];
+            // instancience of network varibles
+            // star field varibles 
+            starfield = new Starfield(GraphicsDevice, this.Content.Load<Texture2D>("Star"));
+            
 
-			state = State.CONNECTING;
+            state = State.CONNECTING;
 			//waiting for all computer to connect
 			// gneric varibles
 			old = Keyboard.GetState();
@@ -114,33 +109,7 @@ namespace Client_Solar_War
 				closeStream();
 				this.Exit();
 			}
-			if (x < stars.Length)
-			{
-				for (int i = 0; i < 25 && i + x < stars.Length; i++)
-					stars[x + i] = newStar();
-				x += 25;
-			}
-			if (!graphics.IsFullScreen && Keyboard.GetState().IsKeyDown(Keys.Escape))
-				this.Exit();
-			if (Keyboard.GetState().IsKeyDown(Keys.LeftAlt) && Keyboard.GetState().IsKeyDown(Keys.Enter))
-			{
-				graphics.ToggleFullScreen();
-			}
-			for (int i = 0; i < stars.Length; i++)
-			{
-				try
-				{
-					stars[i].move();
-				}
-				catch (NullReferenceException)
-				{
-					break;
-				}
-				if (!screen.Contains(new Point((int)stars[i].Pos.X, (int)stars[i].Pos.Y)))
-				{
-					stars[i] = newStar();
-				}
-			}
+
 			// Still connecting to ip adress
 
 
@@ -157,7 +126,8 @@ namespace Client_Solar_War
 					// do nothing as the program is closing
 					return;
 			}
-
+            //update starfield
+            starfield.update(graphics);
 			
 
 			// update input feed
@@ -253,7 +223,10 @@ namespace Client_Solar_War
 
 			// TODO: Add your drawing code here
 			spriteBatch.Begin();
-			switch (state)
+            //draw starfield
+            starfield.draw(spriteBatch);
+
+            switch (state)
 			{
 				case State.CONNECTING:
 					text_box.Draw(spriteBatch);
@@ -263,37 +236,11 @@ namespace Client_Solar_War
 					break;
 				default: break;
 			}
-			for (int i = 0; i < stars.Length; i++)
-			{
-				try
-				{
-					spriteBatch.Draw(stars[i].Tex, stars[i].Pos, stars[i].Rect, stars[i].Col);
-				}
-				catch (ArgumentNullException)
-				{
-					stars[i].Tex = Star.defaultTex;
-				}
-				catch (NullReferenceException)
-				{
-					break;
-				}
-			}
-
-
-
+            
 			spriteBatch.End();
 			
             base.Draw(gameTime);
         }
-		protected Star newStar()
-		{
-			//Star temp = new Star(new Rectangle(0, 0, 6, 6), new Color(r.Next(255), r.Next(255), r.Next(255)), new Vector2(r.Next(GraphicsDevice.Viewport.Width - 50), r.Next(GraphicsDevice.Viewport.Height - 50)), new Vector2(r.Next(20) - 10, r.Next(20) - 10));
-			return new Star(new Rectangle(0, 0, 3, 3), new Color(r.Next(255), r.Next(255), r.Next(255), r.Next(255)), new Vector2(r.Next(0), r.Next(GraphicsDevice.Viewport.Height + 1)), new Vector2(r.Next(17) + 5, 0));
-			//if (temp.Vel.Equals(Vector2.Zero))
-			//{
-			//	temp.Vel = new Vector2(1, 1);
-			//}
-			//return temp;
-		}
+		
 	}
 }

@@ -64,6 +64,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Star.cs" />
+    <Compile Include="Starfield.cs" />
     <Compile Include="TextBox.cs" />
   </ItemGroup>
   <ItemGroup>
