@@ -16,30 +16,47 @@ namespace Server_Solar_War
     class Asteroid
     {
         Random rand;
-        private Texture2D image;
+        private Texture2D image,explode;
         private Rectangle rect;
         protected Vector2 origin;
         private int radius,time,timer, speed;
         private double angle;
-         
-        public Asteroid(Texture2D img ,Vector2 origin,int radius )
+
+        public ContentManager Content
         {
-            image = img;
+
+            get { return content; }
+        }
+        ContentManager content;
+
+
+        public Asteroid(Vector2 origin,int radius )
+        {
+            
             this.origin = origin;
             this.radius = radius;
             rand = new Random();
             
             angle = Math.PI / 180.0 * 5.0; 
             //bool = ran
-            rect = new Rectangle(rand.Next((int)origin.X, (int)origin.X + radius+2)
-                                    , rand.Next((int)origin.Y, (int)origin.Y + radius), 50, 50);
-        }
-        private Asteroid()
-        {
-            angle = Math.PI / 180.0 * 5.0;
-            speed = rand.Next(1, 5);
+          
+            speed = rand.Next(50, 150);
             double distance = angle * Math.Pow(radius, 2);
             time = (int)(distance / speed);
+        }
+        private void position()
+        {
+            Vector2 pos = new Vector2(rand.Next((int)origin.X - radius, (int)origin.X + radius), rand.Next((int)origin.Y - radius, (int)origin.Y + radius));
+            double dis = Math.Sqrt(Math.Pow(origin.X - pos.X, 2) + Math.Pow(origin.Y + pos.Y, 2));
+            int d = radius - (int)dis;
+            rect = new Rectangle(d + (int)dis, d + (int)dis, rand.Next(25, 50), rand.Next(25, 50));
+                
+        }
+        public void Load(IServiceProvider server)
+        {
+            content = new ContentManager(server, "Content");
+            image = content.Load<Texture2D>("");
+            explode = content.Load<Texture2D>("");
         }
         private void Orbit()
         {
@@ -49,17 +66,27 @@ namespace Server_Solar_War
             rect.X = (int)x;
             rect.Y = (int)y;
 
-
         }
         public Boolean hit(Rectangle pos)
         {
-            if (rect.Intersects(pos)
+            if (rect.Intersects(pos))
+            {
+                explosion();
                 return true;
+            }
             return false;
+        }
+        private void explosion()
+        {
+            image = explode;
         }
         public void Update(GameTime gameTime)
         {
-            Orbit();
+            timer++;
+            if(timer%time ==0)
+                   Orbit();
+
+
         }
         public void Draw(SpriteBatch spriteBatch)
         {
