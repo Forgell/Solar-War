@@ -37,9 +37,9 @@ namespace Server_Solar_War
             this.radius = radius;
             rand = new Random();
             
-            angle = Math.PI / 180.0 * 5.0; 
+            angle = Math.PI / 180.0 * 5.0;
             //bool = ran
-          
+            position();
             speed = rand.Next(50, 150);
             double distance = angle * Math.Pow(radius, 2);
             time = (int)(distance / speed);
@@ -50,13 +50,14 @@ namespace Server_Solar_War
             double dis = Math.Sqrt(Math.Pow(origin.X - pos.X, 2) + Math.Pow(origin.Y + pos.Y, 2));
             int d = radius - (int)dis;
             rect = new Rectangle(d + (int)dis, d + (int)dis, rand.Next(25, 50), rand.Next(25, 50));
+            Console.WriteLine(rect);
                 
         }
         public void Load(IServiceProvider server)
         {
             content = new ContentManager(server, "Content");
-            image = content.Load<Texture2D>("");
-            explode = content.Load<Texture2D>("");
+            image = content.Load<Texture2D>("Asteroid/a1");
+           // explode = content.Load<Texture2D>("");
         }
         private void Orbit()
         {
