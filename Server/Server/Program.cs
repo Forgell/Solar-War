@@ -109,7 +109,10 @@ namespace Server
                 
                 //Console.WriteLine("Warning Sent");
             }
-            
+            //buffer messages
+			foreach(Socket client in clientSockets){
+				client.Send(new byte[100]);
+			}
             current.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, current);
         }
     }
