@@ -37,7 +37,7 @@ namespace Client_Solar_War
             if (x < stars.Length)
             {
                 for (int i = 0; i < 25 && i + x < stars.Length; i++)
-                    stars[x + i] = newStar();
+                    stars[x + i] = newStar(graphics.GraphicsDevice);
                 x += 25;
             }
             //if (!graphics.IsFullScreen && Keyboard.GetState().IsKeyDown(Keys.Escape))
@@ -58,7 +58,7 @@ namespace Client_Solar_War
                 }
                 if (!screen.Contains(new Point((int)stars[i].Pos.X, (int)stars[i].Pos.Y)))
                 {
-                    stars[i] = newStar();
+                    stars[i] = newStar(graphics.GraphicsDevice);
                 }
             }
         }
@@ -82,10 +82,10 @@ namespace Client_Solar_War
             }
         }
 
-        protected Star newStar()
+        protected Star newStar(GraphicsDevice graphics)
         {
             //Star temp = new Star(new Rectangle(0, 0, 6, 6), new Color(r.Next(255), r.Next(255), r.Next(255)), new Vector2(r.Next(GraphicsDevice.Viewport.Width - 50), r.Next(GraphicsDevice.Viewport.Height - 50)), new Vector2(r.Next(20) - 10, r.Next(20) - 10));
-            return new Star(new Rectangle(0, 0, 3, 3), new Color(r.Next(255), r.Next(255), r.Next(255), r.Next(255)), new Vector2(r.Next(0), r.Next(GraphicsDevice.Viewport.Height + 1)), new Vector2(r.Next(17) + 5, 0));
+            return new Star(new Rectangle(0, 0, 3, 3), new Color(r.Next(255), r.Next(255), r.Next(255), r.Next(255)), new Vector2(r.Next(0), r.Next(graphics.Viewport.Height + 1)), new Vector2(r.Next(17) + 5, 0));
             //if (temp.Vel.Equals(Vector2.Zero))
             //{
             //	temp.Vel = new Vector2(1, 1);
