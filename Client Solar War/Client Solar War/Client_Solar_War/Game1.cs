@@ -12,6 +12,8 @@ using Microsoft.Xna.Framework.Media;
 using System.Net.Sockets;
 using System.Net;
 using System.Text;
+using System.Threading;
+
 namespace Client_Solar_War
 {
 	enum State
@@ -28,8 +30,8 @@ namespace Client_Solar_War
         //Networking varibles
         State state;
         Networking network;
-		//ArrayList ip_address_list;
-		//Vector2 position_of_ip_text_box;
+		// Threading for the multi threading
+		Thread networking_thread;
 		// Other varibles that might be useful that is not networking
 		KeyboardState old;
         GraphicsDeviceManager graphics;
@@ -58,7 +60,8 @@ namespace Client_Solar_War
             // instancience of network varibles
             // star field varibles 
             starfield = new Starfield(GraphicsDevice, this.Content.Load<Texture2D>("Star"));
-
+			//
+			networking_thread = new Thread(network_communication);
             network = new Networking();
             state = State.CONNECTING;
 			//waiting for all computer to connect
@@ -66,7 +69,7 @@ namespace Client_Solar_War
 			old = Keyboard.GetState();
 			IsMouseVisible = true;
 			player_number = 0;
-			//Console.WriteLine("\n\n\n" + (char)(0) + "\n\n\n");
+			
             base.Initialize();
         }
 
@@ -92,6 +95,16 @@ namespace Client_Solar_War
             // TODO: Unload any non ContentManager content here
         }
 
+
+		public void network_communication()
+		{
+			int temp = network.recieveServerMessage(player_number_label);
+			if (temp != 0)
+			{
+				player_number = temp;
+			}
+		}
+
         /// <summary>
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
@@ -106,6 +119,7 @@ namespace Client_Solar_War
 			{
 				network.closeStream();
 				this.Exit();
+				networking_thread.Abort();
 			}
 
 			// Still connecting to ip adress
@@ -118,15 +132,15 @@ namespace Client_Solar_War
                     if(temp_state != State.NULL)
                     {
                         state = temp_state;
+						if (state == State.WAITING_FOR_ALL_PLAYERS)
+						{
+							networking_thread.Start();
+						}
                     }
 					break;
 				case State.WAITING_FOR_ALL_PLAYERS:
-                    //recieveServerMessage();
-                    int temp = network.recieveServerMessage(player_number_label);
-                    if(temp != 0)
-                    {
-                        player_number = temp;
-                    }
+                    //multi threading should take care of the rest
+                    
                     break;
 				case State.CLOSING:
 					// do nothing as the program is closing

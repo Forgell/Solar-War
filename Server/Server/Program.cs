@@ -10,13 +10,16 @@ namespace Server
 {
     class Program
     {
-
+		// client related varibles
         private static readonly Socket serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         private static readonly List<Socket> clientSockets = new List<Socket>();
         private const int BUFFER_SIZE = 2048;
         private const int PORT = 100;
         private static readonly byte[] buffer = new byte[BUFFER_SIZE];
+		// game related varibles
 		private static int TOTAL_PLAYER_NUMBER = 0;
+		private static PlayerState[] player_state = new PlayerState[4];
+
         static void Main(string[] args)
         {
             Console.Title = "Server";
@@ -30,10 +33,18 @@ namespace Server
         {
             Console.WriteLine("Setting up server...");
             serverSocket.Bind(new IPEndPoint(IPAddress.Any , PORT));
+			IPAddress[] ipv4Addresses = Array.FindAll(Dns.GetHostEntry(string.Empty).AddressList,a => a.AddressFamily == AddressFamily.InterNetwork);
+			Console.WriteLine(ipv4Addresses[ipv4Addresses.Length - 1]);
+			// init
+			for (int i = 0; i < player_state.Length; i++)
+			{
+				player_state[i] = PlayerState.NOT_CONNECTED;
+			}
             serverSocket.Listen(0);
             serverSocket.BeginAccept( AcceptCallback, null);
             Console.WriteLine("Server setup complete");
         }
+
 
         public static void CloseAllSockets()
         {
@@ -58,11 +69,20 @@ namespace Server
                 return;
             }
 
-            clientSockets.Add(socket);
-            socket.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, socket);
-            Console.WriteLine("Client connected, waiting for request...");
-			clientSockets[clientSockets.Count - 1].Send(Encoding.ASCII.GetBytes("You are player: " + (++TOTAL_PLAYER_NUMBER)));
-            serverSocket.BeginAccept(AcceptCallback, null);
+
+			if (clientSockets.Count != 4)
+			{
+				clientSockets.Add(socket);
+				socket.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, socket);
+				Console.WriteLine("Client connected, waiting for request...");
+				clientSockets[clientSockets.Count - 1].Send(Encoding.ASCII.GetBytes("You are player: " + (++TOTAL_PLAYER_NUMBER)));
+				player_state[clientSockets.Count - 1] = PlayerState.ASSIGNING_PLAYER_NUMBER;
+				serverSocket.BeginAccept(AcceptCallback, null);
+			}
+			else
+			{
+				socket.Send(Encoding.ASCII.GetBytes("player list is full"));
+			}
         }
 
         private static void ReceiveCallback(IAsyncResult AR)
@@ -80,6 +100,7 @@ namespace Server
                 // Don't shutdown because the socket may be disposed and its disconnected anyway.
                 current.Close();
                 clientSockets.Remove(current);
+				TOTAL_PLAYER_NUMBER--;
                 return;
             }
 
@@ -99,12 +120,13 @@ namespace Server
                 current.Close();
                 clientSockets.Remove(current);
                 Console.WriteLine("Client disconnected");
+				TOTAL_PLAYER_NUMBER--;
                 return;
             }
             else
             {
                 //Console.WriteLine("Text is an invalid request");
-                byte[] data = Encoding.ASCII.GetBytes(text);
+                byte[] data = Encoding.ASCII.GetBytes(text); // sends the data back at them at current time is just sends buffer back and forth
                 current.Send(data);
                 
                 //Console.WriteLine("Warning Sent");
