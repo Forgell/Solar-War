@@ -28,17 +28,11 @@ namespace Start
 			Console.WriteLine(rectBanner.Y);
 			Console.WriteLine();
 			start = new Button("Host a Server", new Vector2(x, y), font);
-			join = new Button("Join a Server", new Vector2(x, y + 10), font);
-
 		}
 
-		public int update(int x, int y, bool pressed, GameTime gameTime)
+		public bool update(int x, int y, bool pressed, GameTime gameTime)
 		{
-			if (start.pressed(x, y) && pressed)
-				return 1;
-			if (join.pressed(x, y) && pressed)
-				return 2;
-			return -1;
+			return start.pressed(x, y) && pressed;
 		}
 
 		public void draw(SpriteBatch spriteBatch, GameTime gameTime)

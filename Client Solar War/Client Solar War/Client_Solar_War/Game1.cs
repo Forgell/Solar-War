@@ -40,8 +40,11 @@ namespace Client_Solar_War
 		Label player_number_label;
 		// To see what player you are when all the players are connecting
 		int player_number;
-
-        Starfield starfield;
+		int screenHeight, screenWidth;
+		SpriteFont sf;
+		Texture2D logo;
+		TitleScreen title;
+		Starfield starfield;
 
 		public Game1()
         {
@@ -69,8 +72,9 @@ namespace Client_Solar_War
 			old = Keyboard.GetState();
 			IsMouseVisible = true;
 			player_number = 0;
-			
-            base.Initialize();
+			screenHeight = GraphicsDevice.Viewport.Height;
+			screenWidth = GraphicsDevice.Viewport.Width;
+			base.Initialize();
         }
 
         /// <summary>
@@ -83,8 +87,11 @@ namespace Client_Solar_War
             spriteBatch = new SpriteBatch(GraphicsDevice);
 			text_box = new TextBox(new Vector2(10, 10), Content.Load<SpriteFont>("font"));
 			player_number_label = new Label("No number assigned", new Vector2(10 , 10) , Color.White ,Content.Load<SpriteFont>("font"));
-            // TODO: use this.Content to load your game content here
-        }
+			sf = this.Content.Load<SpriteFont>("SpriteFont1");
+			logo = this.Content.Load<Texture2D>("logo");
+			title = new TitleScreen(logo, sf, screenWidth, screenHeight, GraphicsDevice);
+			// TODO: use this.Content to load your game content here
+		}
 
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
@@ -121,6 +128,8 @@ namespace Client_Solar_War
 				this.Exit();
 				networking_thread.Abort();
 			}
+			MouseState m = Mouse.GetState();
+			bool state = title.update(m.X, m.Y, m.LeftButton == ButtonState.Pressed, gameTime);
 
 			// Still connecting to ip adress
 
