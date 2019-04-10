@@ -56,26 +56,39 @@ namespace Server_Solar_War
             {
                 asteroids[i].Load(server);
             }
+            for (int i = 0; i < planets.Count; i++)
+            {
+                //planets[i].Load(server);
+            }
         }
         public void Update(GameTime gametime)
         {
             //update everything
+            for (int i = 0; i < asteroids.Count; i++)
+            {
+                asteroids[i].Update(gametime);
+            }
+            for (int i = 0; i < planets.Count; i++)
+            {
+                //planets[i].Update(gametime);
+            }
             //change locations of planets as they rotate
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
             //draw everything
-            //will need to change planet class to be able to draw each planet
-            for(int i = 0; i < planets.Count; i++)
-            {
-                planets[i].Draw(spriteBatch);
-            }
+            
             //draw sun/star
             //draw asteroids
             for(int i = 0; i < asteroids.Count; i++)
             {
                 asteroids[i].Draw(spriteBatch);
+            }
+            //will need to change planet class to be able to draw each planet
+            for (int i = 0; i < planets.Count; i++)
+            {
+                planets[i].Draw(spriteBatch);
             }
         }
     }
