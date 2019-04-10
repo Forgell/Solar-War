@@ -18,7 +18,7 @@ namespace Client_Solar_War
 {
 	enum State
 	{
-		CONNECTING , WAITING_FOR_ALL_PLAYERS , CLOSING , NULL
+		CONNECTING , WAITING_FOR_ALL_PLAYERS , CLOSING , NULL, START
 	}
 
 
@@ -66,7 +66,7 @@ namespace Client_Solar_War
 			//
 			networking_thread = new Thread(network_communication);
             network = new Networking();
-            state = State.CONNECTING;
+            state = State.START;
 			//waiting for all computer to connect
 			// gneric varibles
 			old = Keyboard.GetState();
@@ -85,9 +85,9 @@ namespace Client_Solar_War
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-			text_box = new TextBox(new Vector2(10, 10), Content.Load<SpriteFont>("font"));
-			player_number_label = new Label("No number assigned", new Vector2(10 , 10) , Color.White ,Content.Load<SpriteFont>("font"));
-			sf = this.Content.Load<SpriteFont>("SpriteFont1");
+			sf = this.Content.Load<SpriteFont>("font");
+			text_box = new TextBox(new Vector2(10, 10), sf);
+			player_number_label = new Label("No number assigned", new Vector2(10 , 10) , Color.White , sf);
 			logo = this.Content.Load<Texture2D>("logo");
 			title = new TitleScreen(logo, sf, screenWidth, screenHeight, GraphicsDevice);
 			// TODO: use this.Content to load your game content here
@@ -128,9 +128,12 @@ namespace Client_Solar_War
 				this.Exit();
 				networking_thread.Abort();
 			}
-			MouseState m = Mouse.GetState();
-			bool state = title.update(m.X, m.Y, m.LeftButton == ButtonState.Pressed, gameTime);
-
+			if (state == State.START)
+			{
+				MouseState m = Mouse.GetState();
+				if (title.update(m.X, m.Y, m.LeftButton == ButtonState.Pressed, gameTime))
+					state = State.CONNECTING;
+			}
 			// Still connecting to ip adress
 
 
@@ -186,6 +189,9 @@ namespace Client_Solar_War
 
             switch (state)
 			{
+				case State.START:
+					title.draw(spriteBatch, gameTime);
+					break;
 				case State.CONNECTING:
 					text_box.Draw(spriteBatch);
 					break;

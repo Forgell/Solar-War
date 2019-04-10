@@ -9,11 +9,11 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
-namespace Start
+namespace Client_Solar_War
 {
 	class TitleScreen
 	{
-		Button start, join;
+		TitleButton start, join;
 		Texture2D textBanner;
 		Rectangle rectBanner;
 
@@ -27,7 +27,7 @@ namespace Start
 			Console.WriteLine();
 			Console.WriteLine(rectBanner.Y);
 			Console.WriteLine();
-			start = new Button("Host a Server", new Vector2(x, y), font);
+			start = new TitleButton("Start", new Vector2(x, y), font);
 		}
 
 		public bool update(int x, int y, bool pressed, GameTime gameTime)
@@ -37,13 +37,11 @@ namespace Start
 
 		public void draw(SpriteBatch spriteBatch, GameTime gameTime)
 		{
-			spriteBatch.Begin();
 			spriteBatch.Draw(textBanner, rectBanner, Color.White);
 			start.Draw(spriteBatch);
-			spriteBatch.End();
 		}
 	}
-	class Button
+	class TitleButton
 	{
 		string text;
 		Texture2D image;
@@ -55,7 +53,7 @@ namespace Start
 		Rectangle temp;
 		Rectangle temp2;
 
-		public Button(string text, Vector2 pos, SpriteFont font)
+		public TitleButton(string text, Vector2 pos, SpriteFont font)
 		{
 			Vector2 dems = font.MeasureString(text);
 			this.text = text;
@@ -68,7 +66,7 @@ namespace Start
 			temp2 = new Rectangle();
 		}
 
-		public Button(Texture2D image, Rectangle rect)
+		public TitleButton(Texture2D image, Rectangle rect)
 		{
 			this.image = image;
 			this.rect = rect;
