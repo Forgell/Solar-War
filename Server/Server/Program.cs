@@ -104,7 +104,7 @@ namespace Server
             else
             {
                 //Console.WriteLine("Text is an invalid request");
-                byte[] data = Encoding.ASCII.GetBytes(text);
+                byte[] data = Encoding.ASCII.GetBytes("buffer");
                 current.Send(data);
                 
                 //Console.WriteLine("Warning Sent");
