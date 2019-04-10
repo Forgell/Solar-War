@@ -17,6 +17,8 @@ namespace Server_Solar_War
         List<Planet> planets;
         List<Player> players;
         //contains all planets and players
+        //contains all asteroids
+        List<Asteroid> asteroids;
 
         //used to create planet
         IServiceProvider d;
@@ -25,7 +27,9 @@ namespace Server_Solar_War
         {
             planets = new List<Planet>();
             players = new List<Player>();
-            //later, write number of/each planets and players
+            asteroids = new List<Asteroid>();
+            //later, write number of/each planets and players and asteroids
+            asteroids.Add(new Asteroid(new Vector2(200, 200), 50));
         }
 
         public Planet getPlanet(Rectangle pos) 
@@ -41,7 +45,14 @@ namespace Server_Solar_War
             return new Planet("", new Rectangle(-2, -2, 1, 1), d);
             //how do we prevent this or how do we get in fo that this happened
         }
-        public void update()
+        public void Load(IServiceProvider server)
+        {
+            for (int i = 0; i < asteroids.Count; i++)
+            {
+                asteroids[i].Load(server);
+            }
+        }
+        public void Update(GameTime gametime)
         {
             //update everything
             //change locations of planets as they rotate
@@ -57,6 +68,10 @@ namespace Server_Solar_War
             }
             //draw sun/star
             //draw asteroids
+            for(int i = 0; i < asteroids.Count; i++)
+            {
+                asteroids[i].Draw(spriteBatch);
+            }
         }
     }
 }
