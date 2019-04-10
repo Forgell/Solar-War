@@ -42,8 +42,13 @@ namespace Server_Solar_War
                 }
             }
             //this shouldn't happen:
-            return new Planet("", new Rectangle(-2, -2, 1, 1), d);
+            return new Planet("", new Rectangle(-2, -2, 1, 1));
             //how do we prevent this or how do we get in fo that this happened
+                    //insert file name and read the file
+                //.in order to orbit
+                   //oorigin = sun location
+                   //radius = distance from sun
+
         }
         public void Load(IServiceProvider server)
         {
