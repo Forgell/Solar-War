@@ -41,5 +41,22 @@ namespace Server_Solar_War
             return new Planet("", new Rectangle(-2, -2, 1, 1), d);
             //how do we prevent this or how do we get in fo that this happened
         }
+        public void update()
+        {
+            //update everything
+            //change locations of planets as they rotate
+        }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            //draw everything
+            //will need to change planet class to be able to draw each planet
+            for(int i = 0; i < planets.Count; i++)
+            {
+                planets[i].Draw(spriteBatch);
+            }
+            //draw sun/star
+            //draw asteroids
+        }
     }
 }
