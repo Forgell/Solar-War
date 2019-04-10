@@ -131,7 +131,7 @@ namespace Client_Solar_War
 			if (state == State.START)
 			{
 				MouseState m = Mouse.GetState();
-				if (title.update(m.X, m.Y, m.LeftButton == ButtonState.Pressed, gameTime))
+				if (title.update(m.X, m.Y, m.LeftButton == ButtonState.Pressed, gameTime) || console.IsKeyDown(Keys.Enter))
 					state = State.CONNECTING;
 			}
 			// Still connecting to ip adress
