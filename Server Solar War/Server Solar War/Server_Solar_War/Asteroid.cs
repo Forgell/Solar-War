@@ -16,7 +16,7 @@ namespace Server_Solar_War
     class Asteroid
     {
         Random rand;
-        private Texture2D[] image;
+        private Texture2D image;
         private Texture2D explode;
         private Rectangle rect;
         protected Vector2 origin;
@@ -58,9 +58,10 @@ namespace Server_Solar_War
         public void Load(IServiceProvider server)
         {
             content = new ContentManager(server, "Content");
-            for(int i =0; i<image.Length;i++)
-                image[i] = content.Load<Texture2D>("Asteroid/a1");
-           explode = content.Load<Texture2D>("");
+
+           // for (int i = 0; i < image.Length; i++)
+                image = content.Load<Texture2D>("Asteroid/a1");
+            //explode = content.Load<Texture2D>("");
         }
         private void Orbit()
         {
@@ -82,7 +83,7 @@ namespace Server_Solar_War
         }
         private void explosion()
         {
-            image = explode;
+           // image = explode;
         }
         public void Update(GameTime gameTime)
         {
@@ -98,7 +99,7 @@ namespace Server_Solar_War
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(image[0], rect, Color.White);
+            spriteBatch.Draw(image, rect, Color.White);
         }
 
         
