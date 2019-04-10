@@ -30,7 +30,6 @@ namespace Client_Solar_War
                     int player_number = player_number = server_message_as_string[server_message_as_string.Length - 1] - '0';
                     player_number_label.updateText("You are player: " + player_number);
                     return player_number;
-                    
                 }
 
                 ClientSocket.Send(Encoding.ASCII.GetBytes("buffer"));
@@ -54,23 +53,35 @@ namespace Client_Solar_War
 		/// </summary>
 		public State attemptConnectionToServer(TextBox text_box)
         {
-            string[] parts_of_ip_address = text_box.Text.Split('.');
-            byte[] ip_adress_as_byte_array = new byte[parts_of_ip_address.Length];
-            for (int i = 0; i < parts_of_ip_address.Length; i++)
+            if(text_box.Text.Equals(""))
             {
-                ip_adress_as_byte_array[i] = Byte.Parse(parts_of_ip_address[i]);
+                return State.NULL;
             }
             try
             {
-                ClientSocket.Connect(new IPEndPoint(new IPAddress(ip_adress_as_byte_array), PORT));
-                return State.WAITING_FOR_ALL_PLAYERS;
+                string[] parts_of_ip_address = text_box.Text.Split('.');
+                byte[] ip_adress_as_byte_array = new byte[parts_of_ip_address.Length];
+                for (int i = 0; i < parts_of_ip_address.Length; i++)
+                {
+                    ip_adress_as_byte_array[i] = Byte.Parse(parts_of_ip_address[i]);
+                }
+                try
+                {
+                    ClientSocket.Connect(new IPEndPoint(new IPAddress(ip_adress_as_byte_array), PORT));
+                    return State.WAITING_FOR_ALL_PLAYERS;
 
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+
+                }
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-
             }
+            
 
             return State.NULL;
 
