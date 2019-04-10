@@ -55,6 +55,10 @@ namespace Server_Solar_War
         public void Update(GameTime gametime)
         {
             //update everything
+            for (int i = 0; i < asteroids.Count; i++)
+            {
+                asteroids[i].Update(gametime);
+            }
             //change locations of planets as they rotate
         }
 
