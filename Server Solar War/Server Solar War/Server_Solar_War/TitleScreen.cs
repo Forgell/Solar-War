@@ -14,7 +14,6 @@ namespace Server_Solar_War
     class TitleScreen
     {
         Button start;
-        Button leaderBoard;
         Texture2D textBanner;
         Rectangle rectBanner;
 
@@ -29,7 +28,6 @@ namespace Server_Solar_War
             Console.WriteLine(rectBanner.Y);
             Console.WriteLine();
             start = new Button("Start", new Vector2(x, y), font);
-            leaderBoard = new Button("LeaderBoard", new Vector2(x, y + screenHeight / 15), font);
 
         }
 
@@ -43,7 +41,6 @@ namespace Server_Solar_War
             spriteBatch.Begin();
             spriteBatch.Draw(textBanner, rectBanner, Color.White);
             start.Draw(spriteBatch);
-            leaderBoard.Draw(spriteBatch);
             spriteBatch.End();
         }
     }
