@@ -17,7 +17,7 @@ namespace Server_Solar_War
     {
         Random rand;
         private Texture2D[] image;
-        private Texture2D explode;
+        private Texture2D[] explode;
         private Rectangle rect;
         protected Vector2 origin;
         private int radius,time,timer, speed;
@@ -61,7 +61,7 @@ namespace Server_Solar_War
             content = new ContentManager(server, "Content");
             for(int i =0; i<image.Length;i++)
                 image[i] = content.Load<Texture2D>("Asteroid/a1");
-           explode = content.Load<Texture2D>("");
+           //explode = content.Load<Texture2D>("");
         }
         private void Orbit()
         {

@@ -44,7 +44,7 @@ namespace Server_Solar_War
                 }
             }
             //this shouldn't happen:
-            return new Planet("", new Rectangle(-2, -2, 1, 1));
+            return new Planet("", new Rectangle(-2, -2, 1, 1) , Color.White);
             //how do we prevent this or how do we get in fo that this happened
                     //insert file name and read the file
                 //.in order to orbit
