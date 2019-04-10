@@ -21,6 +21,7 @@ namespace Server_Solar_War
         List<Asteroid> asteroids;
 
         //used to create planet
+        IServiceProvider d;
 
         public Game()
         {
