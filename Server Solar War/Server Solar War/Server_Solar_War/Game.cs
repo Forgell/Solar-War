@@ -30,6 +30,8 @@ namespace Server_Solar_War
             asteroids = new List<Asteroid>();
             //later, write number of/each planets and players and asteroids
             asteroids.Add(new Asteroid(new Vector2(200, 200), 50));
+
+            asteroids.Add(new Asteroid(new Vector2(200, 200), 100));
         }
 
         public Planet getPlanet(Rectangle pos) 

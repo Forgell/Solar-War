@@ -38,6 +38,8 @@ namespace Server_Solar_War
             // TODO: Add your initialization logic here
             game = new Game();
             //asteroid = new Asteroid(new Vector2(200, 200), 50);
+            IsMouseVisible = true;
+
             base.Initialize();
         }
 

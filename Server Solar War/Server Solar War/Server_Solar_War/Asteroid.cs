@@ -20,7 +20,7 @@ namespace Server_Solar_War
         private Rectangle rect;
         protected Vector2 origin;
         private int radius,time,timer, speed;
-        private double angle;
+        private double angle, angular_speed;
 
         public ContentManager Content
         {
@@ -44,6 +44,7 @@ namespace Server_Solar_War
             timer = 0;
             double distance = angle * Math.Pow(radius, 2);
             time = (int)(distance / speed);
+            angular_speed = .55;
         }
         private void position()
         {
@@ -69,27 +70,29 @@ namespace Server_Solar_War
             rect.Y = (int)y;
 
         }
+
+
         public Boolean hit(Rectangle pos)
         {
             if (rect.Intersects(pos))
             {
                 explosion();
-                return true;
             }
-            return false;
+            return rect.Intersects(pos);
         }
         private void explosion()
         {
             image = explode;
         }
+
         public void Update(GameTime gameTime)
         {
             timer++;
             if (timer % time == 0)
             {
-                angle += .55;
+                angle += angular_speed;
                 Orbit();
-                Console.WriteLine("Aster time: " + timer);
+                //Console.WriteLine("Aster time: " + timer);
             }
 
         }
