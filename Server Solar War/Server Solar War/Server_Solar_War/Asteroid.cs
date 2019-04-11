@@ -92,7 +92,7 @@ namespace Server_Solar_War
             {
                 angle += .55;
                 Orbit();
-                Console.WriteLine("Aster time: " + timer);
+                //Console.WriteLine("Aster time: " + timer);
             }
 
 
