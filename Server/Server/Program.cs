@@ -58,6 +58,7 @@ namespace Server
                 socket.Close();
             }
             serverSocket.Close();
+			game_loop_thread.Abort();
         }
 
         private static void AcceptCallback(IAsyncResult AR)
@@ -82,6 +83,14 @@ namespace Server
 				clientSockets[clientSockets.Count - 1].Send(Encoding.ASCII.GetBytes("You are player: " + (++TOTAL_PLAYER_NUMBER)));
 				//player_state[clientSockets.Count - 1] = PlayerState.ASSIGNING_PLAYER_NUMBER;
 				serverSocket.BeginAccept(AcceptCallback, null);
+				if (clientSockets.Count == 4)
+				{
+					for(int i = 0; i < 4; i++)
+					{
+						clientSockets[i].Send(Encoding.ASCII.GetBytes("Game Start!"));
+					}
+					game_loop_thread.Start();
+				}
 			}
 			else
 			{

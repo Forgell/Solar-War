@@ -23,7 +23,8 @@ namespace Client_Solar_War
 			this.textBanner = textBanner;
 			int x = screenWidth / 4;
 			int y = screenHeight / 2;
-			this.rectBanner = new Rectangle((screenWidth * 4) / 5 - ((screenWidth * 5) / 8), screenHeight / 4 - (screenHeight / 8), (screenWidth * 2) / 3, screenHeight / 4);
+			this.rectBanner = new Rectangle((int)(screenWidth * 2.80) / 4 - ((screenWidth * 5) / 8), screenHeight / 4 - (screenHeight / 8), (screenWidth * 6) / 7, screenHeight / 4);
+			
 			Console.WriteLine();
 			Console.WriteLine(rectBanner.Y);
 			Console.WriteLine();

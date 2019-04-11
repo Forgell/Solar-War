@@ -18,7 +18,7 @@ namespace Client_Solar_War
 {
 	enum State
 	{
-		CONNECTING , WAITING_FOR_ALL_PLAYERS , CLOSING , NULL, START
+		CONNECTING , WAITING_FOR_ALL_PLAYERS , CLOSING , NULL, START , PLAYING
 	}
 
 
@@ -154,6 +154,10 @@ namespace Client_Solar_War
                     //multi threading should take care of the rest
                     
                     break;
+				case State.PLAYING:
+					// playing the game all of the players are connected
+					update_game();
+					break;
 				case State.CLOSING:
 					// do nothing as the program is closing
 					return;
@@ -168,7 +172,12 @@ namespace Client_Solar_War
         }
 
 		
-
+		public void update_game()
+		{
+			// get the players game input
+			// update the game screen
+			// send the server  
+		}
 		
 
 		
