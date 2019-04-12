@@ -47,7 +47,7 @@ namespace Server_Solar_War
                 }
             }
             //this shouldn't happen:
-            return new Planet("Earth",new Vector2(200,10),20);
+            return new Planet("Earth",new Vector2(200,10),20, 10);
             //how do we prevent this or how do we get in fo that this happened
                     //insert file name and read the file
                 //.in order to orbit
