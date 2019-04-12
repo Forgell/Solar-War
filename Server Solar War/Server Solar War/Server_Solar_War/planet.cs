@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
-
+using System.IO;
 
 namespace Server_Solar_War
 {
@@ -23,7 +23,8 @@ namespace Server_Solar_War
             get { return pos; }
         }
         private Rectangle pos;
-        private int speed;
+        private String fileName;
+      private int speed;
         private int owner;
         private int radius;
         private double angle; 
@@ -69,11 +70,17 @@ namespace Server_Solar_War
             //i want too implement a class to this bc makes it efficient to proccess invasion and capture 
         }
        
-        public  void load(IServiceProvider serve , string fileName)
+        public  void Load(IServiceProvider serve )
         {
             //read file and load 
             content = new ContentManager(serve, "Content");
             //tex = content.Load<Texture2D>(name);
+            string[] file = Directory.GetFiles("Content/"+fileName);
+            tex = new Texture2D[file.Length];
+            for (int i =0; i<fileName.Length; i++)
+            {
+                tex[i] = content.Load<Texture2D>(fileName + "/"+file[i]);
+            }
         }
 
 
@@ -141,14 +148,13 @@ namespace Server_Solar_War
             {
                 angle += .55;
                 Orbit();
-                Console.WriteLine("Aster time: " + timer);
             }
             //somecondition or collision is true
             attack();
         }
         public void Draw(SpriteBatch spritebatch)
         {
-          //  spritebatch.Draw(tex, pos, Incontrol);
+            spritebatch.Draw(tex[0], new Rectangle(200,200,50,50), Color.White);
         }
 
 

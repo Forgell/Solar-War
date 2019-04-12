@@ -42,7 +42,7 @@ namespace Server_Solar_War
                 }
             }
             //this shouldn't happen:
-            return new Planet("", new Vector2(250,200),100);
+            return new Planet("Earth",new Vector2(200,10),20);
             //how do we prevent this or how do we get in fo that this happened
                     //insert file name and read the file
                 //.in order to orbit
@@ -58,7 +58,7 @@ namespace Server_Solar_War
             }
             for (int i = 0; i < planets.Count; i++)
             {
-                //planets[i].Load(server);
+                planets[i].Load(server);
             }
         }
         public void Update(GameTime gametime)
@@ -70,7 +70,7 @@ namespace Server_Solar_War
             }
             for (int i = 0; i < planets.Count; i++)
             {
-                //planets[i].Update(gametime);
+                planets[i].Update(gametime);
             }
             //change locations of planets as they rotate
         }
