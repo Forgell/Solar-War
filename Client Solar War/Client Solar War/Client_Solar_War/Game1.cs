@@ -18,7 +18,7 @@ namespace Client_Solar_War
 {
 	enum State
 	{
-		CONNECTING , WAITING_FOR_ALL_PLAYERS , CLOSING , NULL, START
+		CONNECTING , WAITING_FOR_ALL_PLAYERS , CLOSING , NULL, START , PLAYING
 	}
 
 
@@ -105,11 +105,27 @@ namespace Client_Solar_War
 
 		public void network_communication()
 		{
-			int temp = network.recieveServerMessage(player_number_label);
-			if (temp != 0)
+			if (player_number == 0)
 			{
-				player_number = temp;
+				int temp = network.recieveServerMessage(player_number_label);
+				if (temp != 0)
+				{
+					player_number = temp;
+				}
 			}
+			else
+			{
+				string message = network.getMessage();
+				if (message.Equals(""))
+				{
+					return;
+				}
+				if (message.Equals("Game Start!")) {
+					state = State.PLAYING;
+				}
+
+			}
+			
 		}
 
         /// <summary>
@@ -154,6 +170,10 @@ namespace Client_Solar_War
                     //multi threading should take care of the rest
                     
                     break;
+				case State.PLAYING:
+					// playing the game all of the players are connected
+					update_game(console);
+					break;
 				case State.CLOSING:
 					// do nothing as the program is closing
 					return;
@@ -168,7 +188,15 @@ namespace Client_Solar_War
         }
 
 		
+		public void update_game(KeyboardState console)
+		{
+			// get the players game input
+			Keys input = KeyboardHelper.getKeyboardGameInput(console , old);
+			MouseState mouse = Mouse.GetState();
+			// update the game screen
 
+			// send the server  
+		}
 		
 
 		

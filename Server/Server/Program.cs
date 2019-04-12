@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.Net;
+using System.Threading;
 
 namespace Server
 {
@@ -18,7 +19,9 @@ namespace Server
         private static readonly byte[] buffer = new byte[BUFFER_SIZE];
 		// game related varibles
 		private static int TOTAL_PLAYER_NUMBER = 0;
-		private static PlayerState[] player_state = new PlayerState[4];
+		//private static PlayerState[] player_state = new PlayerState[4];
+		// need to create a game loop so I will use threadgin as a filler? good idea
+		private static Thread game_loop_thread;
 
         static void Main(string[] args)
         {
@@ -36,12 +39,13 @@ namespace Server
 			IPAddress[] ipv4Addresses = Array.FindAll(Dns.GetHostEntry(string.Empty).AddressList,a => a.AddressFamily == AddressFamily.InterNetwork);
 			Console.WriteLine(ipv4Addresses[ipv4Addresses.Length - 1]);
 			// init
-			for (int i = 0; i < player_state.Length; i++)
-			{
-				player_state[i] = PlayerState.NOT_CONNECTED;
-			}
+			//for (int i = 0; i < player_state.Length; i++)
+			//{
+			//	player_state[i] = PlayerState.NOT_CONNECTED;
+			//}
             serverSocket.Listen(0);
             serverSocket.BeginAccept( AcceptCallback, null);
+			game_loop_thread = new Thread(new ThreadStart(game_loop));
             Console.WriteLine("Server setup complete");
         }
 
@@ -54,6 +58,7 @@ namespace Server
                 socket.Close();
             }
             serverSocket.Close();
+			game_loop_thread.Abort();
         }
 
         private static void AcceptCallback(IAsyncResult AR)
@@ -76,8 +81,16 @@ namespace Server
 				socket.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, socket);
 				Console.WriteLine("Client connected, waiting for request...");
 				clientSockets[clientSockets.Count - 1].Send(Encoding.ASCII.GetBytes("You are player: " + (++TOTAL_PLAYER_NUMBER)));
-				player_state[clientSockets.Count - 1] = PlayerState.ASSIGNING_PLAYER_NUMBER;
+				//player_state[clientSockets.Count - 1] = PlayerState.ASSIGNING_PLAYER_NUMBER;
 				serverSocket.BeginAccept(AcceptCallback, null);
+				if (clientSockets.Count == 4)
+				{
+					for(int i = 0; i < 4; i++)
+					{
+						clientSockets[i].Send(Encoding.ASCII.GetBytes("Game Start!"));
+					}
+					game_loop_thread.Start();
+				}
 			}
 			else
 			{
@@ -137,5 +150,10 @@ namespace Server
 			}
             current.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, current);
         }
+
+		public static void game_loop()
+		{
+
+		}
     }
 }
