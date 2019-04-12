@@ -24,7 +24,7 @@ namespace Server_Solar_War
         }
         private Rectangle pos;
         private String fileName;
-      private int speed;
+        private double speed;
         private int owner;
         private int radius;
         private double angle; 
@@ -38,6 +38,7 @@ namespace Server_Solar_War
             get { return content; }
         }
         ContentManager content;
+        private double angular_speed;
         
 
         //can someone look at this class bc i need to kknow what to implement for some method
@@ -46,7 +47,7 @@ namespace Server_Solar_War
             r = new Random();
             //invade_Capacity = rand 
         }
-        public Planet(string fileName, Vector2 origin,int radius)
+        public Planet(string fileName, Vector2 origin,int radius , double angular_speed) // input degress
         {
 			owner = 0;
             this.origin = origin;
@@ -58,7 +59,7 @@ namespace Server_Solar_War
             timer = 0;
             double distance = angle * Math.Pow(radius, 2);
             time = (int)(distance / speed);
-
+            this.angular_speed = MathHelper.ToRadians((float)angular_speed);
 
         }
 
@@ -146,7 +147,7 @@ namespace Server_Solar_War
             timer++;
             if (timer % time == 0)
             {
-                angle += .55;
+                angle += angular_speed;
                 Orbit();
             }
             //somecondition or collision is true
