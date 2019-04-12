@@ -19,6 +19,8 @@ namespace Server_Solar_War
         //contains all planets and players
         //contains all asteroids
         List<Asteroid> asteroids;
+        //list of SolarOrbits 
+        //List<SolarOrbit> orbits;
 
         //used to create planet
         IServiceProvider d;
@@ -28,8 +30,11 @@ namespace Server_Solar_War
             planets = new List<Planet>();
             players = new List<Player>();
             asteroids = new List<Asteroid>();
+            //orbits = new List<SolarOrbit>();
             //later, write number of/each planets and players and asteroids
             asteroids.Add(new Asteroid(new Vector2(200, 200), 50));
+            //fill orbits with planets
+
         }
 
         public Planet getPlanet(Rectangle pos) 
