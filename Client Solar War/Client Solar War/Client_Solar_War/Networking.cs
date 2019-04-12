@@ -11,7 +11,7 @@ namespace Client_Solar_War
 {
     class Networking
     {
-        public static readonly Socket ClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        public static Socket ClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         public static readonly int PORT = 100;
 
 
@@ -69,21 +69,25 @@ namespace Client_Solar_War
                 {
 					IAsyncResult result = ClientSocket.BeginConnect(new IPAddress(ip_adress_as_byte_array), PORT, null, null);
 
-					bool success = result.AsyncWaitHandle.WaitOne(2500, true);
+					bool success = result.AsyncWaitHandle.WaitOne(2000, true);
 
 					if (ClientSocket.Connected)
 					{
-						ClientSocket.EndConnect(result);
+						//ClientSocket.EndConnect(result);
+						//ClientSocket.Connect(new IPEndPoint(new IPAddress(ip_adress_as_byte_array), PORT));
+						return State.WAITING_FOR_ALL_PLAYERS;
 					}
 					else
 					{
 						// NOTE, MUST CLOSE THE SOCKET
 
 						ClientSocket.Close();
+						ClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 						throw new ApplicationException("Failed to connect server.");
+						return State.CONNECTING;
 					}
-					ClientSocket.Connect(new IPEndPoint(new IPAddress(ip_adress_as_byte_array), PORT));
-                    return State.WAITING_FOR_ALL_PLAYERS;
+					
+
 
                 }
                 catch (Exception e)
