@@ -18,7 +18,9 @@ namespace Server_Solar_War
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        Game game;
 
+        //Asteroid asteroid;
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -34,6 +36,9 @@ namespace Server_Solar_War
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            game = new Game();
+            //asteroid = new Asteroid(new Vector2(200, 200), 50);
+            IsMouseVisible = true;
 
             base.Initialize();
         }
@@ -46,7 +51,7 @@ namespace Server_Solar_War
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            game.Load(Services); 
             // TODO: use this.Content to load your game content here
         }
 
@@ -71,6 +76,8 @@ namespace Server_Solar_War
                 this.Exit();
 
             // TODO: Add your update logic here
+            //asteroid.Update(gameTime);
+            game.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -84,7 +91,10 @@ namespace Server_Solar_War
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-
+            spriteBatch.Begin();
+            //asteroid.Draw(spriteBatch);
+            game.Draw(spriteBatch);
+            spriteBatch.End();
             base.Draw(gameTime);
         }
     }
