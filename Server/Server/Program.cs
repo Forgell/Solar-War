@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.Net;
+using System.Threading;
 
 namespace Server
 {
@@ -19,7 +20,10 @@ namespace Server
 		// game related varibles
 		private static int TOTAL_PLAYER_NUMBER = 0;
 		private static PlayerState[] player_state = new PlayerState[4];
-
+        // Threading for yolos 
+        private static Thread game_thread;
+        private List<string> recieved_message;
+        private List<string> sending_message;
         static void Main(string[] args)
         {
             Console.Title = "Server";
@@ -43,8 +47,14 @@ namespace Server
             serverSocket.Listen(0);
             serverSocket.BeginAccept( AcceptCallback, null);
             Console.WriteLine("Server setup complete");
+            game_thread = new Thread(game_loop);
         }
 
+        public static void game_loop()
+        {
+            // send any new message update the messages
+            
+        }
 
         public static void CloseAllSockets()
         {
@@ -54,6 +64,7 @@ namespace Server
                 socket.Close();
             }
             serverSocket.Close();
+            game_thread.Abort();
         }
 
         private static void AcceptCallback(IAsyncResult AR)
@@ -78,6 +89,14 @@ namespace Server
 				clientSockets[clientSockets.Count - 1].Send(Encoding.ASCII.GetBytes("You are player: " + (++TOTAL_PLAYER_NUMBER)));
 				player_state[clientSockets.Count - 1] = PlayerState.ASSIGNING_PLAYER_NUMBER;
 				serverSocket.BeginAccept(AcceptCallback, null);
+                if (clientSockets.Count == 4)
+                {
+                    for(int i = 0; i < 4; i++)
+                    {
+                        player_state[i] = PlayerState.PLAYING;
+                    }
+                    game_thread.Start();
+                }
 			}
 			else
 			{
@@ -89,7 +108,6 @@ namespace Server
         {
             Socket current = (Socket)AR.AsyncState;
             int received;
-
             try
             {
                 received = current.EndReceive(AR);
@@ -100,6 +118,7 @@ namespace Server
                 // Don't shutdown because the socket may be disposed and its disconnected anyway.
                 current.Close();
                 clientSockets.Remove(current);
+                player_state[clientSockets.IndexOf(current)] = PlayerState.NOT_CONNECTED;
 				TOTAL_PLAYER_NUMBER--;
                 return;
             }
@@ -120,6 +139,8 @@ namespace Server
                 current.Close();
                 clientSockets.Remove(current);
                 Console.WriteLine("Client disconnected");
+                
+                player_state[clientSockets.IndexOf(current)] = PlayerState.NOT_CONNECTED;
 				TOTAL_PLAYER_NUMBER--;
                 return;
             }
