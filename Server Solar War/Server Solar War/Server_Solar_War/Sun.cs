@@ -25,7 +25,25 @@ namespace Server_Solar_War
         {
             rect = new Rectangle(200, 0, 100, 100);
             radiusH = 20;
+
             //change the radius 
+        }
+
+        public ContentManager Content
+        {
+
+            get { return content; }
+        }
+        ContentManager content;
+
+
+    public void Load(IServiceProvider server)
+        {
+            content = new ContentManager(server, "Content");
+            img = new Texture2D[2];
+            img[0] = content.Load<Texture2D>("Sun/sun");
+            img[1] = content.Load<Texture2D>("Sun/sun2");
+                    
         }
     }
 }
