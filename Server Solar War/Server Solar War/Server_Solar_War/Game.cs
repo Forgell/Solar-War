@@ -20,20 +20,23 @@ namespace Server_Solar_War
         //contains all asteroids
         List<Asteroid> asteroids;
         //list of SolarOrbits 
-        //List<SolarOrbit> orbits;
 
         //used to create planet
         IServiceProvider d;
-
-        public Game()
+		
+		
+        public Game(int screenWidth , int screenHeight , ContentManager Content)
         {
             planets = new List<Planet>();
             players = new List<Player>();
             asteroids = new List<Asteroid>();
-            //orbits = new List<SolarOrbit>();
-            //later, write number of/each planets and players and asteroids
-            asteroids.Add(new Asteroid(new Vector2(200, 200), 50));
-            //fill orbits with planets
+			//orbits = new List<SolarOrbit>();
+			//later, write number of/each planets and players and asteroids
+			//asteroids.Add(new Asteroid(new Vector2(200, 200), 50));
+			//fill orbits with planets
+			Console.WriteLine(Content.RootDirectory);
+			int radius = 50;
+			planets.Add(new Planet("planet-1-1", new Vector2(screenWidth / 2 , screenHeight / 2) , radius , 5, Content) );
 
         }
 
@@ -46,13 +49,14 @@ namespace Server_Solar_War
                     return planets.ElementAt<Planet>(i);
                 }
             }
-            //this shouldn't happen:
-            return new Planet("Earth",new Vector2(200,10),20);
-            //how do we prevent this or how do we get in fo that this happened
-                    //insert file name and read the file
-                //.in order to orbit
-                   //oorigin = sun location
-                   //radius = distance from sun
+			//this shouldn't happen:
+			//return new Planet("Earth",new Rectangle(new Vector2(200,10) , 1,1),20);
+			//how do we prevent this or how do we get in fo that this happened
+			//insert file name and read the file
+			//.in order to orbit
+			//oorigin = sun location
+			//radius = distance from sun
+			return null;
 
         }
         public void Load(IServiceProvider server)

@@ -42,17 +42,25 @@ namespace Server_Solar_War
         
 
         //can someone look at this class bc i need to kknow what to implement for some method
-        public Planet()
+        /*public Planet()
         {
             r = new Random();
             //invade_Capacity = rand 
         }
-        public Planet(string fileName, Vector2 origin,int radius , double angular_speed) // input degress
+		*/
+        public Planet(string fileName, Vector2 origin,int radius , double angular_speed , ContentManager Contents) // input degress
         {
 			owner = 0;
             this.origin = origin;
             this.radius = radius;
-            pos = new Rectangle((int)origin.X + radius, (int)origin.Y, tex[0].Width, tex[0].Height);
+			tex = new Texture2D[1];
+			Texture2D tem = Content.Load<Texture2D>(fileName);
+			tex[0] = tem;
+			if (tex != null)
+			{
+				pos = new Rectangle((int)origin.X + radius, (int)origin.Y, tex[0].Width, tex[0].Height);
+			}
+            
             //how to set the size depending on the planet
             angle = Math.PI / 180.0 * 5.0;
             speed = -1; //how to determine, the speed
@@ -63,6 +71,7 @@ namespace Server_Solar_War
 
         }
 
+		/*
         public Planet(string fileName,Rectangle position, Color faction)
         {
             //this.image = image;
@@ -70,7 +79,7 @@ namespace Server_Solar_War
 			owner = 0;
             //i want too implement a class to this bc makes it efficient to proccess invasion and capture 
         }
-       
+        */
         public  void Load(IServiceProvider serve )
         {
             //read file and load 
@@ -82,7 +91,8 @@ namespace Server_Solar_War
             {
                 tex[i] = content.Load<Texture2D>(fileName + "/"+file[i]);
             }
-        }
+			pos = new Rectangle((int)origin.X + radius, (int)origin.Y, tex[0].Width, tex[0].Height);
+		}
 
 
 
@@ -153,7 +163,7 @@ namespace Server_Solar_War
                 Orbit();
             }
             //somecondition or collision is true
-            attack();
+            //attack();
         }
         public void Draw(SpriteBatch spritebatch)
         {

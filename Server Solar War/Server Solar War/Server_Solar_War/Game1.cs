@@ -25,6 +25,8 @@ namespace Server_Solar_War
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+			//Console.WriteLine(Content.ServiceProvider.);
+			
         }
 
         /// <summary>
@@ -36,7 +38,7 @@ namespace Server_Solar_War
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            game = new Game();
+            game = new Game(graphics.PreferredBackBufferWidth , graphics.PreferredBackBufferHeight , Content);
             //asteroid = new Asteroid(new Vector2(200, 200), 50);
             IsMouseVisible = true;
 
@@ -51,9 +53,10 @@ namespace Server_Solar_War
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            game.Load(Services); 
-            // TODO: use this.Content to load your game content here
-        }
+			//game.Load(Services); 
+			Content.Load<Texture2D>("planet-1-1");
+			// TODO: use this.Content to load your game content here
+		}
 
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload

@@ -27,12 +27,12 @@ namespace Server_Solar_War
             double angle_between = 360.0 / number_of_planets;
             double currnet_angle = 0.0;
             int translateX = 0, translateY = 0;
-            for(int i = 0; i < number_of_planets; i++)
+            /*for(int i = 0; i < number_of_planets; i++)
             {
                 
                 planets.Add(new Planet( "temp_image",new Vector2((float)(radius * Math.Cos(MathHelper.ToRadians((float)currnet_angle))) + translateX , (float)(radius * Math.Sin(MathHelper.ToRadians((float)currnet_angle))) + translateY) , radius , angular_speed ));
                 currnet_angle += angle_between;
-            }
+            }*/ //fix this later
         }
 
         public void Update(GameTime gameTime)
