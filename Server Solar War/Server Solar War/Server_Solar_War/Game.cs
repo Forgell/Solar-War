@@ -47,6 +47,10 @@ namespace Server_Solar_War
 			planets[2].setAngle(180);
 			planets.Add(new Planet("planet-4", new Vector2(screenWidth / 2, screenHeight / 2), radius, speed, 2, Content, 2));
 			planets[3].setAngle(270);
+
+            //asteroid 
+            asteroids.Add(new Asteroid(new Vector2(100, 600), 50));
+            //sun
             sun = new Sun(screenWidth, screenHeight);
 		}
 
@@ -73,7 +77,7 @@ namespace Server_Solar_War
         {
             for (int i = 0; i < asteroids.Count; i++)
             {
-                asteroids[i].Load(server);
+               // asteroids[i].Load(server);
             }
             for (int i = 0; i < planets.Count; i++)
             {
