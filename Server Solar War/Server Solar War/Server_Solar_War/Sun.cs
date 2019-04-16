@@ -21,9 +21,9 @@ namespace Server_Solar_War
         private int radiusH;
         private Boolean change;
 
-        public Sun()
+        public Sun(int screenWidth,int ScreeHeight)
         {
-            rect = new Rectangle(350, 200, 100, 100);
+            rect = new Rectangle(screenWidth/2,ScreeHeight/2, 100, 100);
             radiusH = 20;
             change = true;
             //change the radius 
@@ -37,13 +37,13 @@ namespace Server_Solar_War
         ContentManager content;
 
 
-    public void Load(IServiceProvider server)
+        public void Load(IServiceProvider server)
         {
             content = new ContentManager(server, "Content");
             img = new Texture2D[2];
             img[0] = content.Load<Texture2D>("Sun/sun");
             img[1] = content.Load<Texture2D>("Sun/sun2");
-                    
+
         }
 
         private void animaton()
@@ -57,7 +57,7 @@ namespace Server_Solar_War
             }
             else
             {
-                change = true; 
+                change = true;
                 display = img[1];
             }
         }
@@ -68,10 +68,10 @@ namespace Server_Solar_War
 
         }
 
-        public void Draw(SpriteBatch sb )
+        public void Draw(SpriteBatch sb)
         {
             sb.Draw(display, rect, Color.White);
         }
     }
-    
+
 }

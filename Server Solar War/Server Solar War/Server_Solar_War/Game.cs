@@ -23,8 +23,10 @@ namespace Server_Solar_War
 
         //used to create planet
         IServiceProvider d;
-		
-		
+        //sun  object
+        Sun sun;
+
+
         public Game(int screenWidth , int screenHeight , ContentManager Content)
         {
             planets = new List<Planet>();
@@ -45,7 +47,7 @@ namespace Server_Solar_War
 			planets[2].setAngle(180);
 			planets.Add(new Planet("planet-4", new Vector2(screenWidth / 2, screenHeight / 2), radius, speed, 2, Content, 2));
 			planets[3].setAngle(270);
-			//Console.WriteLine(planets[0].Angle + " " + planets[1].Angle);
+            sun = new Sun(screenWidth, screenHeight);
 		}
 
         public Planet getPlanet(Rectangle pos) 
@@ -77,6 +79,7 @@ namespace Server_Solar_War
             {
                 planets[i].Load(server);
             }
+            sun.Load(server);
         }
         public void Update(GameTime gametime)
         {
@@ -90,15 +93,17 @@ namespace Server_Solar_War
                 planets[i].Update(gametime);
 				//Console.Write(planets[i].Angle + " ");
             }
-			//Console.WriteLine();
+            //Console.WriteLine();
             //change locations of planets as they rotate
+            sun.Update(gametime);
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
             //draw everything
-            
+
             //draw sun/star
+            sun.Draw(spriteBatch);
             //draw asteroids
             for(int i = 0; i < asteroids.Count; i++)
             {
