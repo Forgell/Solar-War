@@ -37,16 +37,32 @@ namespace Server_Solar_War
 			Console.WriteLine(Content.RootDirectory);
 			int radius = 200;
 			double speed = 1.0 /5.0;
-			planets.Add(new Planet("planet-2", new Vector2(screenWidth / 2 , screenHeight / 2) , radius , speed, 2, Content, 3));
+            int numberOfRows = 4;
+            int planet;
+            int team;
+            //for(int j = 0; j < numberOfRows; j++)
+            //{
+            //    for (int i = 0; i < ((radius - 100) / 25); i++) //number of planets per row
+            //    {
+            //        planet = 2;
+            //        team = 3;
+            //        planets.Add(new Planet("planet-" + planet, new Vector2(screenWidth / 2, screenHeight / 2), radius, speed, 2, Content, planet + 1));
+            //        planets[i].setAngle(i * 90);
+            //        if(planet = )
+            //    }
+            //}
+            
+            //first orbit
+			planets.Add(new Planet("planet-1", new Vector2(screenWidth / 2 , screenHeight / 2) , radius , speed, 2, Content, 0));
 			planets[0].setAngle(0);
-			planets.Add(new Planet("planet-1", new Vector2(screenWidth / 2, screenHeight / 2), radius, speed, 2, Content, 0));
+			planets.Add(new Planet("planet-2", new Vector2(screenWidth / 2, screenHeight / 2), radius, speed, 2, Content, 1));
 			planets[1].setAngle(90);
-			planets.Add(new Planet("planet-3", new Vector2(screenWidth / 2, screenHeight / 2), radius, speed, 2, Content, 1));
+			planets.Add(new Planet("planet-3", new Vector2(screenWidth / 2, screenHeight / 2), radius, speed, 2, Content, 2));
 			planets[2].setAngle(180);
-			planets.Add(new Planet("planet-4", new Vector2(screenWidth / 2, screenHeight / 2), radius, speed, 2, Content, 2));
+			planets.Add(new Planet("planet-4", new Vector2(screenWidth / 2, screenHeight / 2), radius, speed, 2, Content, 3));
 			planets[3].setAngle(270);
-			//Console.WriteLine(planets[0].Angle + " " + planets[1].Angle);
-		}
+            //Console.WriteLine(planets[0].Angle + " " + planets[1].Angle);
+        }
 
         public Planet getPlanet(Rectangle pos) 
         {

@@ -60,7 +60,7 @@ namespace Server_Solar_War
 		//There is also a ship class, but this is the number of ships at this planet.
 		private int[] ships;
         private Vector2[] shipPositions;
-        private int color; //team that the planet is for {0 = orange, 1 = green, 2 = purple, 3 = blue, 4 = neutral}
+        private int color; //team that the planet is for {0 = orange, 1 = purple, 2 = blue, 3 = green, 4 = neutral}
         private int incrementShipTimer;
         private int timer;
 		private String fileName;
@@ -95,9 +95,9 @@ namespace Server_Solar_War
 			this.scaler = scaler;
             //temp_rects = new List<Rectangle>();
             //temp_rects.Add(new Rectangle((int)origin.X , (int)origin.Y , 1 , 1));
-            ships = new int[4]; //{orange, green, purple, blue}
+            ships = new int[4]; //{0 = orange, 1 = purple, 2 = blue, 3 = green}
             shipPositions = new Vector2[4];
-            color = team; //{0 = orange, 1 = green, 2 = purple, 3 = blue, 4 = neutral}
+            color = team; //{0 = orange, 1 = purple, 2 = blue, 3 = green, 4 = neutral}
 
         }
 
@@ -223,7 +223,7 @@ namespace Server_Solar_War
                 incrementShipTimer = 0;
             }
         }
-        //color = (0 = orange, 1 = green, 2 = purple, 3 = blue, 4 = neutral)
+        //color = (0 = orange, 1 = purple, 2 = blue, 3 = green, 4 = neutral)
         private void incrementShips()
         {
             if (color == 4)
@@ -252,25 +252,20 @@ namespace Server_Solar_War
             if(ships[0] != 0)
                 DrawOrangeShips(spritebatch);
             if (ships[1] != 0)
-                DrawGreenShips(spritebatch);
-            if (ships[2] != 0)
                 DrawPurpleShips(spritebatch);
-            if (ships[3] != 0)
+            if (ships[2] != 0)
                 DrawBlueShips(spritebatch);
+            if (ships[3] != 0)
+                DrawGreenShips(spritebatch);
+
         }
-        //ships = {orange, green, purple, blue}
+        //ships = {0 = orange, 1 = purple, 2 = blue, 3 = green}
         //draw the int number of ships at the planet
         private void DrawOrangeShips(SpriteBatch spritebatch)
         {
             //display to the left of the planet
             shipPositions[0] = new Vector2(pos.X - 25, pos.Y);
             spritebatch.DrawString(font, "" + ships[0], shipPositions[0], Color.Orange);
-        }
-        private void DrawGreenShips(SpriteBatch spritebatch)
-        {
-            //display above the planet
-            shipPositions[1] = new Vector2(pos.X + 10, pos.Y - 22);
-            spritebatch.DrawString(font, "" + ships[1], shipPositions[1], Color.Green);
         }
         private void DrawPurpleShips(SpriteBatch spritebatch)
         {
@@ -283,6 +278,12 @@ namespace Server_Solar_War
             //display below the planet
             shipPositions[3] = new Vector2(pos.X + 10, pos.Y + 25);
             spritebatch.DrawString(font, "" + ships[3], shipPositions[3], Color.Blue);
+        }
+        private void DrawGreenShips(SpriteBatch spritebatch)
+        {
+            //display above the planet
+            shipPositions[1] = new Vector2(pos.X + 10, pos.Y - 22);
+            spritebatch.DrawString(font, "" + ships[1], shipPositions[1], Color.Green);
         }
 
     }
