@@ -183,6 +183,12 @@ namespace Server_Solar_War
 			ships = newShips;
 		}
 
+        public bool checkRadius()//check radius to be able to move troops
+        {
+            //will use x and y directions then check triangle a squared plus b squared = c squared
+            return false;
+        }
+
         public void Update(GameTime gameTime)
         {
             timer++;
