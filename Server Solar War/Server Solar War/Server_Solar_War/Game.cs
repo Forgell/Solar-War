@@ -19,7 +19,7 @@ namespace Server_Solar_War
         //contains all planets and players
         //contains all asteroids
         List<Asteroid> asteroids;
-
+        Sun sun;
         //used to create planet
         IServiceProvider d;
 
@@ -30,6 +30,7 @@ namespace Server_Solar_War
             asteroids = new List<Asteroid>();
             //later, write number of/each planets and players and asteroids
             asteroids.Add(new Asteroid(new Vector2(200, 200), 50));
+            sun = new Sun();
         }
 
         public Planet getPlanet(Rectangle pos) 
@@ -60,6 +61,7 @@ namespace Server_Solar_War
             {
                 planets[i].Load(server);
             }
+            sun.Load(server);
         }
         public void Update(GameTime gametime)
         {
@@ -72,7 +74,8 @@ namespace Server_Solar_War
             {
                 planets[i].Update(gametime);
             }
-            //change locations of planets as they rotate
+            //change locations of planets as they rotate.
+            sun.Update(gametime); 
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -90,6 +93,7 @@ namespace Server_Solar_War
             {
                 planets[i].Draw(spriteBatch);
             }
+            sun.Draw(spriteBatch);
         }
     }
 }

@@ -19,13 +19,13 @@ namespace Server_Solar_War
         private Texture2D[] img;
         private Rectangle rect;
         private int radiusH;
-        
+        private Boolean change;
 
         public Sun()
         {
-            rect = new Rectangle(200, 0, 100, 100);
+            rect = new Rectangle(350, 200, 100, 100);
             radiusH = 20;
-
+            change = true;
             //change the radius 
         }
 
@@ -45,5 +45,33 @@ namespace Server_Solar_War
             img[1] = content.Load<Texture2D>("Sun/sun2");
                     
         }
+
+        private void animaton()
+        {
+
+
+            if (change)
+            {
+                change = false;
+                display = img[0];
+            }
+            else
+            {
+                change = true; 
+                display = img[1];
+            }
+        }
+
+        public void Update(GameTime gt)
+        {
+            animaton();
+
+        }
+
+        public void Draw(SpriteBatch sb )
+        {
+            sb.Draw(display, rect, Color.White);
+        }
     }
+    
 }
