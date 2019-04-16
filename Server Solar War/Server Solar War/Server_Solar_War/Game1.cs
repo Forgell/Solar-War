@@ -37,10 +37,13 @@ namespace Server_Solar_War
         /// </summary>
         protected override void Initialize()
         {
-			// TODO: Add your initialization logic here
-			//graphics.IsFullScreen = true;
-			//graphics.ToggleFullScreen();
-			//graphics.ApplyChanges();
+            // TODO: Add your initialization logic here
+            
+            graphics.PreferredBackBufferHeight = 1000;
+            graphics.PreferredBackBufferWidth = 1800;
+            //graphics.IsFullScreen = true;
+            //graphics.ToggleFullScreen();
+            graphics.ApplyChanges();
             game = new Game(graphics.PreferredBackBufferWidth , graphics.PreferredBackBufferHeight , Content);
             //asteroid = new Asteroid(new Vector2(200, 200), 50);
             IsMouseVisible = true;
