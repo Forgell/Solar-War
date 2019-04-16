@@ -37,7 +37,10 @@ namespace Server_Solar_War
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+			// TODO: Add your initialization logic here
+			//graphics.IsFullScreen = true;
+			//graphics.ToggleFullScreen();
+			//graphics.ApplyChanges();
             game = new Game(graphics.PreferredBackBufferWidth , graphics.PreferredBackBufferHeight , Content);
             //asteroid = new Asteroid(new Vector2(200, 200), 50);
             IsMouseVisible = true;
@@ -53,8 +56,8 @@ namespace Server_Solar_War
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-			//game.Load(Services); 
-			Content.Load<Texture2D>("planet-1-1");
+			game.Load(Services); 
+			//Content.Load<Texture2D>("planet-1-1");
 			// TODO: use this.Content to load your game content here
 		}
 
@@ -75,7 +78,7 @@ namespace Server_Solar_War
         protected override void Update(GameTime gameTime)
         {
             // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 this.Exit();
 
             // TODO: Add your update logic here

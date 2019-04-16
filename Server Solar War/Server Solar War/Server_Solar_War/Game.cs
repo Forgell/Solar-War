@@ -35,10 +35,18 @@ namespace Server_Solar_War
 			//asteroids.Add(new Asteroid(new Vector2(200, 200), 50));
 			//fill orbits with planets
 			Console.WriteLine(Content.RootDirectory);
-			int radius = 50;
-			planets.Add(new Planet("planet-1-1", new Vector2(screenWidth / 2 , screenHeight / 2) , radius , 5, Content) );
-
-        }
+			int radius = 200;
+			double speed = 1.0 /5.0;
+			planets.Add(new Planet("planet-2", new Vector2(screenWidth / 2 , screenHeight / 2) , radius , speed, 2, Content) );
+			planets[0].setAngle(0);
+			planets.Add(new Planet("planet-1", new Vector2(screenWidth / 2, screenHeight / 2), radius, speed, 2, Content));
+			planets[1].setAngle(90);
+			planets.Add(new Planet("planet-3", new Vector2(screenWidth / 2, screenHeight / 2), radius, speed, 2, Content));
+			planets[2].setAngle(180);
+			planets.Add(new Planet("planet-4", new Vector2(screenWidth / 2, screenHeight / 2), radius, speed, 2, Content));
+			planets[3].setAngle(270);
+			//Console.WriteLine(planets[0].Angle + " " + planets[1].Angle);
+		}
 
         public Planet getPlanet(Rectangle pos) 
         {
@@ -80,7 +88,9 @@ namespace Server_Solar_War
             for (int i = 0; i < planets.Count; i++)
             {
                 planets[i].Update(gametime);
+				//Console.Write(planets[i].Angle + " ");
             }
+			//Console.WriteLine();
             //change locations of planets as they rotate
         }
 
