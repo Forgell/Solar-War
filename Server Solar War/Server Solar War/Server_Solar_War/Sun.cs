@@ -23,7 +23,7 @@ namespace Server_Solar_War
 
         public Sun(int screenWidth,int ScreeHeight)
         {
-            rect = new Rectangle(screenWidth/2,ScreeHeight/2, 550, 550);
+            rect = new Rectangle(250,100, 300, 300);
             radiusH = 20;
             change = true;
             //change the radius 
@@ -64,6 +64,7 @@ namespace Server_Solar_War
 
         public void Update(GameTime gt)
         {
+           // if(gt.IsRunningSlowly)
                 animaton();
 
         }
