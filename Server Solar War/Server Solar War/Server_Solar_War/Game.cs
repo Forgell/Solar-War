@@ -50,6 +50,7 @@ namespace Server_Solar_War
 
             //asteroid 
             asteroids.Add(new Asteroid(new Vector2(100, 600), 50));
+            asteroids.Add(new Asteroid(new Vector2(300, 150), 50));
             //sun
             sun = new Sun(screenWidth, screenHeight);
 		}
@@ -77,7 +78,7 @@ namespace Server_Solar_War
         {
             for (int i = 0; i < asteroids.Count; i++)
             {
-               // asteroids[i].Load(server);
+                asteroids[i].Load(server,"astriod");
             }
             for (int i = 0; i < planets.Count; i++)
             {

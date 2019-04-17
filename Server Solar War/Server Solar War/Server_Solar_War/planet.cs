@@ -110,9 +110,9 @@ namespace Server_Solar_War
         {
             //read file and load 
             ContentManager content = new ContentManager(serve, "Content");
-			//tex = content.Load<Texture2D>(name);
-			fileName = "Sprites/planets/" + fileName + "/";
-			string[] file = Directory.GetFiles("Content/"+fileName);
+            //tex = content.Load<Texture2D>(name);
+            fileName = "Sprites/planets/" + fileName + "/";
+            string[] file = Directory.GetFiles("Content/"+fileName);
             tex = new Texture2D[file.Length];
             for (int i =0; i<file.Length; i++)
             {

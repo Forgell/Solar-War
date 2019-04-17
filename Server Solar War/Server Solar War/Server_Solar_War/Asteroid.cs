@@ -58,10 +58,16 @@ namespace Server_Solar_War
         public void Load(IServiceProvider server,String fileName)
         {
             content = new ContentManager(server, "Content");
-            String[] file = Directory.GetFiles("Content/Sprites/astroid");
+            fileName = "Sprites/" + fileName + "/";
+
+            string[] file = Directory.GetFiles("Content/"+fileName);
+
             sheet = new Texture2D [ file.Length];
-           // for (int i = 0; i < file.Length; i++)
-            //explode = content.Load<Texture2D>("");
+            for (int i = 0; i < file.Length; i++)
+                sheet[i] = content.Load<Texture2D>(file[i].Substring(8,file[i].Length-4 - 8));
+            rand = new Random();
+            image = sheet[rand.Next(sheet.Length - 1)];
+
         }
         private void Orbit()
         {
