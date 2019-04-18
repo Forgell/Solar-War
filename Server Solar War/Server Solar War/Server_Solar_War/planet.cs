@@ -56,9 +56,12 @@ namespace Server_Solar_War
 
 		private int index;
 		private Vector2 offset;
+        //radius for the planet to invade
+        private Texture2D Radius_Tex;
+        private Rectangle Radius_rect;
 
-		//There is also a ship class, but this is the number of ships at this planet.
-		private int[] ships;
+        //There is also a ship class, but this is the number of ships at this planet.
+        private int[] ships;
         private Vector2[] shipPositions;
         private int color; //team that the planet is for {0 = orange, 1 = green, 2 = purple, 3 = blue, 4 = neutral}
         private int incrementShipTimer;
@@ -99,6 +102,8 @@ namespace Server_Solar_War
             shipPositions = new Vector2[4];
             color = team; //{0 = orange, 1 = green, 2 = purple, 3 = blue, 4 = neutral}
 
+            
+
         }
 
 		public void setAngle(double angle) // input degeres
@@ -134,7 +139,7 @@ namespace Server_Solar_War
 		}
 
 
-
+        /**  Radiusa position movement **/
 
         /**  animation */
         private void Orbit()
