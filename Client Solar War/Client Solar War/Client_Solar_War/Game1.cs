@@ -18,7 +18,7 @@ namespace Client_Solar_War
 {
 	enum State
 	{
-		CONNECTING , WAITING_FOR_ALL_PLAYERS , CLOSING , NULL, START , PLAYING
+		CONNECTING, WAITING_FOR_ALL_PLAYERS , CLOSING , NULL, START , PLAYING
 	}
 
 
@@ -63,7 +63,6 @@ namespace Client_Solar_War
             // instancience of network varibles
             // star field varibles 
             starfield = new Starfield(GraphicsDevice, this.Content.Load<Texture2D>("Star"));
-			//
 			networking_thread = new Thread(network_communication);
             network = new Networking();
             state = State.START;
@@ -108,6 +107,30 @@ namespace Client_Solar_War
 			if (player_number == 0)
 			{
 				int temp = network.recieveServerMessage(player_number_label);
+				//KeyboardState kb = Keyboard.GetState();
+				//String temp = network.getMessage();
+				//if (kb.IsKeyDown(Keys.D1) && temp.ToCharArray()[0] == '0')
+				//{
+				//	player_number = 1;
+				//	network.send("take1");
+				//	//Find a way to send server a "taken" message for all
+				//}
+				//else if (kb.IsKeyDown(Keys.D2) && temp.ToCharArray()[1] == '0')
+				//{
+				//	player_number = 2;
+				//	network.send("take2");
+				//}
+				//else if (kb.IsKeyDown(Keys.D3) && temp.ToCharArray()[2] == '0')
+				//{
+				//	player_number = 3;
+				//	network.send("take3");
+				//}
+				//else if (kb.IsKeyDown(Keys.D4) && temp.ToCharArray()[3] == '0')
+				//{
+				//	player_number = 4;
+				//	network.send("take4");
+				//}
+
 				if (temp != 0)
 				{
 					player_number = temp;
@@ -168,6 +191,7 @@ namespace Client_Solar_War
 					break;
 				case State.WAITING_FOR_ALL_PLAYERS:
                     //multi threading should take care of the rest
+
                     
                     break;
 				case State.PLAYING:

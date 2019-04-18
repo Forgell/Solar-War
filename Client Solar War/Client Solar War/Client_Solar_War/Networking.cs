@@ -54,7 +54,11 @@ namespace Client_Solar_War
             }
             //state = State.CLOSING;
         }
-
+		public void send(String str)
+		{
+			byte[] message_as_bytes = Encoding.ASCII.GetBytes(str);
+			ClientSocket.Send(message_as_bytes, 0, message_as_bytes.Length, SocketFlags.None);
+		}
         /// <summary>
 		/// is run only when the enter key is pressed and attempts to connect to the ip that is inputed by th custom text box
 		/// </summary>

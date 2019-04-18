@@ -102,7 +102,7 @@ namespace Server
         {
             Socket current = (Socket)AR.AsyncState;
             int received;
-
+			
             try
             {
                 received = current.EndReceive(AR);
@@ -153,7 +153,11 @@ namespace Server
 
 		public static void game_loop()
 		{
-
+			foreach (Socket socket in clientSockets)
+			{
+				byte[] data = Encoding.ASCII.GetBytes("buffer");
+				socket.Send(data);
+			}
 		}
     }
 }
