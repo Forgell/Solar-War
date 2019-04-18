@@ -61,6 +61,7 @@ namespace Server_Solar_War
 		private int[] ships;
         private Vector2[] shipPositions;
         private int color; //team that the planet is for {0 = orange, 1 = blue, 2 = green, 3 = purple, 4 = neutral}
+        Label label;
         private int incrementShipTimer;
         private int timer;
 		private String fileName;
@@ -265,25 +266,33 @@ namespace Server_Solar_War
         {
             //display to the left of the planet
             shipPositions[0] = new Vector2(pos.X - 25, pos.Y);
-            spritebatch.DrawString(font, "" + ships[0], shipPositions[0], Color.Orange);
+            label = new Label("" + ships[0], shipPositions[0], Color.Orange, font);
+            label.Draw(spritebatch);
+            //spritebatch.DrawString(font, "" + ships[0], shipPositions[0], Color.Orange);
         }
         private void DrawBlueShips(SpriteBatch spritebatch)
         {
             //display below the planet
             shipPositions[1] = new Vector2(pos.X + 10, pos.Y + 25);
-            spritebatch.DrawString(font, "" + ships[1], shipPositions[1], Color.Blue);
+            label = new Label("" + ships[1], shipPositions[1], Color.Blue, font);
+            label.Draw(spritebatch);
+            //spritebatch.DrawString(font, "" + ships[1], shipPositions[1], Color.Blue);
         }
         private void DrawGreenShips(SpriteBatch spritebatch)
         {
             //display to the right of the planet
             shipPositions[2] = new Vector2(pos.X + 35, pos.Y);
-            spritebatch.DrawString(font, "" + ships[2], shipPositions[2], Color.Green);
+            label = new Label("" + ships[2], shipPositions[2], Color.Green, font);
+            label.Draw(spritebatch);
+            //spritebatch.DrawString(font, "" + ships[2], shipPositions[2], Color.Green);
         }
         private void DrawPurpleShips(SpriteBatch spritebatch)
         {
             //display above the planet
             shipPositions[3] = new Vector2(pos.X + 10, pos.Y - 22);
-            spritebatch.DrawString(font, "" + ships[3], shipPositions[3], Color.Purple);
+            label = new Label("" + ships[3], shipPositions[3], Color.Purple, font);
+            label.Draw(spritebatch);
+            //spritebatch.DrawString(font, "" + ships[3], shipPositions[3], Color.Purple);
         }
         
 

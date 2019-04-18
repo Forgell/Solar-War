@@ -42,7 +42,7 @@ namespace Server_Solar_War
             int count = 0;
             int numberOfPlanets;//per row
             int anglePerPlanet;
-            for (int j = 0; j < numberOfRows; j++)
+            for (int j = 0; j < numberOfRows; j++) //number of rows
             {
                 radius = (j * 100) + 200; //radius increases by 100 each time
                 planet = 1;
