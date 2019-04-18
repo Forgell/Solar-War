@@ -233,7 +233,10 @@ namespace Server_Solar_War
             }
             else
             {
-                ships[color] += 1;
+                if(ships[color] < 99)
+                {
+                    ships[color] += 1;
+                }
             }
         }
 
