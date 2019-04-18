@@ -23,7 +23,11 @@ namespace Server_Solar_War
         //Asteroid asteroid;
         public Game1()
         {
+            
             graphics = new GraphicsDeviceManager(this);
+            graphics.PreferredBackBufferHeight = 1000;
+            graphics.PreferredBackBufferWidth = 1800;
+
             Content.RootDirectory = "Content";
 			//Console.WriteLine(Content.ServiceProvider.);
 			
