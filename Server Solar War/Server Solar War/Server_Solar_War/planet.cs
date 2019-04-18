@@ -62,6 +62,7 @@ namespace Server_Solar_War
         private Vector2[] shipPositions;
         private int color; //team that the planet is for {0 = orange, 1 = blue, 2 = green, 3 = purple, 4 = neutral}
         Label label;
+        private bool isAttacked;
         private int incrementShipTimer;
         private int timer;
 		private String fileName;
@@ -236,6 +237,45 @@ namespace Server_Solar_War
                 if(ships[color] < 99)
                 {
                     ships[color] += 1;
+                }
+            }
+        }
+
+        //If ships of a diferent color than planet is at planet, then ships attack defending ships
+        private void attacked()
+        {
+            isAttacked = false;
+            for(int i = 0; i < 4; i++) 
+            //making sure that that the ships in the planet have not started incrementing and that there is another player attacking
+            {
+                
+                if(i == color)
+                {
+                    //do nothing
+                }
+                else
+                {
+                    if (ships[i] > 0)
+                        isAttacked = true;
+                }
+            }
+            if(isAttacked)
+            {
+                for(int i = 0; i < 4; i++) //each color
+                {
+                    if(i != color)
+                    {
+                        for(int j = ships[i]; j > 0 && ships[color] > 0; j--)//attacking or defending groups of ships have not run out of ships
+                        {
+                            ships[color] = ships[color] - 1;
+                            ships[i] = ships[i] - 1;
+                        }
+                        if(ships[color] == 0)
+                        {
+                            //planet has become neutral
+                            color = 4; //4 = neutral
+                        }
+                    }
                 }
             }
         }
