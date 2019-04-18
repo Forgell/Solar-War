@@ -38,6 +38,12 @@ namespace Client_Solar_War
 			this.font = font;
 			text = "";
 		}
+		public TextBox(Vector2 position, SpriteFont font, string str)
+		{
+			this.position = position;
+			this.font = font;
+			text = "" + str;
+		}
 
 		/// <summary>
 		/// replaces the text with the parameter

@@ -96,7 +96,7 @@ namespace Client_Solar_War
 						ClientSocket.Close();
 						ClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 						throw new ApplicationException("Failed to connect server.");
-						return State.CONNECTING;
+						//return State.CONNECTING;
 					}
 					
 
@@ -131,8 +131,6 @@ namespace Client_Solar_War
                 case 000: break; // nothing is pressed
                 case 004: // is transmitted if enter key is pressed
                     return attemptConnectionToServer(text_box);
-                    break;
-
                 default:
                     text_box.updateText(input_as_char);
                     break;
