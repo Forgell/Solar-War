@@ -85,7 +85,7 @@ namespace Client_Solar_War
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 			sf = this.Content.Load<SpriteFont>("font");
-			text_box = new TextBox(new Vector2(10, 10), sf);
+			text_box = new TextBox(new Vector2(10, 10), sf, "Type in server ip: ");
 			player_number_label = new Label("No number assigned", new Vector2(10 , 10) , Color.White , sf);
 			logo = this.Content.Load<Texture2D>("logo");
 			title = new TitleScreen(logo, sf, screenWidth, screenHeight, GraphicsDevice);

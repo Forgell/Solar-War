@@ -70,7 +70,8 @@ namespace Client_Solar_War
             }
             try
             {
-                string[] parts_of_ip_address = text_box.Text.Split('.');
+				string str = text_box.Text.Substring("Type in server ip: ".Length);
+                string[] parts_of_ip_address = str.Split('.');
                 byte[] ip_adress_as_byte_array = new byte[parts_of_ip_address.Length];
                 for (int i = 0; i < parts_of_ip_address.Length; i++)
                 {
