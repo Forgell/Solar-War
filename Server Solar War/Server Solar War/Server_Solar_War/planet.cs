@@ -59,6 +59,7 @@ namespace Server_Solar_War
         //radius for the planet to invade
         private Texture2D Radius_Tex;
         private Rectangle Radius_rect;
+        private Boolean dis;
 
         //There is also a ship class, but this is the number of ships at this planet.
         private int[] ships;
@@ -136,11 +137,20 @@ namespace Server_Solar_War
 
             //load SpriteFont
             font = content.Load<SpriteFont>("SpriteFont1");
+            //radius tex
+            Radius_Tex = content.Load<Texture2D>("Sprites/white-circle");
+
 		}
 
 
         /**  Radiusa position movement **/
+        private void Radius()
+        {
+            int X = pos.X - 50;
+            int y = pos.Y - 50;
+            Radius_rect = new Rectangle(X, y, 150, 150);
 
+        }
         /**  animation */
         private void Orbit()
         {
@@ -227,6 +237,10 @@ namespace Server_Solar_War
                 incrementShips();
                 incrementShipTimer = 0;
             }
+
+            //radius display 
+            //if(mouse shown in planet)
+            Radius();
         }
         //color = (0 = orange, 1 = green, 2 = purple, 3 = blue, 4 = neutral)
         private void incrementShips()
@@ -245,6 +259,8 @@ namespace Server_Solar_War
         {
             spritebatch.Draw(tex[index], pos, Color.White);
             DrawShips(spritebatch);
+            //radius
+            spritebatch.Draw(Radius_Tex,Radius_rect,Color.Yellow);
 			//foreach(Rectangle rect in temp_rects)
 			//{
 			//	spritebatch.Draw(tex[index] , rect , Color.Black);
