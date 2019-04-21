@@ -88,6 +88,7 @@ namespace Server_Solar_War
         public void Update(GameTime gametime)
         {
             MouseState m = Mouse.GetState();
+            //  Console.WriteLine("mouse: " + m.X);
             //update everything
             for (int i = 0; i < asteroids.Count; i++)
             {
@@ -95,7 +96,7 @@ namespace Server_Solar_War
             }
             for (int i = 0; i < planets.Count; i++)
             {
-                planets[i].Update(gametime);
+                planets[i].Update(gametime,m);
 				//Console.Write(planets[i].Angle + " ");
             }
             //Console.WriteLine();

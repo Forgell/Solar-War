@@ -213,7 +213,25 @@ namespace Server_Solar_War
             //will use x and y directions then check triangle a squared plus b squared = c squared
             return false;
         }
+        public void Update(GameTime gt, MouseState m)
+        {
 
+            //   radius display
+            //if (mouse shown in planet)
+              if (pos.Intersects(new Rectangle(m.X, m.Y,100, 100)))
+              
+                {
+                Radius();
+                Raddis = true;
+                //  if(m.LeftButton == ButtonState.Pressed)
+            }
+            else
+                Raddis = false;
+
+            Update(gt);
+
+
+        }
         public void Update(GameTime gameTime)
         {
             MouseState m = Mouse.GetState();
@@ -238,16 +256,6 @@ namespace Server_Solar_War
                 incrementShips();
                 incrementShipTimer = 0;
             }
-
-         //   radius display
-            //if (mouse shown in planet)
-            if (pos.Intersects(new Rectangle(m.X, m.Y, 2, 2)))
-            {
-                Radius();
-                Raddis = true;
-            }
-            else
-                Raddis = false;
 
         }
         //color = (0 = orange, 1 = green, 2 = purple, 3 = blue, 4 = neutral)
