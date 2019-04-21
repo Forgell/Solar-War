@@ -59,7 +59,7 @@ namespace Server_Solar_War
         //radius for the planet to invade
         private Texture2D Radius_Tex;
         private Rectangle Radius_rect;
-        private Boolean dis;
+        private Boolean Raddis;
 
         //There is also a ship class, but this is the number of ships at this planet.
         private int[] ships;
@@ -146,9 +146,9 @@ namespace Server_Solar_War
         /**  Radiusa position movement **/
         private void Radius()
         {
-            int X = pos.X - 50;
-            int y = pos.Y - 50;
-            Radius_rect = new Rectangle(X, y, 150, 150);
+            int X = (pos.X - 50) - pos.Width/2;
+            int y = (pos.Y - 50)-pos.Height/2;
+            Radius_rect = new Rectangle(X, y, 150+pos.Width/2, 150+pos.Height/2);
 
         }
         /**  animation */
@@ -216,6 +216,7 @@ namespace Server_Solar_War
 
         public void Update(GameTime gameTime)
         {
+            MouseState m = Mouse.GetState();
             incrementShipTimer++;
             timer++;
                 angle += angular_speed;
@@ -238,9 +239,16 @@ namespace Server_Solar_War
                 incrementShipTimer = 0;
             }
 
-            //radius display 
-            //if(mouse shown in planet)
-            Radius();
+         //   radius display
+            //if (mouse shown in planet)
+            if (pos.Intersects(new Rectangle(m.X, m.Y, 2, 2)))
+            {
+                Radius();
+                Raddis = true;
+            }
+            else
+                Raddis = false;
+
         }
         //color = (0 = orange, 1 = green, 2 = purple, 3 = blue, 4 = neutral)
         private void incrementShips()
@@ -260,7 +268,8 @@ namespace Server_Solar_War
             spritebatch.Draw(tex[index], pos, Color.White);
             DrawShips(spritebatch);
             //radius
-            spritebatch.Draw(Radius_Tex,Radius_rect,Color.Yellow);
+            if(Raddis)
+                spritebatch.Draw(Radius_Tex,Radius_rect,Color.Yellow);
 			//foreach(Rectangle rect in temp_rects)
 			//{
 			//	spritebatch.Draw(tex[index] , rect , Color.Black);

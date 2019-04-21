@@ -47,8 +47,7 @@ namespace Server_Solar_War
 			planets[2].setAngle(180);
 			planets.Add(new Planet("planet-4", new Vector2(screenWidth / 2, screenHeight / 2), radius, speed, 2, Content, 2));
 			planets[3].setAngle(270);
-
-            //asteroid 
+             //asteroid 
             asteroids.Add(new Asteroid(new Vector2(100, 600), 50));
             asteroids.Add(new Asteroid(new Vector2(300, 150), 50));
             //sun
@@ -88,6 +87,7 @@ namespace Server_Solar_War
         }
         public void Update(GameTime gametime)
         {
+            MouseState m = Mouse.GetState();
             //update everything
             for (int i = 0; i < asteroids.Count; i++)
             {

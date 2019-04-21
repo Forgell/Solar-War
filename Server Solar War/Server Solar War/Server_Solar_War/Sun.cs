@@ -23,7 +23,7 @@ namespace Server_Solar_War
 
         public Sun(int screenWidth,int ScreeHeight)
         {
-            rect = new Rectangle(250,100, 300, 300);
+            rect = new Rectangle(screenWidth/2,screenWidth/2, 300, 300);
             radiusH = 20;
             change = true;
             //change the radius 
