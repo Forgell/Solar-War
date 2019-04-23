@@ -60,6 +60,7 @@ namespace Server_Solar_War
         private Texture2D Radius_Tex;
         private Rectangle Radius_rect;
         private Boolean Raddis;
+        public Boolean sending_Troops;
 
         //There is also a ship class, but this is the number of ships at this planet.
         private int[] ships;
@@ -146,14 +147,18 @@ namespace Server_Solar_War
         /**  Radiusa position movement **/
         private void Radius()
         {
-            int X = (pos.X - 50) - pos.Width/2;
-            int y = (pos.Y - 50)-pos.Height/2;
-            Radius_rect = new Rectangle(X, y, 150+pos.Width/2, 150+pos.Height/2);
+            int X = (pos.X - 50) - pos.Width / 2;
+            int y = (pos.Y - 50) - pos.Height / 2;
+            int width = pos.Width / 2;
+            int height = pos.Height / 2;
+            Radius_rect = new Rectangle(X, y, 150 + width, 150 + height);
+
 
         }
+        
         /**  animation */
         private void Orbit()
-        {
+        { 
 
             double x = (origin.X + Math.Cos(angle) * radius) - offset.X;
             double y = (origin.Y + Math.Sin(angle) * radius) - offset.Y;
@@ -207,10 +212,12 @@ namespace Server_Solar_War
 			}
 			ships = newShips;
 		}
+        
 
-        public bool checkRadius()//check radius to be able to move troops
+        public bool checkRadius(Rectangle r)//check radius to be able to move troops
         {
             //will use x and y directions then check triangle a squared plus b squared = c squared
+
             return false;
         }
         public void Update(GameTime gt, MouseState m)
@@ -221,8 +228,11 @@ namespace Server_Solar_War
               if (pos.Intersects(new Rectangle(m.X, m.Y,100, 100)))
               
                 {
-                Radius();
-                Raddis = true;
+                        Radius();
+
+                        Raddis = true;
+                if (m.LeftButton == ButtonState.Pressed)
+                    sending_Troops = true;
                 //  if(m.LeftButton == ButtonState.Pressed)
             }
             else
