@@ -61,7 +61,7 @@ namespace Server_Solar_War
         private Rectangle Radius_rect;
         private Boolean Raddis;
         public Boolean sending_Troops;
-
+        private int Redar_redius;
         //There is also a ship class, but this is the number of ships at this planet.
         private int[] ships;
         private Vector2[] shipPositions;
@@ -104,7 +104,7 @@ namespace Server_Solar_War
             shipPositions = new Vector2[4];
             color = team; //{0 = orange, 1 = green, 2 = purple, 3 = blue, 4 = neutral}
 
-            
+          
 
         }
 
@@ -112,8 +112,7 @@ namespace Server_Solar_War
 		{
 			this.angle = MathHelper.ToRadians((float)angle);
 		}
-		
-        public  void Load(IServiceProvider serve )
+           public  void Load(IServiceProvider serve )
         {
             //read file and load 
             ContentManager content = new ContentManager(serve, "Content");
@@ -151,7 +150,8 @@ namespace Server_Solar_War
             int y = (pos.Y - 50) - pos.Height / 2;
             int width = pos.Width / 2;
             int height = pos.Height / 2;
-            Radius_rect = new Rectangle(X, y, 150 + width, 150 + height);
+            Redar_redius = 150; 
+            Radius_rect = new Rectangle(X, y, Redar_redius, Redar_redius);
 
 
         }
@@ -213,12 +213,19 @@ namespace Server_Solar_War
 			ships = newShips;
 		}
         
-
+        private double Distance(Rectangle rect)
+        {
+            return Math.Sqrt(Math.Pow(rect.X - pos.X, 2) + Math.Pow(rect.Y - pos.Y, 2));
+        }
         public bool checkRadius(Rectangle r)//check radius to be able to move troops
         {
             //will use x and y directions then check triangle a squared plus b squared = c squared
 
-            return false;
+            return Distance(r) < Redar_redius;  
+        }
+        public void inDanger()
+        {
+            Console.WriteLine(fileName + " in target to be invade"); // send a message to send the troop
         }
         public void Update(GameTime gt, MouseState m)
         {

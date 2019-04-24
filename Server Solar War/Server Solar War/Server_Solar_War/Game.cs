@@ -99,6 +99,7 @@ namespace Server_Solar_War
             for (int i = 0; i < planets.Count; i++)
             {
                 planets[i].Update(gametime,m);
+
 				//Console.Write(planets[i].Angle + " ");
             }
             //Console.WriteLine();
