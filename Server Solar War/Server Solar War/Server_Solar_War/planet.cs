@@ -153,6 +153,7 @@ namespace Server_Solar_War
         {
 			ships[team] += amnt;
         }
+
         private void attack()
         {
 			int[] newShips = new int[5];
