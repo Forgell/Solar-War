@@ -104,50 +104,73 @@ namespace Client_Solar_War
 
 		public void network_communication()
 		{
-			if (player_number == 0)
+			while (player_number == 0)
 			{
-				int temp = network.recieveServerMessage(player_number_label);
-				//KeyboardState kb = Keyboard.GetState();
-				//String temp = network.getMessage();
-				//if (kb.IsKeyDown(Keys.D1) && temp.ToCharArray()[0] == '0')
-				//{
-				//	player_number = 1;
-				//	network.send("take1");
-				//	//Find a way to send server a "taken" message for all
-				//}
-				//else if (kb.IsKeyDown(Keys.D2) && temp.ToCharArray()[1] == '0')
-				//{
-				//	player_number = 2;
-				//	network.send("take2");
-				//}
-				//else if (kb.IsKeyDown(Keys.D3) && temp.ToCharArray()[2] == '0')
-				//{
-				//	player_number = 3;
-				//	network.send("take3");
-				//}
-				//else if (kb.IsKeyDown(Keys.D4) && temp.ToCharArray()[3] == '0')
-				//{
-				//	player_number = 4;
-				//	network.send("take4");
-				//}
-
-				if (temp != 0)
+				string temp;
+				if (old.IsKeyDown(Keys.D1))
 				{
-					player_number = temp;
+					network.send("take1");
+					temp = network.getMessage();
+					if (!temp.Equals("taken"))
+					{
+						player_number = 1;
+						player_number_label.updateText("You are player number: " + player_number);
+					}
+					else
+						player_number_label.updateText("Player 1 is already taken, try again!");
+					//Find a way to send server a "taken" message for all
+				}
+				else if (old.IsKeyDown(Keys.D2))
+				{
+					network.send("take2");
+					temp = network.getMessage();
+					if (!temp.Equals("taken"))
+					{
+						player_number = 2;
+						player_number_label.updateText("You are player number: " + player_number);
+					}
+					else
+						player_number_label.updateText("Player 2 is already taken, try again!");
+				}
+				else if (old.IsKeyDown(Keys.D3))
+				{
+					network.send("take3");
+					temp = network.getMessage();
+					if (!temp.Equals("taken"))
+					{
+						player_number = 3;
+						player_number_label.updateText("You are player number: " + player_number);
+					}
+					else
+						player_number_label.updateText("Player 3 is already taken, try again!");
+
+				}
+				else if (old.IsKeyDown(Keys.D4))
+				{
+					network.send("take4");
+					temp = network.getMessage();
+					if (!temp.Equals("taken"))
+					{
+						player_number = 4;
+						player_number_label.updateText("You are player number: " + player_number);
+					}
+					else
+						player_number_label.updateText("Player 4 is already taken, try again!");
 				}
 			}
-			else
-			{
-				string message = network.getMessage();
-				if (message.Equals(""))
-				{
-					return;
-				}
-				if (message.Equals("Game Start!")) {
-					state = State.PLAYING;
-				}
+			
+			//else
+			//{
+			//	string message = network.getMessage();
+			//	if (message.Equals(""))
+			//	{
+			//		return;
+			//	}
+			//	if (message.Equals("Game Start!")) {
+			//		state = State.PLAYING;
+			//	}
 
-			}
+			//}
 			
 		}
 
