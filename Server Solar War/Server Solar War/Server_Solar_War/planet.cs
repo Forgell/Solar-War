@@ -58,7 +58,7 @@ namespace Server_Solar_War
 		private Vector2 offset;
         //radius for the planet to invade
         private Texture2D Radius_Tex;
-        private Rectangle Radius_rect;
+        private Rectangle Radius_rect, mouse_Rect;
         private Boolean Raddis;
 
         //There is also a ship class, but this is the number of ships at this planet.
@@ -102,7 +102,7 @@ namespace Server_Solar_War
             ships = new int[4]; //{orange, green, purple, blue}
             shipPositions = new Vector2[4];
             color = team; //{0 = orange, 1 = green, 2 = purple, 3 = blue, 4 = neutral}
-
+            mouse_Rect = new Rectangle(0, 0, 5, 5);
             
 
         }
@@ -218,7 +218,9 @@ namespace Server_Solar_War
 
             //   radius display
             //if (mouse shown in planet)
-              if (pos.Intersects(new Rectangle(m.X, m.Y,100, 100)))
+            mouse_Rect.X = m.X;
+            mouse_Rect.Y = m.Y;
+              if (pos.Intersects(mouse_Rect))
               
                 {
                 Radius();
