@@ -18,7 +18,7 @@ namespace Client_Solar_War
 {
 	enum State
 	{
-		CONNECTING , WAITING_FOR_ALL_PLAYERS , CLOSING , NULL
+		CONNECTING, WAITING_FOR_ALL_PLAYERS , CLOSING , NULL, START , PLAYING
 	}
 
 
@@ -40,8 +40,11 @@ namespace Client_Solar_War
 		Label player_number_label;
 		// To see what player you are when all the players are connecting
 		int player_number;
-
-        Starfield starfield;
+		int screenHeight, screenWidth;
+		SpriteFont sf;
+		Texture2D logo;
+		TitleScreen title;
+		Starfield starfield;
 
 		public Game1()
         {
@@ -60,17 +63,17 @@ namespace Client_Solar_War
             // instancience of network varibles
             // star field varibles 
             starfield = new Starfield(GraphicsDevice, this.Content.Load<Texture2D>("Star"));
-			//
 			networking_thread = new Thread(network_communication);
             network = new Networking();
-            state = State.CONNECTING;
+            state = State.START;
 			//waiting for all computer to connect
 			// gneric varibles
 			old = Keyboard.GetState();
 			IsMouseVisible = true;
 			player_number = 0;
-			
-            base.Initialize();
+			screenHeight = GraphicsDevice.Viewport.Height;
+			screenWidth = GraphicsDevice.Viewport.Width;
+			base.Initialize();
         }
 
         /// <summary>
@@ -81,10 +84,13 @@ namespace Client_Solar_War
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-			text_box = new TextBox(new Vector2(10, 10), Content.Load<SpriteFont>("font"));
-			player_number_label = new Label("No number assigned", new Vector2(10 , 10) , Color.White ,Content.Load<SpriteFont>("font"));
-            // TODO: use this.Content to load your game content here
-        }
+			sf = this.Content.Load<SpriteFont>("font");
+			text_box = new TextBox(new Vector2(10, 10), sf);
+			player_number_label = new Label("No number assigned", new Vector2(10 , 10) , Color.White , sf);
+			logo = this.Content.Load<Texture2D>("logo");
+			title = new TitleScreen(logo, sf, screenWidth, screenHeight, GraphicsDevice);
+			// TODO: use this.Content to load your game content here
+		}
 
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
@@ -98,11 +104,51 @@ namespace Client_Solar_War
 
 		public void network_communication()
 		{
-			int temp = network.recieveServerMessage(player_number_label);
-			if (temp != 0)
+			if (player_number == 0)
 			{
-				player_number = temp;
+				int temp = network.recieveServerMessage(player_number_label);
+				//KeyboardState kb = Keyboard.GetState();
+				//String temp = network.getMessage();
+				//if (kb.IsKeyDown(Keys.D1) && temp.ToCharArray()[0] == '0')
+				//{
+				//	player_number = 1;
+				//	network.send("take1");
+				//	//Find a way to send server a "taken" message for all
+				//}
+				//else if (kb.IsKeyDown(Keys.D2) && temp.ToCharArray()[1] == '0')
+				//{
+				//	player_number = 2;
+				//	network.send("take2");
+				//}
+				//else if (kb.IsKeyDown(Keys.D3) && temp.ToCharArray()[2] == '0')
+				//{
+				//	player_number = 3;
+				//	network.send("take3");
+				//}
+				//else if (kb.IsKeyDown(Keys.D4) && temp.ToCharArray()[3] == '0')
+				//{
+				//	player_number = 4;
+				//	network.send("take4");
+				//}
+
+				if (temp != 0)
+				{
+					player_number = temp;
+				}
 			}
+			else
+			{
+				string message = network.getMessage();
+				if (message.Equals(""))
+				{
+					return;
+				}
+				if (message.Equals("Game Start!")) {
+					state = State.PLAYING;
+				}
+
+			}
+			
 		}
 
         /// <summary>
@@ -121,7 +167,12 @@ namespace Client_Solar_War
 				this.Exit();
 				networking_thread.Abort();
 			}
-
+			if (state == State.START)
+			{
+				MouseState m = Mouse.GetState();
+				if (title.update(m.X, m.Y, m.LeftButton == ButtonState.Pressed, gameTime) || console.IsKeyDown(Keys.Enter))
+					state = State.CONNECTING;
+			}
 			// Still connecting to ip adress
 
 
@@ -140,8 +191,13 @@ namespace Client_Solar_War
 					break;
 				case State.WAITING_FOR_ALL_PLAYERS:
                     //multi threading should take care of the rest
+
                     
                     break;
+				case State.PLAYING:
+					// playing the game all of the players are connected
+					update_game(console);
+					break;
 				case State.CLOSING:
 					// do nothing as the program is closing
 					return;
@@ -156,7 +212,15 @@ namespace Client_Solar_War
         }
 
 		
+		public void update_game(KeyboardState console)
+		{
+			// get the players game input
+			Keys input = KeyboardHelper.getKeyboardGameInput(console , old);
+			MouseState mouse = Mouse.GetState();
+			// update the game screen
 
+			// send the server  
+		}
 		
 
 		
@@ -177,6 +241,9 @@ namespace Client_Solar_War
 
             switch (state)
 			{
+				case State.START:
+					title.draw(spriteBatch, gameTime);
+					break;
 				case State.CONNECTING:
 					text_box.Draw(spriteBatch);
 					break;

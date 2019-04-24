@@ -117,6 +117,21 @@ namespace Client_Solar_War
 			}
 			return (char)0; // null
 		}
-	}
+
+		public static Keys getKeyboardGameInput(KeyboardState console , KeyboardState old)
+		{
+			Keys key;
+			for(int i = 0; i < console.GetPressedKeys().Length; i++)
+			{
+				key = console.GetPressedKeys()[i];
+				if (old.IsKeyUp(key))
+				{
+					return key;
+				}
+			}
+			
+			return Keys.LeftAlt;
+		}
+    }
 }
 

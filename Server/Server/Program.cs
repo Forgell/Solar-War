@@ -19,11 +19,10 @@ namespace Server
         private static readonly byte[] buffer = new byte[BUFFER_SIZE];
 		// game related varibles
 		private static int TOTAL_PLAYER_NUMBER = 0;
-		private static PlayerState[] player_state = new PlayerState[4];
-        // Threading for yolos 
-        private static Thread game_thread;
-        private List<string> recieved_message;
-        private List<string> sending_message;
+		//private static PlayerState[] player_state = new PlayerState[4];
+		// need to create a game loop so I will use threadgin as a filler? good idea
+		private static Thread game_loop_thread;
+
         static void Main(string[] args)
         {
             Console.Title = "Server";
@@ -40,21 +39,16 @@ namespace Server
 			IPAddress[] ipv4Addresses = Array.FindAll(Dns.GetHostEntry(string.Empty).AddressList,a => a.AddressFamily == AddressFamily.InterNetwork);
 			Console.WriteLine(ipv4Addresses[ipv4Addresses.Length - 1]);
 			// init
-			for (int i = 0; i < player_state.Length; i++)
-			{
-				player_state[i] = PlayerState.NOT_CONNECTED;
-			}
+			//for (int i = 0; i < player_state.Length; i++)
+			//{
+			//	player_state[i] = PlayerState.NOT_CONNECTED;
+			//}
             serverSocket.Listen(0);
             serverSocket.BeginAccept( AcceptCallback, null);
+			game_loop_thread = new Thread(new ThreadStart(game_loop));
             Console.WriteLine("Server setup complete");
-            game_thread = new Thread(game_loop);
         }
 
-        public static void game_loop()
-        {
-            // send any new message update the messages
-            
-        }
 
         public static void CloseAllSockets()
         {
@@ -64,7 +58,7 @@ namespace Server
                 socket.Close();
             }
             serverSocket.Close();
-            game_thread.Abort();
+			game_loop_thread.Abort();
         }
 
         private static void AcceptCallback(IAsyncResult AR)
@@ -87,16 +81,16 @@ namespace Server
 				socket.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, socket);
 				Console.WriteLine("Client connected, waiting for request...");
 				clientSockets[clientSockets.Count - 1].Send(Encoding.ASCII.GetBytes("You are player: " + (++TOTAL_PLAYER_NUMBER)));
-				player_state[clientSockets.Count - 1] = PlayerState.ASSIGNING_PLAYER_NUMBER;
+				//player_state[clientSockets.Count - 1] = PlayerState.ASSIGNING_PLAYER_NUMBER;
 				serverSocket.BeginAccept(AcceptCallback, null);
-                if (clientSockets.Count == 4)
-                {
-                    for(int i = 0; i < 4; i++)
-                    {
-                        player_state[i] = PlayerState.PLAYING;
-                    }
-                    game_thread.Start();
-                }
+				if (clientSockets.Count == 4)
+				{
+					for(int i = 0; i < 4; i++)
+					{
+						clientSockets[i].Send(Encoding.ASCII.GetBytes("Game Start!"));
+					}
+					game_loop_thread.Start();
+				}
 			}
 			else
 			{
@@ -108,6 +102,7 @@ namespace Server
         {
             Socket current = (Socket)AR.AsyncState;
             int received;
+			
             try
             {
                 received = current.EndReceive(AR);
@@ -118,7 +113,6 @@ namespace Server
                 // Don't shutdown because the socket may be disposed and its disconnected anyway.
                 current.Close();
                 clientSockets.Remove(current);
-                player_state[clientSockets.IndexOf(current)] = PlayerState.NOT_CONNECTED;
 				TOTAL_PLAYER_NUMBER--;
                 return;
             }
@@ -139,8 +133,6 @@ namespace Server
                 current.Close();
                 clientSockets.Remove(current);
                 Console.WriteLine("Client disconnected");
-                
-                player_state[clientSockets.IndexOf(current)] = PlayerState.NOT_CONNECTED;
 				TOTAL_PLAYER_NUMBER--;
                 return;
             }
@@ -158,5 +150,14 @@ namespace Server
 			}
             current.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, current);
         }
+
+		public static void game_loop()
+		{
+			foreach (Socket socket in clientSockets)
+			{
+				byte[] data = Encoding.ASCII.GetBytes("buffer");
+				socket.Send(data);
+			}
+		}
     }
 }

@@ -11,9 +11,16 @@ namespace Client_Solar_War
 {
     class Networking
     {
-        public static readonly Socket ClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        public static Socket ClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         public static readonly int PORT = 100;
 
+		public string getMessage() {
+			byte[] server_message_as_bytes = new byte[100];
+			ClientSocket.Receive(server_message_as_bytes); //(server_message_as_bytes, 0, server_message_as_bytes.Length, SocketFlags.None);
+			server_message_as_bytes = server_message_as_bytes.Where(val => val != 0).ToArray();
+			string server_message_as_string = Encoding.ASCII.GetString(server_message_as_bytes);
+			return server_message_as_string;
+		}
 
 
         public int recieveServerMessage(Label player_number_label)
@@ -47,7 +54,11 @@ namespace Client_Solar_War
             }
             //state = State.CLOSING;
         }
-
+		public void send(String str)
+		{
+			byte[] message_as_bytes = Encoding.ASCII.GetBytes(str);
+			ClientSocket.Send(message_as_bytes, 0, message_as_bytes.Length, SocketFlags.None);
+		}
         /// <summary>
 		/// is run only when the enter key is pressed and attempts to connect to the ip that is inputed by th custom text box
 		/// </summary>
@@ -67,8 +78,27 @@ namespace Client_Solar_War
                 }
                 try
                 {
-                    ClientSocket.Connect(new IPEndPoint(new IPAddress(ip_adress_as_byte_array), PORT));
-                    return State.WAITING_FOR_ALL_PLAYERS;
+					IAsyncResult result = ClientSocket.BeginConnect(new IPAddress(ip_adress_as_byte_array), PORT, null, null);
+
+					bool success = result.AsyncWaitHandle.WaitOne(2000, true);
+
+					if (ClientSocket.Connected)
+					{
+						//ClientSocket.EndConnect(result);
+						//ClientSocket.Connect(new IPEndPoint(new IPAddress(ip_adress_as_byte_array), PORT));
+						return State.WAITING_FOR_ALL_PLAYERS;
+					}
+					else
+					{
+						// NOTE, MUST CLOSE THE SOCKET
+
+						ClientSocket.Close();
+						ClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+						throw new ApplicationException("Failed to connect server.");
+						return State.CONNECTING;
+					}
+					
+
 
                 }
                 catch (Exception e)
