@@ -159,6 +159,17 @@ namespace Server
                         current.Send(Encoding.ASCII.GetBytes("taken"));
                         Console.WriteLine("sent: taken");
                     }
+                    if (text.Length == 4)
+                    {
+                        if (clientSockets.Count == 4)
+                        {
+                            for (int i = 0; i < 4; i++)
+                            {
+                                clientSockets[i].Send(Encoding.ASCII.GetBytes("Game Start!"));
+                            }
+                            game_loop_thread.Start();
+                        }
+                    }
                 }
                 //Console.WriteLine("Warning Sent");
             }
