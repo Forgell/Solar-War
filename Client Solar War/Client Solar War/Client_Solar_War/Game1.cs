@@ -158,20 +158,17 @@ namespace Client_Solar_War
 						player_number_label.updateText("Player 4 is already taken, try again!");
 				}
 			}
-			
-			//else
-			//{
-			//	string message = network.getMessage();
-			//	if (message.Equals(""))
-			//	{
-			//		return;
-			//	}
-			//	if (message.Equals("Game Start!")) {
-			//		state = State.PLAYING;
-			//	}
 
-			//}
-			
+			string message = network.getMessage();
+			if (message.Equals(""))
+			{
+				return;
+			}
+			if (message.Equals("Game Start!"))
+			{
+				state = State.PLAYING;
+			}
+
 		}
 
         /// <summary>
