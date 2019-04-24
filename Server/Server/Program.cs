@@ -22,7 +22,7 @@ namespace Server
 		//private static PlayerState[] player_state = new PlayerState[4];
 		// need to create a game loop so I will use threadgin as a filler? good idea
 		private static Thread game_loop_thread;
-
+        private static string players_connected_as_string;
         static void Main(string[] args)
         {
             Console.Title = "Server";
@@ -47,6 +47,7 @@ namespace Server
             serverSocket.BeginAccept( AcceptCallback, null);
 			game_loop_thread = new Thread(new ThreadStart(game_loop));
             Console.WriteLine("Server setup complete");
+            players_connected_as_string = "";
         }
 
 
@@ -80,7 +81,7 @@ namespace Server
 				clientSockets.Add(socket);
 				socket.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, socket);
 				Console.WriteLine("Client connected, waiting for request...");
-				clientSockets[clientSockets.Count - 1].Send(Encoding.ASCII.GetBytes("You are player: " + (++TOTAL_PLAYER_NUMBER)));
+				//clientSockets[clientSockets.Count - 1].Send(Encoding.ASCII.GetBytes("You are player: " + (++TOTAL_PLAYER_NUMBER)));
 				//player_state[clientSockets.Count - 1] = PlayerState.ASSIGNING_PLAYER_NUMBER;
 				serverSocket.BeginAccept(AcceptCallback, null);
 				if (clientSockets.Count == 4)
@@ -123,8 +124,9 @@ namespace Server
             if (!text.Equals("buffer"))
             {
                 Console.WriteLine("Received Text: " + text);
-            }
+            }else
             
+
             
             if (text.ToLower() == "exit") // Client wants to exit gracefully
             {
@@ -139,9 +141,20 @@ namespace Server
             else
             {
                 //Console.WriteLine("Text is an invalid request");
-                byte[] data = Encoding.ASCII.GetBytes(text); // sends the data back at them at current time is just sends buffer back and forth
-                current.Send(data);
-                
+                //byte[] data = Encoding.ASCII.GetBytes(text); // sends the data back at them at current time is just sends buffer back and forth
+                //current.Send(data);
+                if (text.Contains("take"))
+                {
+                    int num = text[text.Length - 1] - '0';
+                    if (!players_connected_as_string.Contains("" + num))
+                    {
+                        players_connected_as_string += num;
+                        current.Send(Encoding.ASCII.GetBytes("You are player: " + num));
+                    }else
+                    {
+                        current.Send(Encoding.ASCII.GetBytes("taken"));
+                    }
+                }
                 //Console.WriteLine("Warning Sent");
             }
             //buffer messages
