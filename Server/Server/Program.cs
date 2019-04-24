@@ -123,10 +123,13 @@ namespace Server
             string text = Encoding.ASCII.GetString(recBuf);
             if (!text.Equals("buffer"))
             {
-                Console.WriteLine("Received Text: " + text);
-            }else
-            
+                //Console.WriteLine("Received Text: " + text);
+            }
 
+            if (text.Equals(""))
+            {
+                return;
+            }
             
             if (text.ToLower() == "exit") // Client wants to exit gracefully
             {
@@ -140,7 +143,7 @@ namespace Server
             }
             else
             {
-                //Console.WriteLine("Text is an invalid request");
+                Console.WriteLine("recieved: " + text);
                 //byte[] data = Encoding.ASCII.GetBytes(text); // sends the data back at them at current time is just sends buffer back and forth
                 //current.Send(data);
                 if (text.Contains("take"))
@@ -150,17 +153,30 @@ namespace Server
                     {
                         players_connected_as_string += num;
                         current.Send(Encoding.ASCII.GetBytes("You are player: " + num));
+                        Console.WriteLine("sent: " + "You are player: " + num);
                     }else
                     {
                         current.Send(Encoding.ASCII.GetBytes("taken"));
+                        Console.WriteLine("sent: taken");
+                    }
+                    if (text.Length == 4)
+                    {
+                        if (clientSockets.Count == 4)
+                        {
+                            for (int i = 0; i < 4; i++)
+                            {
+                                clientSockets[i].Send(Encoding.ASCII.GetBytes("Game Start!"));
+                            }
+                            game_loop_thread.Start();
+                        }
                     }
                 }
                 //Console.WriteLine("Warning Sent");
             }
             //buffer messages
-			foreach(Socket client in clientSockets){
-				client.Send(new byte[100]);
-			}
+			//foreach(Socket client in clientSockets){
+			//	client.Send(new byte[100]);
+			//}
             current.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, current);
         }
 
