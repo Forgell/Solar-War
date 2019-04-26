@@ -23,7 +23,11 @@ namespace Server_Solar_War
         //Asteroid asteroid;
         public Game1()
         {
+            
             graphics = new GraphicsDeviceManager(this);
+            graphics.PreferredBackBufferHeight = 1000;
+            graphics.PreferredBackBufferWidth = 1800;
+
             Content.RootDirectory = "Content";
 			//Console.WriteLine(Content.ServiceProvider.);
 			
@@ -80,6 +84,7 @@ namespace Server_Solar_War
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 this.Exit();

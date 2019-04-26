@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Asteroid.cs" />
+    <Compile Include="Class1.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="Planet.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="Game1.cs" />
     <Compile Include="Ship.cs" />
     <Compile Include="SoloarOrbit.cs" />
+    <Compile Include="Sun.cs" />
     <Compile Include="TitleScreen.cs" />
   </ItemGroup>
   <ItemGroup>

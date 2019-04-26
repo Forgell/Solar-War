@@ -8,8 +8,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
-
-
+using System.IO;
 
 namespace Server_Solar_War
 {
@@ -17,6 +16,7 @@ namespace Server_Solar_War
     {
         Random rand;
         private Texture2D image;
+        private Texture2D[] sheet;
         private Texture2D explode;
         private Rectangle rect;
         protected Vector2 origin;
@@ -55,13 +55,19 @@ namespace Server_Solar_War
             Console.WriteLine(rect);
                 
         }
-        public void Load(IServiceProvider server)
+        public void Load(IServiceProvider server,String fileName)
         {
             content = new ContentManager(server, "Content");
+            fileName = "Sprites/" + fileName + "/";
 
-           // for (int i = 0; i < image.Length; i++)
-                image = content.Load<Texture2D>("Asteroid/a1");
-            //explode = content.Load<Texture2D>("");
+            string[] file = Directory.GetFiles("Content/"+fileName);
+
+            sheet = new Texture2D [ file.Length];
+            for (int i = 0; i < file.Length; i++)
+                sheet[i] = content.Load<Texture2D>(file[i].Substring(8,file[i].Length-4 - 8));
+            rand = new Random();
+            image = sheet[rand.Next(sheet.Length - 1)];
+
         }
         private void Orbit()
         {
