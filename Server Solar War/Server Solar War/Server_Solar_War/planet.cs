@@ -72,6 +72,7 @@ namespace Server_Solar_War
 		private String fileName;
 		private int owner;
 		private int radius;
+        private int travel_radius;
 		//can someone look at this class bc i need to kknow what to implement for some method
 		/*public Planet()
         {
@@ -105,7 +106,7 @@ namespace Server_Solar_War
             shipPositions = new Vector2[4];
             color = team; //{0 = orange, 1 = blue, 2 = green, 3 = purple, 4 = neutral}
             mouse_Rect = new Rectangle(0, 0, 5, 5);
-            
+            travel_radius = 100;
 
         }
 
@@ -148,10 +149,9 @@ namespace Server_Solar_War
         /**  Radiusa position movement **/
         private void Radius()
         {
-            int X = (pos.X - 50) - pos.Width/2;
-            int y = (pos.Y - 50)-pos.Height/2;
-            Radius_rect = new Rectangle(X, y, 150+pos.Width/2, 150+pos.Height/2);
-
+            int X = (pos.X - (pos.Width * 4)); //- pos.Width/2;
+            int y = (pos.Y - (pos.Height * 4)); //- pos.Height/2;
+            Radius_rect = new Rectangle(X, y, (pos.Width * 9), (pos.Height * 9));
         }
         /**  animation */
         private void Orbit()
