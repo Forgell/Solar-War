@@ -73,13 +73,9 @@ namespace Server_Solar_War
 		private int owner;
 		private int radius;
         private int travel_radius;
-		//can someone look at this class bc i need to kknow what to implement for some method
-		/*public Planet()
-        {
-            r = new Random();
-            //invade_Capacity = rand 
-        }
-		*/
+
+        private Color faction_color;
+
 		public Planet(string fileName, Vector2 origin,int radius , double angular_speed ,int scaler ,ContentManager Contents, int team) // input degress
         {
 			owner = 0;
@@ -105,6 +101,14 @@ namespace Server_Solar_War
             ships = new int[4]; //{0 = orange, 1 = blue, 2 = green, 3 = purple}
             shipPositions = new Vector2[4];
             color = team; //{0 = orange, 1 = blue, 2 = green, 3 = purple, 4 = neutral}
+            switch (team)
+            {
+                case 0: faction_color = Color.Orange;break;
+                case 1: faction_color = Color.Blue; break;
+                case 2: faction_color = Color.Green; break;
+                case 3: faction_color = Color.Purple; break;
+                case 4: faction_color = Color.Black; break;
+            }
             mouse_Rect = new Rectangle(0, 0, 5, 5);
             travel_radius = 100;
 
@@ -323,7 +327,7 @@ namespace Server_Solar_War
             DrawShips(spritebatch);
             //radius
             if(Raddis)
-                spritebatch.Draw(Radius_Tex,Radius_rect,Color.Yellow);
+                spritebatch.Draw(Radius_Tex,Radius_rect, faction_color);
 			//foreach(Rectangle rect in temp_rects)
 			//{
 			//	spritebatch.Draw(tex[index] , rect , Color.Black);
