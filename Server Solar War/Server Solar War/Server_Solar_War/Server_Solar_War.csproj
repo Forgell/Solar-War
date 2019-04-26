@@ -70,6 +70,7 @@
     <Compile Include="Game1.cs" />
     <Compile Include="Ship.cs" />
     <Compile Include="SoloarOrbit.cs" />
+    <Compile Include="Sun.cs" />
     <Compile Include="TitleScreen.cs" />
   </ItemGroup>
   <ItemGroup>

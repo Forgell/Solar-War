@@ -23,77 +23,36 @@ namespace Server_Solar_War
 
         //used to create planet
         IServiceProvider d;
+        //sun  object
+        Sun sun;
 
 
-        public Game(int screenWidth, int screenHeight, ContentManager Content)
+        public Game(int screenWidth , int screenHeight , ContentManager Content)
         {
             planets = new List<Planet>();
             players = new List<Player>();
             asteroids = new List<Asteroid>();
-            //orbits = new List<SolarOrbit>();
-            //later, write number of/each planets and players and asteroids
-            //asteroids.Add(new Asteroid(new Vector2(200, 200), 50));
-            //fill orbits with planets
-            Console.WriteLine(Content.RootDirectory);
-            int radius = 200;
-            double speed = 1.0 / 25;
-            int numberOfRows = 3;
-            int planet;
-            int count = 0;
-            int numberOfPlanets;//per row
-            int anglePerPlanet;
-            //colorful planets
-            //for (int j = 0; j < numberOfRows; j++) //number of rows
-            //{
-            //    radius = (j * 100) + 200; //radius increases by 100 each time
-            //    planet = 1;
-            //    numberOfPlanets = (radius - 100) / 25;
-            //    anglePerPlanet = (360 / numberOfPlanets);
-            //    speed = -speed;
-            //    for (int i = 0; i < numberOfPlanets; i++) //number of planets per row
-            //    {
-
-            //        planets.Add(new Planet("planet-" + planet, new Vector2(screenWidth / 2, screenHeight / 2), radius, speed, 2, Content, planet - 1));
-            //        //planets[count].setAngle(((planet - 1) * 90));
-            //        planets[count].setAngle(anglePerPlanet * i);
-            //        planet++;
-            //        count++;
-            //        if (planet == 5)
-            //        {
-            //            planet = 1;
-            //        }
-            //    }
-            //}
-
-            //only neutral planets
-            for (int j = 0; j < numberOfRows; j++) //number of rows
-            {
-                radius = (j * 100) + 200; //radius increases by 100 each time
-                numberOfPlanets = (radius - 100) / 25;
-                anglePerPlanet = (360 / numberOfPlanets);
-                speed = -speed;
-                for (int i = 0; i < numberOfPlanets; i++) //number of planets per row
-                {
-
-                    planets.Add(new Planet("planet-" + 5, new Vector2(screenWidth / 2, screenHeight / 2), radius, speed, 2, Content, 4));
-                    //planets[count].setAngle(((planet - 1) * 90));
-                    planets[count].setAngle(anglePerPlanet * i);
-                    count++;
-                }
-            }
-
-
-            //first orbit
-            //planets.Add(new Planet("planet-1", new Vector2(screenWidth / 2, screenHeight / 2), radius, speed, 2, Content, 0));
-            //planets[0].setAngle(0);
-            //planets.Add(new Planet("planet-2", new Vector2(screenWidth / 2, screenHeight / 2), radius, speed, 2, Content, 1));
-            //planets[1].setAngle(90);
-            //planets.Add(new Planet("planet-3", new Vector2(screenWidth / 2, screenHeight / 2), radius, speed, 2, Content, 2));
-            //planets[2].setAngle(180);
-            //planets.Add(new Planet("planet-4", new Vector2(screenWidth / 2, screenHeight / 2), radius, speed, 2, Content, 3));
-            //planets[3].setAngle(270);
-            //Console.WriteLine(planets[0].Angle + " " + planets[1].Angle);
-        }
+			//orbits = new List<SolarOrbit>();
+			//later, write number of/each planets and players and asteroids
+			//asteroids.Add(new Asteroid(new Vector2(200, 200), 50));
+			//fill orbits with planets
+			Console.WriteLine(Content.RootDirectory);
+			int radius = 200;
+			double speed = 1.0 /5.0;
+			planets.Add(new Planet("planet-2", new Vector2(screenWidth / 2 , screenHeight / 2) , radius , speed, 2, Content, 3));
+			planets[0].setAngle(0);
+			planets.Add(new Planet("planet-1", new Vector2(screenWidth / 2, screenHeight / 2), radius, speed, 2, Content, 0));
+			planets[1].setAngle(90);
+			planets.Add(new Planet("planet-3", new Vector2(screenWidth / 2, screenHeight / 2), radius, speed, 2, Content, 1));
+			planets[2].setAngle(180);
+			planets.Add(new Planet("planet-4", new Vector2(screenWidth / 2, screenHeight / 2), radius, speed, 2, Content, 2));
+			planets[3].setAngle(270);
+             //asteroid 
+            asteroids.Add(new Asteroid(new Vector2(100, 600), 50));
+            asteroids.Add(new Asteroid(new Vector2(300, 150), 50));
+            //sun
+            sun = new Sun((screenWidth/2)-100, (screenHeight/2)-100);
+		}
 
         public Planet getPlanet(Rectangle pos) 
         {
@@ -118,15 +77,18 @@ namespace Server_Solar_War
         {
             for (int i = 0; i < asteroids.Count; i++)
             {
-                asteroids[i].Load(server);
+                asteroids[i].Load(server,"astriod");
             }
             for (int i = 0; i < planets.Count; i++)
             {
                 planets[i].Load(server);
             }
+            sun.Load(server);
         }
         public void Update(GameTime gametime)
         {
+            MouseState m = Mouse.GetState();
+            //  Console.WriteLine("mouse: " + m.X);
             //update everything
             for (int i = 0; i < asteroids.Count; i++)
             {
@@ -134,18 +96,20 @@ namespace Server_Solar_War
             }
             for (int i = 0; i < planets.Count; i++)
             {
-                planets[i].Update(gametime);
+                planets[i].Update(gametime,m);
 				//Console.Write(planets[i].Angle + " ");
             }
-			//Console.WriteLine();
+            //Console.WriteLine();
             //change locations of planets as they rotate
+            sun.Update(gametime);
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
             //draw everything
-            
+
             //draw sun/star
+            sun.Draw(spriteBatch);
             //draw asteroids
             for(int i = 0; i < asteroids.Count; i++)
             {

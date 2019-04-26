@@ -56,9 +56,13 @@ namespace Server_Solar_War
 
 		private int index;
 		private Vector2 offset;
+        //radius for the planet to invade
+        private Texture2D Radius_Tex;
+        private Rectangle Radius_rect, mouse_Rect;
+        private Boolean Raddis;
 
-		//There is also a ship class, but this is the number of ships at this planet.
-		private int[] ships;
+        //There is also a ship class, but this is the number of ships at this planet.
+        private int[] ships;
         private Vector2[] shipPositions;
         private int color; //team that the planet is for {0 = orange, 1 = blue, 2 = green, 3 = purple, 4 = neutral}
         Label label;
@@ -100,6 +104,8 @@ namespace Server_Solar_War
             ships = new int[4]; //{0 = orange, 1 = blue, 2 = green, 3 = purple}
             shipPositions = new Vector2[4];
             color = team; //{0 = orange, 1 = blue, 2 = green, 3 = purple, 4 = neutral}
+            mouse_Rect = new Rectangle(0, 0, 5, 5);
+            
 
         }
 
@@ -112,9 +118,9 @@ namespace Server_Solar_War
         {
             //read file and load 
             ContentManager content = new ContentManager(serve, "Content");
-			//tex = content.Load<Texture2D>(name);
-			fileName = "Sprites/planets/" + fileName + "/";
-			string[] file = Directory.GetFiles("Content/"+fileName);
+            //tex = content.Load<Texture2D>(name);
+            fileName = "Sprites/planets/" + fileName + "/";
+            string[] file = Directory.GetFiles("Content/"+fileName);
             tex = new Texture2D[file.Length];
             for (int i =0; i<file.Length; i++)
             {
@@ -133,11 +139,20 @@ namespace Server_Solar_War
 
             //load SpriteFont
             font = content.Load<SpriteFont>("SpriteFont1");
+            //radius tex
+            Radius_Tex = content.Load<Texture2D>("Sprites/white-circle");
+
 		}
 
 
+        /**  Radiusa position movement **/
+        private void Radius()
+        {
+            int X = (pos.X - 50) - pos.Width/2;
+            int y = (pos.Y - 50)-pos.Height/2;
+            Radius_rect = new Rectangle(X, y, 150+pos.Width/2, 150+pos.Height/2);
 
-
+        }
         /**  animation */
         private void Orbit()
         {
@@ -200,9 +215,30 @@ namespace Server_Solar_War
             //will use x and y directions then check triangle a squared plus b squared = c squared
             return false;
         }
+        public void Update(GameTime gt, MouseState m)
+        {
 
+            //   radius display
+            //if (mouse shown in planet)
+            mouse_Rect.X = m.X;
+            mouse_Rect.Y = m.Y;
+              if (pos.Intersects(mouse_Rect))
+              
+                {
+                Radius();
+                Raddis = true;
+                //  if(m.LeftButton == ButtonState.Pressed)
+            }
+            else
+                Raddis = false;
+
+            Update(gt);
+
+
+        }
         public void Update(GameTime gameTime)
         {
+            MouseState m = Mouse.GetState();
             incrementShipTimer++;
             timer++;
                 angle += angular_speed;
@@ -224,6 +260,7 @@ namespace Server_Solar_War
                 incrementShips();
                 incrementShipTimer = 0;
             }
+
         }
         //color = {0 = orange, 1 = blue, 2 = green, 3 = purple, 4 = neutral}
         private void incrementShips()
@@ -284,6 +321,9 @@ namespace Server_Solar_War
         {
             spritebatch.Draw(tex[index], pos, Color.White);
             DrawShips(spritebatch);
+            //radius
+            if(Raddis)
+                spritebatch.Draw(Radius_Tex,Radius_rect,Color.Yellow);
 			//foreach(Rectangle rect in temp_rects)
 			//{
 			//	spritebatch.Draw(tex[index] , rect , Color.Black);
