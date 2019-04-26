@@ -75,7 +75,8 @@ namespace Server_Solar_War
         private int travel_radius;
 
         private Color faction_color;
-
+        private bool selected;
+        private Rectangle selected_rect;
 		public Planet(string fileName, Vector2 origin,int radius , double angular_speed ,int scaler ,ContentManager Contents, int team) // input degress
         {
 			owner = 0;
@@ -111,7 +112,8 @@ namespace Server_Solar_War
             }
             mouse_Rect = new Rectangle(0, 0, 5, 5);
             travel_radius = 100;
-
+            selected = false;
+            
         }
 
 		public void setAngle(double angle) // input degeres
@@ -141,7 +143,8 @@ namespace Server_Solar_War
 			offset = new Vector2(width  / 2.0f, height / 2.0f);
 
 			pos = new Rectangle((int)origin.X + radius - (int)offset.X , (int)origin.Y - (int)offset.Y, width, height);
-
+            int diff = 7;
+            selected_rect = new Rectangle(pos.X - diff , pos.Y - diff, width+ (diff*2), height+ (diff * 2));
             //load SpriteFont
             font = content.Load<SpriteFont>("SpriteFont1");
             //radius tex
@@ -175,45 +178,6 @@ namespace Server_Solar_War
 			ships[team] += amnt;
         }
 
-        private void attack()
-        {
-			int[] newShips = new int[5];
-			
-			for (int i = 0; i < ships.Length; i++)
-			{
-				int enemy = 0;
-				for (int x = 0; x < ships.Length; x++)
-				{
-					if (owner == i)
-						continue;
-					enemy += ships[i];
-				}
-				double chance = ships[i] / enemy * 50;
-				//int num = r.Next((int)chance);
-				/*switch (num)
-				{
-					case 0:
-						newShips[i] = ships[i] - 5;
-						break;
-					case 1:
-						newShips[i] = ships[i] - 4;
-						break;
-					case 2:
-						newShips[i] = ships[i] - 3;
-						break;
-					case 3:
-						newShips[i] = ships[i] - 2;
-						break;
-					case 4:
-						newShips[i] = ships[i] - 1;
-						break;
-				}*/
-
-				
-				
-			}
-			ships = newShips;
-		}
 
         public bool checkRadius()//check radius to be able to move troops
         {
@@ -266,6 +230,10 @@ namespace Server_Solar_War
                 incrementShipTimer = 0;
             }
 
+            int diff = 7;
+            selected_rect.X = pos.X - diff;
+            selected_rect.Y = pos.Y - diff;//, width + diff, height + diff);
+
         }
         //color = {0 = orange, 1 = blue, 2 = green, 3 = purple, 4 = neutral}
         private void incrementShips()
@@ -285,7 +253,10 @@ namespace Server_Solar_War
 
         private void playerAction(MouseState mouse)
         {
+            if (mouse.LeftButton == ButtonState.Pressed)
+            {
 
+            }
         }
 
         //If ships of a diferent color than planet is at planet, then ships attack defending ships
@@ -334,10 +305,11 @@ namespace Server_Solar_War
             //radius
             if(Raddis)
                 spritebatch.Draw(Radius_Tex,Radius_rect, faction_color);
-			//foreach(Rectangle rect in temp_rects)
-			//{
-			//	spritebatch.Draw(tex[index] , rect , Color.Black);
-			//}
+            if (selected)
+            {
+                spritebatch.Draw(Radius_Tex, selected_rect , Color.Black);
+            }
+			
         }
 
         //draw the number of ships at a planet

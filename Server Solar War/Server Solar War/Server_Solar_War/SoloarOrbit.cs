@@ -30,7 +30,7 @@ namespace Server_Solar_War
             for(int i = 0; i < number_of_planets; i++)
             {
                 
-                planets.Add(new Planet( "temp_image",new Vector2((float)(radius * Math.Cos(MathHelper.ToRadians((float)currnet_angle))) + translateX , (float)(radius * Math.Sin(MathHelper.ToRadians((float)currnet_angle))) + translateY) , radius , angular_speed ));
+                //planets.Add(new Planet( "temp_image",new Vector2((float)(radius * Math.Cos(MathHelper.ToRadians((float)currnet_angle))) + translateX , (float)(radius * Math.Sin(MathHelper.ToRadians((float)currnet_angle))) + translateY) , radius , angular_speed ));
                 currnet_angle += angle_between;
             }
         }
