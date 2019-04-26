@@ -282,6 +282,11 @@ namespace Server_Solar_War
             }
         }
 
+        private void playerAction(MouseState mouse)
+        {
+
+        }
+
         //If ships of a diferent color than planet is at planet, then ships attack defending ships
         private void attacked()
         {
