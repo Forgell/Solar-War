@@ -54,6 +54,16 @@ namespace Client_Solar_War
             }
             //state = State.CLOSING;
         }
+		public void closeStream(int num)
+		{
+			if (ClientSocket.IsBound)
+			{
+				byte[] exit_message_as_bytes = Encoding.ASCII.GetBytes("exit" + num);
+				ClientSocket.Send(exit_message_as_bytes, 0, exit_message_as_bytes.Length, SocketFlags.None);
+				ClientSocket.Close();
+			}
+			//state = State.CLOSING;
+		}
 		public void send(String str)
 		{
 			byte[] message_as_bytes = Encoding.ASCII.GetBytes(str);

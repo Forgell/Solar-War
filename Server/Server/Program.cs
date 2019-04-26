@@ -141,6 +141,16 @@ namespace Server
 				TOTAL_PLAYER_NUMBER--;
                 return;
             }
+			else if (text.ToLower().Contains("exit"))
+			{
+				current.Shutdown(SocketShutdown.Both);
+				current.Close();
+				clientSockets.Remove(current);
+				Console.WriteLine("Client disconnected");
+				TOTAL_PLAYER_NUMBER--;
+				players_connected_as_string.Replace("" + text.ToCharArray()[4], "");
+				return;
+			}
             else
             {
                 Console.WriteLine("recieved: " + text);

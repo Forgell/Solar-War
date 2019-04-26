@@ -183,7 +183,10 @@ namespace Client_Solar_War
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || console.IsKeyDown(Keys.Escape))
 			{
-				network.closeStream();
+				if (player_number != 0)
+					network.closeStream(player_number);
+				else
+					network.closeStream();
 				this.Exit();
 				networking_thread.Abort();
 			}
