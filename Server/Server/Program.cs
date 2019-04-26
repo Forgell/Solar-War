@@ -22,7 +22,8 @@ namespace Server
 		//private static PlayerState[] player_state = new PlayerState[4];
 		// need to create a game loop so I will use threadgin as a filler? good idea
 		private static Thread game_loop_thread;
-        private static string players_connected_as_string;
+        public static string players_connected_as_string;
+        private static Dictionary<Socket, int> playernums = new Dictionary<Socket, int>(4);
         static void Main(string[] args)
         {
             Console.Title = "Server";
@@ -110,6 +111,8 @@ namespace Server
             }
             catch (SocketException)
             {
+                players_connected_as_string = players_connected_as_string.Remove(players_connected_as_string.IndexOf("" + playernums[current]), 1);
+                playernums.Remove(current);
                 Console.WriteLine("Client forcefully disconnected");
                 // Don't shutdown because the socket may be disposed and its disconnected anyway.
                 current.Close();
@@ -133,7 +136,7 @@ namespace Server
             
             if (text.ToLower() == "exit") // Client wants to exit gracefully
             {
-                // Always Shutdown before closing
+                // Always Shutdown before closing.
                 current.Shutdown(SocketShutdown.Both);
                 current.Close();
                 clientSockets.Remove(current);
@@ -143,12 +146,15 @@ namespace Server
             }
 			else if (text.ToLower().Contains("exit"))
 			{
+                playernums.Remove(current);
 				current.Shutdown(SocketShutdown.Both);
 				current.Close();
 				clientSockets.Remove(current);
-				Console.WriteLine("Client disconnected");
+				Console.WriteLine("Client " + text.ToCharArray()[4] + " disconnected");
 				TOTAL_PLAYER_NUMBER--;
-				players_connected_as_string.Replace("" + text.ToCharArray()[4], "");
+                //Console.WriteLine(players_connected_as_string.IndexOf(text.ToCharArray()[4]));
+                //Console.WriteLine(text.ToCharArray()[4]);
+				players_connected_as_string = players_connected_as_string.Remove(players_connected_as_string.IndexOf(text.ToCharArray()[4]), 1);
 				return;
 			}
             else
@@ -164,6 +170,7 @@ namespace Server
                         players_connected_as_string += num;
                         current.Send(Encoding.ASCII.GetBytes("You are player: " + num));
                         Console.WriteLine("sent: " + "You are player: " + num);
+                        playernums.Add(current, num);
                     }else
                     {
                         current.Send(Encoding.ASCII.GetBytes("taken"));
