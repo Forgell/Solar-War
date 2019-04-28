@@ -32,21 +32,8 @@ namespace Server_Solar_War
             planets = new List<Planet>();
             players = new List<Player>();
             asteroids = new List<Asteroid>();
-			//orbits = new List<SolarOrbit>();
-			//later, write number of/each planets and players and asteroids
-			//asteroids.Add(new Asteroid(new Vector2(200, 200), 50));
-			//fill orbits with planets
-			Console.WriteLine(Content.RootDirectory);
-			//int radius = 200;
-			//double speed = 1.0 /5.0;
-			//planets.Add(new Planet("planet-2", new Vector2(screenWidth / 2 , screenHeight / 2) , radius , speed, 2, Content, 3));
-			//planets[0].setAngle(0);
-			//planets.Add(new Planet("planet-1", new Vector2(screenWidth / 2, screenHeight / 2), radius, speed, 2, Content, 0));
-			//planets[1].setAngle(90);
-			//planets.Add(new Planet("planet-3", new Vector2(screenWidth / 2, screenHeight / 2), radius, speed, 2, Content, 1));
-			//planets[2].setAngle(180);
-			//planets.Add(new Planet("planet-4", new Vector2(screenWidth / 2, screenHeight / 2), radius, speed, 2, Content, 2));
-			//planets[3].setAngle(270);
+			
+			
 
 
 			// this is the one that works
@@ -119,9 +106,7 @@ namespace Server_Solar_War
             //Console.WriteLine(planets[0].Angle + " " + planets[1].Angle);
 
 
-            //asteroid 
-            //asteroids.Add(new Asteroid(new Vector2(100, 600), 50));
-            //asteroids.Add(new Asteroid(new Vector2(300, 150), 50));
+            
             //sun
             sun = new Sun((screenWidth/2)-100, (screenHeight/2)-100);
 		}

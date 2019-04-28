@@ -64,7 +64,7 @@ namespace Server_Solar_War
         //There is also a ship class, but this is the number of ships at this planet.
         private int[] ships;
         private Vector2[] shipPositions;
-        private int color; //team that the planet is for {0 = orange, 1 = blue, 2 = green, 3 = purple, 4 = neutral}
+        //private int color; //team that the planet is for {0 = orange, 1 = blue, 2 = green, 3 = purple, 4 = neutral}
         Label label;
         private bool isAttacked;
         private int incrementShipTimer;
@@ -77,7 +77,7 @@ namespace Server_Solar_War
         private Color faction_color;
         private bool selected;
         private Rectangle selected_rect;
-		public Planet(string fileName, Vector2 origin,int radius , double angular_speed ,int scaler , int team) // input degress
+		public Planet(string fileName, Vector2 origin,int radius , double angular_speed ,int scaler , Color faction_color) // input degress
         {
 			owner = 0;
             this.origin = origin;
@@ -101,15 +101,16 @@ namespace Server_Solar_War
             //temp_rects.Add(new Rectangle((int)origin.X , (int)origin.Y , 1 , 1));
             ships = new int[4]; //{0 = orange, 1 = blue, 2 = green, 3 = purple}
             shipPositions = new Vector2[4];
-            color = team; //{0 = orange, 1 = blue, 2 = green, 3 = purple, 4 = neutral}
-            switch (team)
+			//color = team; //{0 = orange, 1 = blue, 2 = green, 3 = purple, 4 = neutral}
+			/*switch (team)
             {
                 case 0: faction_color = Color.Orange;break;
                 case 1: faction_color = Color.Blue; break;
                 case 2: faction_color = Color.Green; break;
                 case 3: faction_color = Color.Purple; break;
                 case 4: faction_color = Color.Black; break;
-            }
+            }*/
+			this.faction_color = faction_color;
             mouse_Rect = new Rectangle(0, 0, 5, 5);
             travel_radius = 100;
             selected = false;
@@ -226,8 +227,11 @@ namespace Server_Solar_War
             //attack();
             if(incrementShipTimer == 60)//increase number of ships each second
             {
-                incrementShips();
-                incrementShipTimer = 0;
+				if (faction_color != Color.Black)
+				{
+					incrementShips();
+					incrementShipTimer = 0;
+				}
             }
 
             int diff = 7;
