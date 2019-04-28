@@ -113,7 +113,8 @@ namespace Server_Solar_War
 
         public Planet getPlanet(Rectangle pos) 
         {
-            for(int i = 0; i < planets.Count; i++)
+			// this methoud is out of date all planets are now held within the solar obrits list
+			for (int i = 0; i < planets.Count; i++)
             {
                 if(pos.Intersects((planets.ElementAt<Planet>(i)).position))
                 {
@@ -149,7 +150,6 @@ namespace Server_Solar_War
         public void Update(GameTime gametime)
         {
             MouseState m = Mouse.GetState();
-            //  Console.WriteLine("mouse: " + m.X);
             //update everything
             for (int i = 0; i < asteroids.Count; i++)
             {
@@ -164,7 +164,6 @@ namespace Server_Solar_War
 			{
 				soloar_orbits[i].Update(gametime , m);
 			}
-            //Console.WriteLine();
             //change locations of planets as they rotate
             sun.Update(gametime);
         }

@@ -31,7 +31,6 @@ namespace Server_Solar_War
             for(int i = 0; i < number_of_planets; i++)
             {
 
-				//new Vector2((float)(radius * Math.Cos(MathHelper.ToRadians((float)currnet_angle))) + translateX , (float)(radius * Math.Sin(MathHelper.ToRadians((float)currnet_angle))) + translateY) , radius , angular_speed ));
 				planets.Add(new Planet("planet-5" , orgin , radius , angular_speed , 2 , Color.Black));
 				planets[i].setAngle(currnet_angle);
 				currnet_angle += angle_between;

@@ -53,6 +53,10 @@ namespace Server_Solar_War
 		}
 		private int scaler;
 
+		private Label ship_label;
+
+
+		public static int Max_AMOUNT_OF_SHIPS_ON_PLANET = 99;
 
 		private int index;
 		private Vector2 offset;
@@ -62,7 +66,7 @@ namespace Server_Solar_War
         private Boolean Raddis;
 
         //There is also a ship class, but this is the number of ships at this planet.
-        private int[] ships;
+        private int ships;
         private Vector2[] shipPositions;
         //private int color; //team that the planet is for {0 = orange, 1 = blue, 2 = green, 3 = purple, 4 = neutral}
         Label label;
@@ -70,16 +74,13 @@ namespace Server_Solar_War
         private int incrementShipTimer;
         private int timer;
 		private String fileName;
-		private int owner;
 		private int radius;
-        private int travel_radius;
 
         private Color faction_color;
         private bool selected;
         private Rectangle selected_rect;
 		public Planet(string fileName, Vector2 origin,int radius , double angular_speed ,int scaler , Color faction_color) // input degress
         {
-			owner = 0;
             this.origin = origin;
             this.radius = radius;
 			this.fileName = fileName;
@@ -99,7 +100,7 @@ namespace Server_Solar_War
 			this.scaler = scaler;
             //temp_rects = new List<Rectangle>();
             //temp_rects.Add(new Rectangle((int)origin.X , (int)origin.Y , 1 , 1));
-            ships = new int[4]; //{0 = orange, 1 = blue, 2 = green, 3 = purple}
+            ships = 0; 
             shipPositions = new Vector2[4];
 			//color = team; //{0 = orange, 1 = blue, 2 = green, 3 = purple, 4 = neutral}
 			/*switch (team)
@@ -112,9 +113,9 @@ namespace Server_Solar_War
             }*/
 			this.faction_color = faction_color;
             mouse_Rect = new Rectangle(0, 0, 5, 5);
-            travel_radius = 100;
+            //travel_radius = 100;
             selected = false;
-            
+			
         }
 
 		public void setAngle(double angle) // input degeres
@@ -150,6 +151,7 @@ namespace Server_Solar_War
             font = content.Load<SpriteFont>("SpriteFont1");
             //radius tex
             Radius_Tex = content.Load<Texture2D>("Sprites/white-circle");
+			ship_label = new Label("" + ships, new Vector2(pos.X, pos.Y), faction_color, font);
 
 		}
 
@@ -174,22 +176,33 @@ namespace Server_Solar_War
 
 
         //if it being invaded by a a 
-        public void add(int team, int amnt) //some class or paerameter like color
+        public void add(Color faction, int amnt) //some class or paerameter like color
         {
-			ships[team] += amnt;
+			if (faction == faction_color)
+			{
+				ships += amnt;
+				if (ships > 99)
+				{
+					ships = 99;
+				}
+			}
+			else
+			{
+				//battle(faction , amnt);
+			}
         }
 
 
-        public bool checkRadius()//check radius to be able to move troops
+        /*public bool checkRadius()//check radius to be able to move troops
         {
             //will use x and y directions then check triangle a squared plus b squared = c squared
             return false;
         }
-        public void Update(GameTime gt, MouseState m)
+		*/
+        /*public void Update(GameTime gt, MouseState m)
         {
 
             //   radius display
-            //if (mouse shown in planet)
             mouse_Rect.X = m.X;
             mouse_Rect.Y = m.Y;
               if (pos.Intersects(mouse_Rect))
@@ -197,19 +210,29 @@ namespace Server_Solar_War
                 {
                 Radius();
                 Raddis = true;
-                //  if(m.LeftButton == ButtonState.Pressed)
             }
             else
                 Raddis = false;
 
-            Update(gt);
+            //Update(gt);
 
 
         }
-        public void Update(GameTime gameTime)
+		*/
+        public void Update(GameTime gameTime , MouseState m)
         {
-            MouseState m = Mouse.GetState();
-            incrementShipTimer++;
+			mouse_Rect.X = m.X;
+			mouse_Rect.Y = m.Y;
+			if (pos.Intersects(mouse_Rect))
+
+			{
+				Radius();
+				Raddis = true;
+			}
+			else
+				Raddis = false;
+
+			incrementShipTimer++;
             timer++;
                 angle += angular_speed;
                 Orbit();
@@ -222,35 +245,31 @@ namespace Server_Solar_War
 			{
 				index = 0;
 			}
-			//temp_rects.Add(new Rectangle(pos.X + (int)offset.X , pos.Y + (int)offset.Y , 1 , 1));
            
-            //attack();
             if(incrementShipTimer == 60)//increase number of ships each second
             {
-				if (faction_color != Color.Black)
-				{
-					incrementShips();
-					incrementShipTimer = 0;
-				}
+
+				incrementShips();
+				incrementShipTimer = 0;
             }
 
             int diff = 7;
             selected_rect.X = pos.X - diff;
             selected_rect.Y = pos.Y - diff;//, width + diff, height + diff);
-
+			ship_label.updateText(""+ships);
+			ship_label.updatePosition(pos.X - 25 , pos.Y);
         }
-        //color = {0 = orange, 1 = blue, 2 = green, 3 = purple, 4 = neutral}
         private void incrementShips()
         {
-            if (color == 4)
+            if (faction_color == Color.Black)
             {
                 //nothing happens because planet is neutral
             }
             else
             {
-                if(ships[color] < 99)
+                if(ships < Max_AMOUNT_OF_SHIPS_ON_PLANET)
                 {
-                    ships[color] += 1;
+                    ships += 1;
                 }
             }
         }
@@ -268,7 +287,7 @@ namespace Server_Solar_War
 		}
 
         //If ships of a diferent color than planet is at planet, then ships attack defending ships
-        private void attacked()
+        /*private void attacked()
         {
             isAttacked = false;
             for(int i = 0; i < 4; i++) 
@@ -304,7 +323,8 @@ namespace Server_Solar_War
                     }
                 }
             }
-        }
+        }*/
+
 
         public void Draw(SpriteBatch spritebatch)
         {
@@ -323,51 +343,9 @@ namespace Server_Solar_War
         //draw the number of ships at a planet
         private void DrawShips(SpriteBatch spritebatch)
         {
-            if(ships[0] != 0)
-                DrawOrangeShips(spritebatch);
-            if (ships[1] != 0)
-                DrawBlueShips(spritebatch);
-            if (ships[2] != 0)
-                DrawGreenShips(spritebatch);
-            if (ships[3] != 0)
-                DrawPurpleShips(spritebatch);
+			ship_label.Draw(spritebatch);
 
         }
-        //ships = {0 = orange, 1 = blue, 2 = green, 3 = purple}
-        //draw the int number of ships at the planet
-        private void DrawOrangeShips(SpriteBatch spritebatch)
-        {
-            //display to the left of the planet
-            shipPositions[0] = new Vector2(pos.X - 25, pos.Y);
-            label = new Label("" + ships[0], shipPositions[0], Color.Orange, font);
-            label.Draw(spritebatch);
-            //spritebatch.DrawString(font, "" + ships[0], shipPositions[0], Color.Orange);
-        }
-        private void DrawBlueShips(SpriteBatch spritebatch)
-        {
-            //display below the planet
-            shipPositions[1] = new Vector2(pos.X + 10, pos.Y + 25);
-            label = new Label("" + ships[1], shipPositions[1], Color.Blue, font);
-            label.Draw(spritebatch);
-            //spritebatch.DrawString(font, "" + ships[1], shipPositions[1], Color.Blue);
-        }
-        private void DrawGreenShips(SpriteBatch spritebatch)
-        {
-            //display to the right of the planet
-            shipPositions[2] = new Vector2(pos.X + 35, pos.Y);
-            label = new Label("" + ships[2], shipPositions[2], Color.Green, font);
-            label.Draw(spritebatch);
-            //spritebatch.DrawString(font, "" + ships[2], shipPositions[2], Color.Green);
-        }
-        private void DrawPurpleShips(SpriteBatch spritebatch)
-        {
-            //display above the planet
-            shipPositions[3] = new Vector2(pos.X + 10, pos.Y - 22);
-            label = new Label("" + ships[3], shipPositions[3], Color.Purple, font);
-            label.Draw(spritebatch);
-            //spritebatch.DrawString(font, "" + ships[3], shipPositions[3], Color.Purple);
-        }
-        
 
     }
 }
