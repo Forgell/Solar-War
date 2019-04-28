@@ -19,8 +19,8 @@ namespace Server_Solar_War
         //contains all planets and players
         //contains all asteroids
         List<Asteroid> asteroids;
-        //list of SolarOrbits 
-
+		//list of SolarOrbits 
+		List<SoloarOrbit> soloar_orbits;
         //used to create planet
         IServiceProvider d;
         //sun  object
@@ -37,18 +37,20 @@ namespace Server_Solar_War
 			//asteroids.Add(new Asteroid(new Vector2(200, 200), 50));
 			//fill orbits with planets
 			Console.WriteLine(Content.RootDirectory);
-			int radius = 200;
-            //double speed = 1.0 /5.0;
-            //planets.Add(new Planet("planet-2", new Vector2(screenWidth / 2 , screenHeight / 2) , radius , speed, 2, Content, 3));
-            //planets[0].setAngle(0);
-            //planets.Add(new Planet("planet-1", new Vector2(screenWidth / 2, screenHeight / 2), radius, speed, 2, Content, 0));
-            //planets[1].setAngle(90);
-            //planets.Add(new Planet("planet-3", new Vector2(screenWidth / 2, screenHeight / 2), radius, speed, 2, Content, 1));
-            //planets[2].setAngle(180);
-            //planets.Add(new Planet("planet-4", new Vector2(screenWidth / 2, screenHeight / 2), radius, speed, 2, Content, 2));
-            //planets[3].setAngle(270);
+			//int radius = 200;
+			//double speed = 1.0 /5.0;
+			//planets.Add(new Planet("planet-2", new Vector2(screenWidth / 2 , screenHeight / 2) , radius , speed, 2, Content, 3));
+			//planets[0].setAngle(0);
+			//planets.Add(new Planet("planet-1", new Vector2(screenWidth / 2, screenHeight / 2), radius, speed, 2, Content, 0));
+			//planets[1].setAngle(90);
+			//planets.Add(new Planet("planet-3", new Vector2(screenWidth / 2, screenHeight / 2), radius, speed, 2, Content, 1));
+			//planets[2].setAngle(180);
+			//planets.Add(new Planet("planet-4", new Vector2(screenWidth / 2, screenHeight / 2), radius, speed, 2, Content, 2));
+			//planets[3].setAngle(270);
 
-            double speed = 1.0 / 25;
+
+			// this is the one that works
+			/*double speed = 1.0 / 25;
             int numberOfRows = 3;
             int planet;
             int count = 0;
@@ -65,7 +67,7 @@ namespace Server_Solar_War
                 for (int i = 0; i < numberOfPlanets; i++) //number of planets per row
                 {
 
-                    planets.Add(new Planet("planet-" + planet, new Vector2(screenWidth / 2, screenHeight / 2), radius, speed, 2, Content, planet - 1));
+                    planets.Add(new Planet("planet-" + planet, new Vector2(screenWidth / 2, screenHeight / 2), radius, speed, 2, planet - 1));
                     //planets[count].setAngle(((planet - 1) * 90));
                     planets[count].setAngle(anglePerPlanet * i);
                     planet++;
@@ -75,8 +77,19 @@ namespace Server_Solar_War
                         planet = 1;
                     }
                 }
-            }
-
+            }*/
+			soloar_orbits = new List<SoloarOrbit>();
+			int radius = 200;
+			double angular_speed = 1/25.0;
+			int number_of_planets = 4;
+			for(int i = 0; i < 3; i++)
+			{
+				soloar_orbits.Add(new SoloarOrbit(radius, angular_speed, number_of_planets, screenWidth, screenHeight));
+				number_of_planets += 2;
+				angular_speed = -angular_speed;
+				radius += 100;
+			}
+		
             //only neutral planets
             //for (int j = 0; j < numberOfRows; j++) //number of rows
             //{
@@ -107,8 +120,8 @@ namespace Server_Solar_War
 
 
             //asteroid 
-            asteroids.Add(new Asteroid(new Vector2(100, 600), 50));
-            asteroids.Add(new Asteroid(new Vector2(300, 150), 50));
+            //asteroids.Add(new Asteroid(new Vector2(100, 600), 50));
+            //asteroids.Add(new Asteroid(new Vector2(300, 150), 50));
             //sun
             sun = new Sun((screenWidth/2)-100, (screenHeight/2)-100);
 		}
@@ -142,6 +155,10 @@ namespace Server_Solar_War
             {
                 planets[i].Load(server);
             }
+			for (int i = 0; i < soloar_orbits.Count; i++)
+			{
+				soloar_orbits[i].Load(server);
+			}
             sun.Load(server);
         }
         public void Update(GameTime gametime)
@@ -158,6 +175,10 @@ namespace Server_Solar_War
                 planets[i].Update(gametime,m);
 				//Console.Write(planets[i].Angle + " ");
             }
+			for(int i = 0; i < soloar_orbits.Count; i++)
+			{
+				soloar_orbits[i].Update(gametime , m);
+			}
             //Console.WriteLine();
             //change locations of planets as they rotate
             sun.Update(gametime);
@@ -179,6 +200,11 @@ namespace Server_Solar_War
             {
                 planets[i].Draw(spriteBatch);
             }
+
+			for(int i = 0; i < soloar_orbits.Count; i++)
+			{
+				soloar_orbits[i].Draw(spriteBatch);
+			}
         }
     }
 }

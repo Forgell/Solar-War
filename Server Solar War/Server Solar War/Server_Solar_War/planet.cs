@@ -77,7 +77,7 @@ namespace Server_Solar_War
         private Color faction_color;
         private bool selected;
         private Rectangle selected_rect;
-		public Planet(string fileName, Vector2 origin,int radius , double angular_speed ,int scaler ,ContentManager Contents, int team) // input degress
+		public Planet(string fileName, Vector2 origin,int radius , double angular_speed ,int scaler , int team) // input degress
         {
 			owner = 0;
             this.origin = origin;
@@ -251,13 +251,17 @@ namespace Server_Solar_War
             }
         }
 
-        private void playerAction(MouseState mouse)
-        {
-            if (mouse.LeftButton == ButtonState.Pressed)
-            {
 
-            }
-        }
+
+        public void select()
+		{
+			selected = true;
+		}
+
+		public void deselect()
+		{
+			selected = false;
+		}
 
         //If ships of a diferent color than planet is at planet, then ships attack defending ships
         private void attacked()
