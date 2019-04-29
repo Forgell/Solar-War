@@ -48,7 +48,7 @@ namespace Server_Solar_War
             //graphics.IsFullScreen = true;
             //graphics.ToggleFullScreen();
             graphics.ApplyChanges();
-            game = new Game(graphics.PreferredBackBufferWidth , graphics.PreferredBackBufferHeight , Content);
+            game = new Game(graphics.PreferredBackBufferWidth , graphics.PreferredBackBufferHeight , Content , Color.Green);
             //asteroid = new Asteroid(new Vector2(200, 200), 50);
             IsMouseVisible = true;
 

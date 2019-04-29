@@ -53,10 +53,17 @@ namespace Server_Solar_War
 		}
 		private int scaler;
 
+		public Color Color
+		{
+			get { return faction_color; }
+		}
+
 		private Label ship_label;
 
 
 		public static int Max_AMOUNT_OF_SHIPS_ON_PLANET = 99;
+		public static int TRAVEL_RADIUS = 270 / 2;
+
 
 		private int index;
 		private Vector2 offset;
@@ -79,6 +86,8 @@ namespace Server_Solar_War
         private Color faction_color;
         private bool selected;
         private Rectangle selected_rect;
+
+
 		public Planet(string fileName, Vector2 origin,int radius , double angular_speed ,int scaler , Color faction_color) // input degress
         {
             this.origin = origin;
@@ -102,15 +111,7 @@ namespace Server_Solar_War
             //temp_rects.Add(new Rectangle((int)origin.X , (int)origin.Y , 1 , 1));
             ships = 0; 
             shipPositions = new Vector2[4];
-			//color = team; //{0 = orange, 1 = blue, 2 = green, 3 = purple, 4 = neutral}
-			/*switch (team)
-            {
-                case 0: faction_color = Color.Orange;break;
-                case 1: faction_color = Color.Blue; break;
-                case 2: faction_color = Color.Green; break;
-                case 3: faction_color = Color.Purple; break;
-                case 4: faction_color = Color.Black; break;
-            }*/
+			
 			this.faction_color = faction_color;
             mouse_Rect = new Rectangle(0, 0, 5, 5);
             //travel_radius = 100;
@@ -161,7 +162,8 @@ namespace Server_Solar_War
         {
             int X = (pos.X - (pos.Width * 4)); //- pos.Width/2;
             int y = (pos.Y - (pos.Height * 4)); //- pos.Height/2;
-            Radius_rect = new Rectangle(X, y, (pos.Width * 9), (pos.Height * 9));
+			//Console.WriteLine(pos.Width * 9);
+            Radius_rect = new Rectangle(X, y, TRAVEL_RADIUS * 2, TRAVEL_RADIUS * 2);
         }
         /**  animation */
         private void Orbit()

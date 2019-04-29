@@ -55,6 +55,18 @@ namespace Server_Solar_War
         }
 
 
+		public Planet getPlanet(Rectangle position)
+		{
+			foreach (Planet planet in planets)
+			{
+				if (planet.position.Intersects(position))
+				{
+					return planet;
+				}
+			}
+			return null;
+		}
+
 
 		public void Load(IServiceProvider server)
 		{
