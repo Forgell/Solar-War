@@ -128,14 +128,15 @@ namespace Server_Solar_War
 			if (mouse.RightButton == ButtonState.Pressed && !(old_mouse.RightButton == ButtonState.Pressed))// right click to desect
 			{
 				planet_is_selected = false;
-				selected_planet.deselect();
+				if(selected_planet != null) 
+					selected_planet.deselect();
 				selected_planet = null;
 			}
 		}
 
 		private void transfer_troops(Planet first , Planet secound)
 		{
-			
+			first.tranfer_troops(secound , 1);
 		}
 
         public void Load(IServiceProvider server)

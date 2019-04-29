@@ -86,8 +86,9 @@ namespace Server_Solar_War
         private Color faction_color;
         private bool selected;
         private Rectangle selected_rect;
-
-
+		private bool is_being_taken_over;
+		private double capture_timer;
+		private Color ships_color;
 		public Planet(string fileName, Vector2 origin,int radius , double angular_speed ,int scaler , Color faction_color) // input degress
         {
             this.origin = origin;
@@ -116,7 +117,9 @@ namespace Server_Solar_War
             mouse_Rect = new Rectangle(0, 0, 5, 5);
             //travel_radius = 100;
             selected = false;
-			
+			is_being_taken_over = false;
+			capture_timer = 0;
+			ships_color = faction_color;
         }
 
 		public void setAngle(double angle) // input degeres
@@ -178,7 +181,7 @@ namespace Server_Solar_War
 
 
         //if it being invaded by a a 
-        public void add(Color faction, int amnt) //some class or paerameter like color
+        /*public void add(Color faction, int amnt) //some class or paerameter like color
         {
 			if (faction == faction_color)
 			{
@@ -192,7 +195,36 @@ namespace Server_Solar_War
 			{
 				//battle(faction , amnt);
 			}
-        }
+        }*/
+
+		public void tranfer_troops(Planet source ,  int amount)
+		{
+			source.ships -= amount;
+			if (source.faction_color == this.faction_color)
+			{
+				// peacful tranfer
+				this.ships += amount;
+			}
+			else
+			{
+				// it is attacking
+				if (this.ships >= amount)
+				{
+					// the faction holds
+					this.ships -= amount;
+				}
+				else
+				{
+					// stop producing
+					// start a timer
+					is_being_taken_over = true;
+					this.ships = amount - this.ships;
+					
+					ships_color = source.faction_color;
+				}
+
+			}
+		}
 
 
         /*public bool checkRadius()//check radius to be able to move troops
@@ -221,8 +253,9 @@ namespace Server_Solar_War
 
         }
 		*/
-        public void Update(GameTime gameTime , MouseState m)
-        {
+
+		private void update_radius(MouseState m)
+		{
 			mouse_Rect.X = m.X;
 			mouse_Rect.Y = m.Y;
 			if (pos.Intersects(mouse_Rect))
@@ -233,11 +266,11 @@ namespace Server_Solar_War
 			}
 			else
 				Raddis = false;
-
+		}
+		private void updateShips()
+		{
 			incrementShipTimer++;
-            timer++;
-                angle += angular_speed;
-                Orbit();
+			timer++;
 			if (timer == 10)
 			{
 				index++;
@@ -247,20 +280,45 @@ namespace Server_Solar_War
 			{
 				index = 0;
 			}
-           
-            if(incrementShipTimer == 60)//increase number of ships each second
-            {
+
+			if (incrementShipTimer == 60)//increase number of ships each second
+			{
 
 				incrementShips();
 				incrementShipTimer = 0;
-            }
+			}
+		}
+        public void Update(GameTime gameTime , MouseState m)
+        {
+			// see if the mouse is hovering to show the radius of travel
+			update_radius(m);
 
-            int diff = 7;
-            selected_rect.X = pos.X - diff;
+			updateShips();
+
+			angle += angular_speed;
+			Orbit();
+
+			if (is_being_taken_over)
+			{
+				capture_timer++;
+				if (capture_timer == 180) // hopefully around 2 secounds
+				{
+					changeFaction();
+				}
+			}
+			int diff = 7;
+			selected_rect.X = pos.X - diff;
             selected_rect.Y = pos.Y - diff;//, width + diff, height + diff);
 			ship_label.updateText(""+ships);
 			ship_label.updatePosition(pos.X - 25 , pos.Y);
+			ship_label.updateColor(ships_color);
         }
+
+		private void changeFaction()
+		{
+			
+		}
+
         private void incrementShips()
         {
             if (faction_color == Color.Black)
@@ -269,7 +327,7 @@ namespace Server_Solar_War
             }
             else
             {
-                if(ships < Max_AMOUNT_OF_SHIPS_ON_PLANET)
+                if(ships < Max_AMOUNT_OF_SHIPS_ON_PLANET && !is_being_taken_over)
                 {
                     ships += 1;
                 }
