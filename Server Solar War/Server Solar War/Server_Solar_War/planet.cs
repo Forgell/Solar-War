@@ -73,7 +73,7 @@ namespace Server_Solar_War
 
 		public static int Max_AMOUNT_OF_SHIPS_ON_PLANET = 99;
 		public static int TRAVEL_RADIUS = 270 / 2;
-		public static int TOTAL_TIME_TO_CAPTURE = 60; // as in 60 frames
+		public static int TOTAL_TIME_TO_CAPTURE = 1200; // as in 60 frames
 
 		private int index;
 		private Vector2 offset;
@@ -98,6 +98,7 @@ namespace Server_Solar_War
         private Rectangle selected_rect;
 		private bool is_being_taken_over;
 		private double capture_timer;
+		private Label capture_label;
 		private Color ships_color;
 		public Planet(string fileName, Vector2 origin,int radius , double angular_speed ,int scaler , Color faction_color) // input degress
         {
@@ -167,6 +168,7 @@ namespace Server_Solar_War
             //radius tex
             Radius_Tex = content.Load<Texture2D>("Sprites/white-circle");
 			ship_label = new Label("" + ships, new Vector2(pos.X, pos.Y), faction_color, font);
+			capture_label = new Label("" + capture_timer , new Vector2(pos.X , pos.Y) , Color.Black , font);
 
 		}
 
@@ -304,6 +306,8 @@ namespace Server_Solar_War
 		public void updateCapture(GameTime gametime)
 		{
 			capture_timer++;
+			capture_label.updatePosition(pos.X , pos.Y + pos.Width);
+			capture_label.updateText("" + Math.Round((capture_timer / (TOTAL_TIME_TO_CAPTURE * 1.0)) * 100) + "%");
 			if (capture_timer >= TOTAL_TIME_TO_CAPTURE)
 			{
 				// then lets tranfer the planets contoll
@@ -445,6 +449,10 @@ namespace Server_Solar_War
             {
                 spritebatch.Draw(Radius_Tex, selected_rect , Color.Black);
             }
+			if (is_being_taken_over)
+			{
+				capture_label.Draw(spritebatch);
+			}
 			
         }
 

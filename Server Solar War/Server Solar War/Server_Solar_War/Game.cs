@@ -31,7 +31,8 @@ namespace Server_Solar_War
 		MouseState old_mouse;
 		private Color player_faction;
 
-
+		Label launching_ships;
+		float presentage_of_launching_ships;
 
         public Game(int screenWidth , int screenHeight , ContentManager Content , Color player_faction)
         {
@@ -54,8 +55,10 @@ namespace Server_Solar_War
 			selected_planet = null;
 			planet_is_selected = false;
 			old_mouse = Mouse.GetState();
-            //sun
-            //sun = new Sun((screenWidth/2)-100, (screenHeight/2)-100);
+			//sun
+			//sun = new Sun((screenWidth/2)-100, (screenHeight/2)-100);
+			number_of_planets = 0;
+			presentage_of_launching_ships = 1;
 		}
 
         public Planet getPlanet(Rectangle pos) 
@@ -86,14 +89,15 @@ namespace Server_Solar_War
 				{
 					// then this planet has been clicked
 					//planet_at_position.select();
-					if (!planet_is_selected)
+					if (!planet_is_selected && planet_at_position.Color == player_faction)
 					{
 						planet_at_position.select();
 						selected_planet = planet_at_position;
 						planet_is_selected = true;
 					}
-					else
+					else if (planet_is_selected)
 					{
+						
 						if (planet_at_position != selected_planet)
 						{
 							// now if there is a secound planet clicked it signifies that the player
@@ -112,7 +116,7 @@ namespace Server_Solar_War
 								{
 									// then everything is otherized
 									
-									transfer_troops(selected_planet , planet_at_position , 1);
+									transfer_troops(selected_planet , planet_at_position , (int)Math.Round(presentage_of_launching_ships * selected_planet.Ships));
 								}
 							}
 
@@ -135,11 +139,34 @@ namespace Server_Solar_War
 					selected_planet.deselect();
 				selected_planet = null;
 			}
+			if (planet_is_selected)
+			{
+				if (mouse.ScrollWheelValue != old_mouse.ScrollWheelValue)
+				{
+					presentage_of_launching_ships += ((mouse.ScrollWheelValue - old_mouse.ScrollWheelValue) / 120.0f / 100.0f) * 3f; // should we do poportions increse by 3%
+					
+				}
+				if (presentage_of_launching_ships < 0)
+				{
+					presentage_of_launching_ships = 0;
+				}
+				if (presentage_of_launching_ships > 1)
+				{
+					presentage_of_launching_ships = 1;
+				}
+				launching_ships.updateText((int)Math.Round(presentage_of_launching_ships  * selected_planet.Ships)+ "--" + (Math.Round(presentage_of_launching_ships * 100) ) + "%");
+				launching_ships.updatePosition(selected_planet.position.X  + selected_planet.position.Width, selected_planet.position.Y);
+				launching_ships.updateColor(selected_planet.Color);
+			}
+
 		}
 
 		private void transfer_troops(Planet first , Planet secound ,  int amount)
 		{
 			secound.tranfer_troops(first , amount);
+			planet_is_selected = false;
+			selected_planet.deselect();
+			selected_planet = null;
 		}
 
         public void Load(IServiceProvider server)
@@ -156,6 +183,8 @@ namespace Server_Solar_War
 			{
 				soloar_orbits[i].Load(server);
 			}
+
+			launching_ships = new Label( "" + presentage_of_launching_ships, new Vector2() , Color.Black ,(new ContentManager(server , "Content/").Load<SpriteFont>("SpriteFont1")));
             //sun.Load(server);
         }
         public void Update(GameTime gametime)
@@ -203,6 +232,10 @@ namespace Server_Solar_War
 			for(int i = 0; i < soloar_orbits.Count; i++)
 			{
 				soloar_orbits[i].Draw(spriteBatch);
+			}
+			if (planet_is_selected)
+			{
+				launching_ships.Draw(spriteBatch);
 			}
         }
     }

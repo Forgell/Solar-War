@@ -51,7 +51,6 @@ namespace Server_Solar_War
             game = new Game(graphics.PreferredBackBufferWidth , graphics.PreferredBackBufferHeight , Content , Color.Green);
             //asteroid = new Asteroid(new Vector2(200, 200), 50);
             IsMouseVisible = true;
-
             base.Initialize();
         }
 
