@@ -31,6 +31,8 @@ namespace Server_Solar_War
 		MouseState old_mouse;
 		private Color player_faction;
 
+
+
         public Game(int screenWidth , int screenHeight , ContentManager Content , Color player_faction)
         {
             //planets = new List<Planet>();
@@ -109,7 +111,8 @@ namespace Server_Solar_War
 								if (selected_planet.Color == player_faction)
 								{
 									// then everything is otherized
-									transfer_troops(selected_planet , planet_at_position);
+									
+									transfer_troops(selected_planet , planet_at_position , 1);
 								}
 							}
 
@@ -134,9 +137,9 @@ namespace Server_Solar_War
 			}
 		}
 
-		private void transfer_troops(Planet first , Planet secound)
+		private void transfer_troops(Planet first , Planet secound ,  int amount)
 		{
-			first.tranfer_troops(secound , 1);
+			secound.tranfer_troops(first , amount);
 		}
 
         public void Load(IServiceProvider server)

@@ -58,12 +58,22 @@ namespace Server_Solar_War
 			get { return faction_color; }
 		}
 
+		public int Ships
+		{
+			get
+			{
+				return ships;
+			}
+		}
+
+		private IServiceProvider server;
+
 		private Label ship_label;
 
 
 		public static int Max_AMOUNT_OF_SHIPS_ON_PLANET = 99;
 		public static int TRAVEL_RADIUS = 270 / 2;
-
+		public static int TOTAL_TIME_TO_CAPTURE = 60; // as in 60 frames
 
 		private int index;
 		private Vector2 offset;
@@ -129,7 +139,8 @@ namespace Server_Solar_War
 		
         public  void Load(IServiceProvider serve )
         {
-            //read file and load 
+			this.server = serve;
+			//read file and load
             ContentManager content = new ContentManager(serve, "Content");
             //tex = content.Load<Texture2D>(name);
             fileName = "Sprites/planets/" + fileName + "/";
@@ -221,6 +232,7 @@ namespace Server_Solar_War
 					this.ships = amount - this.ships;
 					
 					ships_color = source.faction_color;
+
 				}
 
 			}
@@ -288,12 +300,48 @@ namespace Server_Solar_War
 				incrementShipTimer = 0;
 			}
 		}
+
+		public void updateCapture(GameTime gametime)
+		{
+			capture_timer++;
+			if (capture_timer >= TOTAL_TIME_TO_CAPTURE)
+			{
+				// then lets tranfer the planets contoll
+				capture_timer = 0;
+				this.faction_color = ships_color;
+				//switch()
+				if(faction_color == Color.Red){
+					fileName = "planet-1";
+				}
+				if (faction_color == Color.Blue)
+				{
+					fileName = "planet-2";
+				}
+				if (faction_color == Color.Green)
+				{
+					fileName = "planet-3";
+				}
+				if (faction_color == Color.Purple)
+				{
+					fileName = "planet-4";
+				}
+				
+				Load(server);
+
+				is_being_taken_over = false;
+			}
+		}
         public void Update(GameTime gameTime , MouseState m)
         {
 			// see if the mouse is hovering to show the radius of travel
 			update_radius(m);
 
 			updateShips();
+
+			if (is_being_taken_over)
+			{
+				updateCapture(gameTime);
+			}
 
 			angle += angular_speed;
 			Orbit();
