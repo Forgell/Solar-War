@@ -7,6 +7,7 @@ using System.Net.Sockets;
 using System.Net;
 using System.Threading;
 using System.Diagnostics;
+using Microsoft.Xna.Framework;
 
 namespace Server
 {
@@ -27,6 +28,8 @@ namespace Server
         private static Dictionary<Socket, int> playernums = new Dictionary<Socket, int>(4);
 
 		//private List<string> actions;
+		private static Game game;
+		public static GameTime gameTime;
 
         static void Main(string[] args)
         {
@@ -95,6 +98,8 @@ namespace Server
 					{
 						clientSockets[i].Send(Encoding.ASCII.GetBytes("Game Start!"));
 					}
+					game = new Game( 1800, 1000 );
+					gameTime = new GameTime();
 					game_loop_thread.Start();
 				}
 			}
@@ -206,12 +211,15 @@ namespace Server
 			while (true) {
 				Stopwatch watch = new Stopwatch();
 				watch.Start();
-				
+				game.Update(gameTime);
 				foreach (Socket socket in clientSockets)
 				{
-					
+					// recieve 
+
+					// send
 
 				}
+				//Base64FormattingOptions()
 				watch.Stop();
 				int time = (int)(((1.0 / 60.0) - (watch.ElapsedMilliseconds / Math.Pow(10, 3))) * 1000);
 				Thread.Sleep( time ); // should wait a 60th of a seciund

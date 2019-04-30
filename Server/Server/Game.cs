@@ -28,18 +28,14 @@ namespace Server
 
 		bool planet_is_selected;
 		Planet selected_planet;
-		//MouseState old_mouse;
-		private Color player_faction;
+		//MouseState old_mouse;		private Color player_faction;
 
 		//Label launching_ships;
-		float presentage_of_launching_ships;
-
-		public Game(int screenWidth, int screenHeight, Color player_faction)
+		public Game(int screenWidth, int screenHeight)
 		{
 			//planets = new List<Planet>();
 			//players = new List<Player>();
 			asteroids = new List<Asteroid>();
-			this.player_faction = player_faction;
 
 			soloar_orbits = new List<SoloarOrbit>();
 			int radius = 200;
@@ -58,7 +54,7 @@ namespace Server
 			//sun
 			//sun = new Sun((screenWidth/2)-100, (screenHeight/2)-100);
 			number_of_planets = 0;
-			presentage_of_launching_ships = 1;
+			//presentage_of_launching_ships = 1;
 		}
 
 		public Planet getPlanet(Rectangle pos)
