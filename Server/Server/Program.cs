@@ -24,6 +24,9 @@ namespace Server
 		private static Thread game_loop_thread;
         public static string players_connected_as_string;
         private static Dictionary<Socket, int> playernums = new Dictionary<Socket, int>(4);
+
+		private List<string> actions;
+
         static void Main(string[] args)
         {
             Console.Title = "Server";
