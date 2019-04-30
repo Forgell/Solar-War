@@ -28,10 +28,10 @@ namespace Server
 
 		bool planet_is_selected;
 		Planet selected_planet;
-		MouseState old_mouse;
+		//MouseState old_mouse;
 		private Color player_faction;
 
-		Label launching_ships;
+		//Label launching_ships;
 		float presentage_of_launching_ships;
 
 		public Game(int screenWidth, int screenHeight, Color player_faction)
@@ -54,7 +54,7 @@ namespace Server
 			}
 			selected_planet = null;
 			planet_is_selected = false;
-			old_mouse = Mouse.GetState();
+			//old_mouse = Mouse.GetState();
 			//sun
 			//sun = new Sun((screenWidth/2)-100, (screenHeight/2)-100);
 			number_of_planets = 0;
@@ -80,7 +80,7 @@ namespace Server
 		}
 
 
-		public void handelPlayerInput(MouseState mouse)
+		/*public void handelPlayerInput(MouseState mouse)
 		{
 			if (mouse.LeftButton == ButtonState.Pressed && !(old_mouse.LeftButton == ButtonState.Pressed))
 			{
@@ -154,12 +154,12 @@ namespace Server
 				{
 					presentage_of_launching_ships = 1;
 				}
-				launching_ships.updateText((int)Math.Round(presentage_of_launching_ships * selected_planet.Ships) + "--" + (Math.Round(presentage_of_launching_ships * 100)) + "%");
-				launching_ships.updatePosition(selected_planet.position.X + selected_planet.position.Width, selected_planet.position.Y);
-				launching_ships.updateColor(selected_planet.Color);
+				//launching_ships.updateText((int)Math.Round(presentage_of_launching_ships * selected_planet.Ships) + "--" + (Math.Round(presentage_of_launching_ships * 100)) + "%");
+				//launching_ships.updatePosition(selected_planet.position.X + selected_planet.position.Width, selected_planet.position.Y);
+				//launching_ships.updateColor(selected_planet.Color);
 			}
 
-		}
+		}*/
 
 		private void transfer_troops(Planet first, Planet secound, int amount)
 		{
@@ -169,11 +169,11 @@ namespace Server
 			selected_planet = null;
 		}
 
-		public void Load(IServiceProvider server)
+		public void Load()
 		{
 			for (int i = 0; i < asteroids.Count; i++)
 			{
-				asteroids[i].Load(server, "astriod");
+				//asteroids[i].Load(server, "astriod");
 			}
 			/*for (int i = 0; i < planets.Count; i++)
             {
@@ -181,15 +181,15 @@ namespace Server
             }*/
 			for (int i = 0; i < soloar_orbits.Count; i++)
 			{
-				soloar_orbits[i].Load(server);
+				//soloar_orbits[i].Load(server);
 			}
 
-			launching_ships = new Label("" + presentage_of_launching_ships, new Vector2(), Color.Black, (new ContentManager(server, "Content/").Load<SpriteFont>("SpriteFont1")));
+			//launching_ships = new Label("" + presentage_of_launching_ships, new Vector2(), Color.Black, (new ContentManager(server, "Content/").Load<SpriteFont>("SpriteFont1")));
 			//sun.Load(server);
 		}
 		public void Update(GameTime gametime)
 		{
-			MouseState m = Mouse.GetState();
+			//MouseState m = Mouse.GetState();
 			//update everything
 			for (int i = 0; i < asteroids.Count; i++)
 			{
@@ -202,14 +202,14 @@ namespace Server
             }*/
 			for (int i = 0; i < soloar_orbits.Count; i++)
 			{
-				soloar_orbits[i].Update(gametime, m);
+				soloar_orbits[i].Update(gametime);
 			}
 
 			// Handel player input
-			handelPlayerInput(m);
+			//handelPlayerInput(m);
 			//change locations of planets as they rotate
 			//sun.Update(gametime);
-			old_mouse = m;
+			//old_mouse = m;
 		}
 
 		public void Draw(SpriteBatch spriteBatch)
@@ -235,7 +235,7 @@ namespace Server
 			}
 			if (planet_is_selected)
 			{
-				launching_ships.Draw(spriteBatch);
+				//launching_ships.Draw(spriteBatch);
 			}
 		}
 	}
