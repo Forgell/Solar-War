@@ -91,6 +91,7 @@ namespace Client_Solar_War
 					IAsyncResult result = ClientSocket.BeginConnect(new IPAddress(ip_adress_as_byte_array), PORT, null, null);
 
 					bool success = result.AsyncWaitHandle.WaitOne(2000, true);
+					//ClientSocket.Connect(new IPAddress(ip_adress_as_byte_array) , PORT);
 
 					if (ClientSocket.Connected)
 					{

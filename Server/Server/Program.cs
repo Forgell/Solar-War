@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.Net;
 using System.Threading;
+using System.Diagnostics;
 
 namespace Server
 {
@@ -179,7 +180,7 @@ namespace Server
                         current.Send(Encoding.ASCII.GetBytes("taken"));
                         Console.WriteLine("sent: taken");
                     }
-                    if (text.Length == 4)
+                    if (playernums.Count == 4)
                     {
                         if (clientSockets.Count == 4)
                         {
@@ -202,10 +203,18 @@ namespace Server
 
 		public static void game_loop()
 		{
-			foreach (Socket socket in clientSockets)
-			{
-				byte[] data = Encoding.ASCII.GetBytes("buffer");
-				socket.Send(data);
+			while (true) {
+				Stopwatch watch = new Stopwatch();
+				watch.Start();
+				
+				foreach (Socket socket in clientSockets)
+				{
+					
+
+				}
+				watch.Stop();
+				int time = (int)(((1.0 / 60.0) - (watch.ElapsedMilliseconds / Math.Pow(10, 3))) * 1000);
+				Thread.Sleep( time ); // should wait a 60th of a seciund
 			}
 		}
     }
