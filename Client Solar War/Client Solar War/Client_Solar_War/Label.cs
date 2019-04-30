@@ -33,12 +33,12 @@ namespace Client_Solar_War
 		}
 		private Color color;
 
-		public Label(string text , Vector2 position, Color color ,SpriteFont font)
+		public Label(string text, Vector2 position, Color color, SpriteFont font)
 		{
 			this.text = text;
 			this.position = position;
 			this.font = font;
-            this.color = color;
+			this.color = color;
 		}
 
 		public void updateText(string new_text)
@@ -46,9 +46,19 @@ namespace Client_Solar_War
 			text = new_text;
 		}
 
+		public void updatePosition(int x, int y)
+		{
+			position.X = x;
+			position.Y = y;
+		}
+
+		public void updateColor(Color color)
+		{
+			this.color = color;
+		}
 		public void Draw(SpriteBatch spritebatch)
 		{
-			spritebatch.DrawString(font , text , position , color);
+			spritebatch.DrawString(font, text, position, color);
 		}
 	}
 }
