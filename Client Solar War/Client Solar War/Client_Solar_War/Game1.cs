@@ -46,10 +46,14 @@ namespace Client_Solar_War
 		TitleScreen title;
 		Starfield starfield;
 
+		// for playing the game
+		Game game;
 		public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
+			graphics.PreferredBackBufferHeight = 1000;
+			graphics.PreferredBackBufferWidth = 1800;
+			Content.RootDirectory = "Content";
         }
 
         /// <summary>
@@ -73,6 +77,7 @@ namespace Client_Solar_War
 			player_number = 0;
 			screenHeight = GraphicsDevice.Viewport.Height;
 			screenWidth = GraphicsDevice.Viewport.Width;
+			
 			base.Initialize();
         }
 
@@ -167,6 +172,16 @@ namespace Client_Solar_War
 			if (message.Equals("Game Start!"))
 			{
 				state = State.PLAYING;
+				Color temp = Color.Black;
+				switch (player_number)
+				{
+					case 1: temp = Color.Red;break;
+					case 2: temp = Color.Blue; break;
+					case 3: temp = Color.Green;break;
+					case 4: temp = Color.Purple; break;
+				}
+				game = new Game(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight, Content, temp);
+				game.Load(Content.ServiceProvider);
 			}
 
 		}
@@ -227,8 +242,11 @@ namespace Client_Solar_War
 			}
             //update starfield
             starfield.update(graphics);
-			
 
+			if (game != null)
+			{
+				game.Update(gameTime);
+			}
 			// update input feed
 			this.old = console;
             base.Update(gameTime);
@@ -260,22 +278,29 @@ namespace Client_Solar_War
 			// TODO: Add your drawing code here
 			spriteBatch.Begin();
             //draw starfield
-            starfield.draw(spriteBatch);
-
-            switch (state)
-			{
-				case State.START:
-					title.draw(spriteBatch, gameTime);
-					break;
-				case State.CONNECTING:
-					text_box.Draw(spriteBatch);
-					break;
-				case State.WAITING_FOR_ALL_PLAYERS:
-					player_number_label.Draw(spriteBatch);
-					break;
-				default: break;
-			}
             
+			if (game!=null)
+			{
+				game.Draw(spriteBatch);
+			}
+			else
+			{
+				starfield.draw(spriteBatch);
+
+				switch (state)
+				{
+					case State.START:
+						title.draw(spriteBatch, gameTime);
+						break;
+					case State.CONNECTING:
+						text_box.Draw(spriteBatch);
+						break;
+					case State.WAITING_FOR_ALL_PLAYERS:
+						player_number_label.Draw(spriteBatch);
+						break;
+					default: break;
+				}
+			}
 			spriteBatch.End();
 			
             base.Draw(gameTime);
