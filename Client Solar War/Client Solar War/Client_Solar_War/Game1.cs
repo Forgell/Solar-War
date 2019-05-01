@@ -163,26 +163,36 @@ namespace Client_Solar_War
 						player_number_label.updateText("Player 4 is already taken, try again!");
 				}
 			}
-
-			string message = network.getMessage();
-			if (message.Equals(""))
+			// waiting for the game to start
+			while (true)
 			{
-				return;
-			}
-			if (message.Equals("Game Start!"))
-			{
-				state = State.PLAYING;
-				Color temp = Color.Black;
-				switch (player_number)
+				string message = network.getMessage();
+				if (message.Equals("Game Start!"))
 				{
-					case 1: temp = Color.Red;break;
-					case 2: temp = Color.Blue; break;
-					case 3: temp = Color.Green;break;
-					case 4: temp = Color.Purple; break;
+					state = State.PLAYING;
+					Color temp = Color.Black;
+					switch (player_number)
+					{
+						case 1: temp = Color.Red; break;
+						case 2: temp = Color.Blue; break;
+						case 3: temp = Color.Green; break;
+						case 4: temp = Color.Purple; break;
+					}
+					game = new Game(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight, Content, temp);
+					game.Load(Content.ServiceProvider);
+					break;
 				}
-				game = new Game(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight, Content, temp);
-				game.Load(Content.ServiceProvider);
+				Thread.Sleep(1);
 			}
+
+
+
+			//game loop 
+			while (true)
+			{
+				game.Update_as_Bytes(network.GetMap());
+			}
+			
 
 		}
 
@@ -212,7 +222,11 @@ namespace Client_Solar_War
 					state = State.CONNECTING;
 			}
 			// Still connecting to ip adress
-
+			//OVERIDE
+			if (console.IsKeyDown(Keys.E))
+			{
+				network.send("overide");
+			}
 
 			switch (state)
 			{

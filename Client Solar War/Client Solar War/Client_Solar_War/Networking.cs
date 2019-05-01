@@ -44,6 +44,13 @@ namespace Client_Solar_War
             return 0;
         }
 
+		public byte[] GetMap()
+		{
+			byte[] temp = new byte[100];
+			ClientSocket.Receive(temp);
+			return temp;
+		}
+
         public void closeStream()
         {
             if (ClientSocket.IsBound)
