@@ -21,9 +21,9 @@ namespace Server_Solar_War
         private int radiusH;
         private Boolean change;
 
-        public Sun(int screenWidth,int ScreeHeight)
+        public Sun(int screenWidth,int ScreenHeight)
         {
-            rect = new Rectangle(screenWidth/2,screenWidth/2, 300, 300);
+            rect = new Rectangle(screenWidth,ScreenHeight, 200, 200);
             radiusH = 20;
             change = true;
             //change the radius 

@@ -53,7 +53,7 @@ namespace Server_Solar_War
             asteroids.Add(new Asteroid(new Vector2(100, 600), 50));
             asteroids.Add(new Asteroid(new Vector2(300, 150), 50));
             //sun
-            sun = new Sun(screenWidth, screenHeight);
+            sun = new Sun((screenWidth/2)-100, (screenHeight/2)-100);
 		}
 
         public Planet getPlanet(Rectangle pos) 
