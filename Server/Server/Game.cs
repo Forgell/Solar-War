@@ -26,8 +26,8 @@ namespace Server
 		//sun  object
 		//Sun sun;
 
-		bool planet_is_selected;
-		Planet selected_planet;
+		//bool planet_is_selected;
+		//Planet selected_planet;
 		//MouseState old_mouse;		private Color player_faction;
 
 		//Label launching_ships;
@@ -48,8 +48,8 @@ namespace Server
 				angular_speed = -angular_speed;
 				radius += 100;
 			}
-			selected_planet = null;
-			planet_is_selected = false;
+			//selected_planet = null;
+			//planet_is_selected = false;
 			//old_mouse = Mouse.GetState();
 			//sun
 			//sun = new Sun((screenWidth/2)-100, (screenHeight/2)-100);
@@ -73,6 +73,43 @@ namespace Server
 			// will return null if no planet matches that position
 			return null;
 
+		}
+
+		public void Input(string message)// all messages are required to be a length of 5
+		{
+			int player_as_number = message[0] - '0';
+			int planet_id_source = message[1] - '0';
+			int amount = (message[2] - '0') * 10 + (message[3] - '0');
+			int planet_id_target = message[4] - '0';
+			//TODO in futre make sure this is a leagl transfer
+			transfer_troops(getPlanetById(planet_id_source) , getPlanetById(planet_id_target) , amount);
+		}
+
+		public byte[] Encode()
+		{
+			byte[] map = new byte[100];
+			//each planet gets around 5 bytes each
+			int index = 0;
+			foreach(SoloarOrbit orbit in soloar_orbits)
+			{
+				byte[] temp = orbit.Encode();
+				for (int i = index; i < temp.Length + index; i++) {
+					temp[i] = temp[i - index];
+				}
+				index += temp.Length;
+			}
+			return map;
+		}
+
+		private Planet getPlanetById(int id)
+		{
+			foreach(SoloarOrbit orbit in soloar_orbits)
+			{
+				Planet temp = orbit.getPlanetById(id);
+				if (temp != null) { return temp; }
+
+			}
+			return null;
 		}
 
 
@@ -160,9 +197,9 @@ namespace Server
 		private void transfer_troops(Planet first, Planet secound, int amount)
 		{
 			secound.tranfer_troops(first, amount);
-			planet_is_selected = false;
-			selected_planet.deselect();
-			selected_planet = null;
+			//planet_is_selected = false;
+			//selected_planet.deselect();
+			//selected_planet = null;
 		}
 
 		public void Load()
@@ -229,10 +266,10 @@ namespace Server
 			{
 				soloar_orbits[i].Draw(spriteBatch);
 			}
-			if (planet_is_selected)
-			{
+			//if (planet_is_selected)
+			//{
 				//launching_ships.Draw(spriteBatch);
-			}
+			//}
 		}
 	}
 }

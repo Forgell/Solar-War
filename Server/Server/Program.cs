@@ -31,6 +31,8 @@ namespace Server
 		private static Game game;
 		public static GameTime gameTime;
 
+		private static List<string> messages;
+
         static void Main(string[] args)
         {
             Console.Title = "Server";
@@ -56,6 +58,7 @@ namespace Server
 			game_loop_thread = new Thread(new ThreadStart(game_loop));
             Console.WriteLine("Server setup complete");
             players_connected_as_string = "";
+			messages = new List<string>();
         }
 
 
@@ -180,23 +183,38 @@ namespace Server
                         current.Send(Encoding.ASCII.GetBytes("You are player: " + num));
                         Console.WriteLine("sent: " + "You are player: " + num);
                         playernums.Add(current, num);
-                    }else
+						if (playernums.Count == 4)
+						{
+							if (clientSockets.Count == 4)
+							{
+								for (int i = 0; i < 4; i++)
+								{
+									clientSockets[i].Send(Encoding.ASCII.GetBytes("Game Start!"));
+								}
+								game_loop_thread.Start();
+							}
+						}
+					}
+					else
                     {
                         current.Send(Encoding.ASCII.GetBytes("taken"));
                         Console.WriteLine("sent: taken");
                     }
-                    if (playernums.Count == 4)
-                    {
-                        if (clientSockets.Count == 4)
-                        {
-                            for (int i = 0; i < 4; i++)
-                            {
-                                clientSockets[i].Send(Encoding.ASCII.GetBytes("Game Start!"));
-                            }
-                            game_loop_thread.Start();
-                        }
-                    }
-                }
+				}
+				else if (text.Equals("overide"))
+				{
+					for (int i = 0; i < 4; i++)
+					{
+						clientSockets[i].Send(Encoding.ASCII.GetBytes("Game Start!"));
+					}
+					game_loop_thread.Start();
+				}
+				else
+				{
+					messages.Add(text);
+				}
+
+
                 //Console.WriteLine("Warning Sent");
             }
             //buffer messages
@@ -212,12 +230,14 @@ namespace Server
 				Stopwatch watch = new Stopwatch();
 				watch.Start();
 				game.Update(gameTime);
+				foreach (string mess in messages)
+				{
+					game.Input(mess);
+				}
 				foreach (Socket socket in clientSockets)
 				{
-					// recieve 
-
 					// send
-
+					socket.Send(game.Encode());
 				}
 				//Base64FormattingOptions()
 				watch.Stop();
