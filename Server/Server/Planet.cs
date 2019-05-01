@@ -186,16 +186,8 @@ namespace Server
         private void updateShips()
         {
             incrementShipTimer++;
-            timer++;
-            if (timer == 10)
-            {
-                index++;
-                timer = 0;
-            }
-            if (index == tex.Length)
-            {
-                index = 0;
-            }
+            
+            
 
             if (incrementShipTimer == 60)//increase number of ships each second
             {

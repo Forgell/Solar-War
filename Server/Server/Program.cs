@@ -99,11 +99,9 @@ namespace Server
 				{
 					for(int i = 0; i < 4; i++)
 					{
-						clientSockets[i].Send(Encoding.ASCII.GetBytes("Game Start!"));
+						//clientSockets[i].Send(Encoding.ASCII.GetBytes("Game Start!"));
 					}
-					game = new Game( 1800, 1000 );
-					gameTime = new GameTime();
-					game_loop_thread.Start();
+					
 				}
 			}
 			else
@@ -191,7 +189,9 @@ namespace Server
 								{
 									clientSockets[i].Send(Encoding.ASCII.GetBytes("Game Start!"));
 								}
-								game_loop_thread.Start();
+                                game = new Game(1800, 1000);
+                                gameTime = new GameTime();
+                                game_loop_thread.Start();
 							}
 						}
 					}
@@ -203,12 +203,16 @@ namespace Server
 				}
 				else if (text.Equals("overide"))
 				{
-					for (int i = 0; i < 4; i++)
+					for (int i = 0; i < clientSockets.Count; i++)
 					{
 						clientSockets[i].Send(Encoding.ASCII.GetBytes("Game Start!"));
 					}
-					game_loop_thread.Start();
-				}
+                    game = new Game(1800, 1000);
+                    gameTime = new GameTime();
+                    game_loop_thread = new Thread(game_loop);
+                    game_loop_thread.Start();
+
+                }
 				else
 				{
 					messages.Add(text);
