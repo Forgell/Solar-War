@@ -34,6 +34,15 @@ namespace Server_Solar_War
 		Label launching_ships;
 		float presentage_of_launching_ships;
 
+        //for checking for a win, player color that has won (or black)
+        List<Color> winColor;
+        //Color that has won: red, blue, green, or purple, else black(neutral)
+        Color colorWon;
+        //to draw text for a player winning the game
+        //spriteBatch.DrawString(spriteFont, "", Vector2 position, Color.Red);
+        string winText;
+        Vector2 winPosition;
+
         public Game(int screenWidth , int screenHeight , ContentManager Content , Color player_faction)
         {
             //planets = new List<Planet>();
@@ -63,7 +72,7 @@ namespace Server_Solar_War
 
         public Planet getPlanet(Rectangle pos) 
         {
-			// this methoud is out of date all planets are now held within the solar obrits list
+			// this method is out of date all planets are now held within the solar obrits list
 			for (int i = 0; i < soloar_orbits.Count; i++)
             {
 				Planet temp_planet = soloar_orbits[i].getPlanet(pos);
@@ -187,8 +196,48 @@ namespace Server_Solar_War
 			launching_ships = new Label( "" + presentage_of_launching_ships, new Vector2() , Color.Black ,(new ContentManager(server , "Content/").Load<SpriteFont>("SpriteFont1")));
             //sun.Load(server);
         }
+
+        //check who wins, return player color of winner, else return black
+        private Color WhoWon()
+        {
+            winColor = new List<Color>();
+            //win condition
+            //4 players, check 4 colors
+            //soloar_orbits
+            for(int i = 0; i < soloar_orbits.Count; i++)
+            {
+                winColor.Add(soloar_orbits[i].isWin());
+            }
+            //check each player color
+            //red, blue, green, or purple, else black
+            if (checkColorWonRows(winColor, Color.Red))
+                return Color.Red;
+            if (checkColorWonRows(winColor, Color.Blue))
+                return Color.Blue;
+            if (checkColorWonRows(winColor, Color.Green))
+                return Color.Green;
+            if (checkColorWonRows(winColor, Color.Purple))
+                return Color.Purple;
+            return Color.Black;
+        }
+
+        private bool checkColorWonRows(List<Color> colorRows, Color faction)
+        {
+            //chack each row for a specific color
+            for(int i = 0; i < colorRows.Count; i++)
+            {
+                if (faction != colorRows[i])
+                    return false;
+            }
+            return true;
+        }
+
+
         public void Update(GameTime gametime)
         {
+            //Win condition
+            colorWon = WhoWon();
+            
             MouseState m = Mouse.GetState();
             //update everything
             for (int i = 0; i < asteroids.Count; i++)
@@ -237,6 +286,20 @@ namespace Server_Solar_War
 			{
 				launching_ships.Draw(spriteBatch);
 			}
+
+            //draw text to show that a player has won
+            //red, blue, green, or purple, else black
+            if(colorWon != Color.Black)
+            {
+                winPosition = new Vector2(10, 10);
+                if (colorWon == Color.Red)
+                {
+                    winText = "Red player has won!";
+                    //spriteBatch.DrawString(spriteFont, winText, winPosition, Color.Red);
+                }
+
+            }
+            
         }
     }
 }

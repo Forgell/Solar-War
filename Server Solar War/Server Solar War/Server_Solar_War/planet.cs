@@ -74,7 +74,12 @@ namespace Server_Solar_War
 		public static int Max_AMOUNT_OF_SHIPS_ON_PLANET = 99;
 		public static int TRAVEL_RADIUS = 270 / 2;
 		public static int TOTAL_TIME_TO_CAPTURE = 1200; // as in 60 frames
-
+        public static int TOTAL_NUMBER_OF_PLANETS = 0;
+        private int id;
+        public int ID
+        {
+            get { return id; }
+        }
 		private int index;
 		private Vector2 offset;
         //radius for the planet to invade
@@ -94,6 +99,10 @@ namespace Server_Solar_War
 		private int radius;
 
         private Color faction_color;
+        public Color faction
+        {
+            get { return faction_color; }
+        }
         private bool selected;
         private Rectangle selected_rect;
 		private bool is_being_taken_over;
@@ -105,7 +114,7 @@ namespace Server_Solar_War
             this.origin = origin;
             this.radius = radius;
 			this.fileName = fileName;
-			
+            id = ++TOTAL_NUMBER_OF_PLANETS;
 			if (tex != null)
 			{
 				pos = new Rectangle((int)origin.X + radius, (int)origin.Y, tex[0].Width, tex[0].Height);

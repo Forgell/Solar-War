@@ -67,8 +67,60 @@ namespace Server_Solar_War
 			return null;
 		}
 
+        public Color isWin()
+        {
+            if (isRedWin())
+                return Color.Red;
+            else if (isBlueWin())
+                return Color.Blue;
+            else if (isGreenWin())
+                return Color.Green;
+            else if (isPurpleWin())
+                return Color.Purple;
+            //else neutral color has "won"
+            return Color.Black;
+        }
 
-		public void Load(IServiceProvider server)
+        //check if player red, blue, green, or purple has won
+        private bool isRedWin()
+        {
+            foreach (Planet planet in planets)
+            {
+                if (planet.faction != Color.Red)
+                    return false;
+            }
+            return true;
+        }
+        private bool isBlueWin()
+        {
+            foreach (Planet planet in planets)
+            {
+                if (planet.faction != Color.Blue)
+                    return false;
+            }
+            return true;
+        }
+        private bool isGreenWin()
+        {
+            foreach (Planet planet in planets)
+            {
+                if (planet.faction != Color.Green)
+                    return false;
+            }
+            return true;
+        }
+        private bool isPurpleWin()
+        {
+            foreach (Planet planet in planets)
+            {
+                if (planet.faction != Color.Purple)
+                    return false;
+            }
+            return true;
+        }
+
+
+        public void Load(IServiceProvider server)
 		{
 			foreach (Planet planet in planets)
 			{
