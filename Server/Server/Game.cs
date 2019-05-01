@@ -94,7 +94,7 @@ namespace Server
 			{
 				byte[] temp = orbit.Encode();
 				for (int i = index; i < temp.Length + index; i++) {
-					temp[i] = temp[i - index];
+					map[i] = temp[i - index];
 				}
 				index += temp.Length;
 			}

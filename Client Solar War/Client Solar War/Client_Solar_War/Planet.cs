@@ -460,7 +460,14 @@ namespace Client_Solar_War
 		//draw the number of ships at a planet
 		private void DrawShips(SpriteBatch spritebatch)
 		{
-			ship_label.Draw(spritebatch);
+			try {
+				ship_label.Draw(spritebatch);
+			}catch(Exception e)
+			{
+				Console.WriteLine(e.Message);
+				Console.WriteLine(ship_label + " " + spritebatch);
+				Console.WriteLine();
+			}
 
 		}
 	}

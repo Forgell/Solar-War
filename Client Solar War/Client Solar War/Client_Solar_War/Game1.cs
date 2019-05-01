@@ -77,7 +77,8 @@ namespace Client_Solar_War
 			player_number = 0;
 			screenHeight = GraphicsDevice.Viewport.Height;
 			screenWidth = GraphicsDevice.Viewport.Width;
-			
+			game = new Game(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight, Content, Color.Green);
+			//game.Load(Content.ServiceProvider);
 			base.Initialize();
         }
 
@@ -94,6 +95,7 @@ namespace Client_Solar_War
 			player_number_label = new Label("No number assigned", new Vector2(10 , 10) , Color.White , sf);
 			logo = this.Content.Load<Texture2D>("logo");
 			title = new TitleScreen(logo, sf, screenWidth, screenHeight, GraphicsDevice);
+			game.Load(Content.ServiceProvider);
 			// TODO: use this.Content to load your game content here
 		}
 
@@ -178,8 +180,8 @@ namespace Client_Solar_War
 						case 3: temp = Color.Green; break;
 						case 4: temp = Color.Purple; break;
 					}
-					game = new Game(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight, Content, temp);
-					game.Load(Content.ServiceProvider);
+					//game = new Game(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight, Content, temp);
+					//game.Load(Content.ServiceProvider);
 					break;
 				}
 				Thread.Sleep(1);
@@ -191,6 +193,7 @@ namespace Client_Solar_War
 			while (true)
 			{
 				game.Update_as_Bytes(network.GetMap());
+				Thread.Sleep(1);
 			}
 			
 
@@ -257,7 +260,7 @@ namespace Client_Solar_War
             //update starfield
             starfield.update(graphics);
 
-			if (game != null)
+			if (state == State.PLAYING)
 			{
 				game.Update(gameTime);
 			}
@@ -293,14 +296,13 @@ namespace Client_Solar_War
 			spriteBatch.Begin();
             //draw starfield
             
-			if (game!=null)
+			if (state == State.PLAYING)
 			{
 				game.Draw(spriteBatch);
 			}
 			else
 			{
 				starfield.draw(spriteBatch);
-
 				switch (state)
 				{
 					case State.START:

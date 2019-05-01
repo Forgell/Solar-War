@@ -271,11 +271,11 @@ namespace Server
             map[1] = (byte)((uint)pos.X & 255); // last 8 of pos.X
             map[2] = (byte)(((uint)pos.Y & 2040) >> 3); // fist 8 bits are here for pos.Y
             map[3] = (byte)((((uint)pos.Y & 7) << 5 ) | (((uint)ships & 124) >> 2)); // first 3 bits are the last bits of pos.Y and the rest are the first 5 bits of ship
-            map[4] = (byte)(((uint)ships & 3) << 6); // first 2 bits are the last 2 bits of ships 
+            map[4] = (byte)(((uint)ships & 3) << 6); // first 2 bits are the last 2 bits of ships  2 bits before is the color of the ships on the planet so 1100
             if (faction_color == Color.Red) // last 2 bits are color
             {
-                map[4] = (byte)(map[4] | 0);
-            }
+                map[4] = (byte)(map[4] | 0);// last 3bits are color
+			}
             if (faction_color == Color.Blue)
             {
                 map[4] = (byte)(map[4] | 1);
@@ -292,7 +292,28 @@ namespace Server
             {
                 map[4] = (byte)(map[4] | 4);
             }
-            return map;
+
+			if (ships_color == Color.Red) 
+			{
+				map[4] = (byte)(map[4] | 0); // 000000
+			}
+			if (ships_color == Color.Blue)
+			{
+				map[4] = (byte)(map[4] | 8); // 001000
+			}
+			if (ships_color == Color.Green)
+			{
+				map[4] = (byte)(map[4] | 16); // 010000
+			}
+			if (ships_color == Color.Purple)
+			{
+				map[4] = (byte)(map[4] | 24); // 011000
+			}
+			if (ships_color == Color.Black)
+			{
+				map[4] = (byte)(map[4] | 32); // 100000
+			}
+			return map;
         }
 
     }

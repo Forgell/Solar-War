@@ -95,9 +95,10 @@ namespace Server
             foreach(Planet p in planets)
             {
                 byte[] temp = p.Encode();
-                for(int i = index; i < temp.Length + index; i++)
+                for(int i = index; i < (temp.Length + index); i++)
                 {
-                    map[index + i] = temp[i - index];
+					byte temp2 = temp[i - index];
+					map[index] = temp2;
                 }
                 index += 5;
             }

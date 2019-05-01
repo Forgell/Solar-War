@@ -201,7 +201,7 @@ namespace Server
                         Console.WriteLine("sent: taken");
                     }
 				}
-				else if (text.Equals("overide"))
+				else if (text.Contains("overide"))
 				{
 					for (int i = 0; i < clientSockets.Count; i++)
 					{
