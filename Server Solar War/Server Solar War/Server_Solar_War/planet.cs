@@ -96,7 +96,7 @@ namespace Server_Solar_War
         private Color faction_color;
         private bool selected;
         private Rectangle selected_rect;
-		private bool is_being_taken_over;
+		public  bool is_being_taken_over;
 		private double capture_timer;
 		private Label capture_label;
 		private Color ships_color;

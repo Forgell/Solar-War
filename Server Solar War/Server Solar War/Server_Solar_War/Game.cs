@@ -89,7 +89,7 @@ namespace Server_Solar_War
 				{
 					// then this planet has been clicked
 					//planet_at_position.select();
-					if (!planet_is_selected && planet_at_position.Color == player_faction)
+					if (!planet_is_selected && planet_at_position.Color == player_faction ||!planet_is_selected && planet_at_position.is_being_taken_over)
 					{
 						planet_at_position.select();
 						selected_planet = planet_at_position;
@@ -97,6 +97,7 @@ namespace Server_Solar_War
 					}
 					else if (planet_is_selected)
 					{
+                        
 						
 						if (planet_at_position != selected_planet)
 						{
@@ -110,9 +111,9 @@ namespace Server_Solar_War
 							double dist = Math.Sqrt(Math.Pow(pos_1.X - pos_2.X, 2) + Math.Pow(pos_1.Y - pos_2.Y, 2));
 							if (dist <= Planet.TRAVEL_RADIUS)
 							{
-								// then troops can  transfer
-								// we need to check if the selcted planet is his color
-								if (selected_planet.Color == player_faction)
+                                // then troops can  transfer
+                                // we need to check if the selcted planet is his color
+                                if (selected_planet.Color == player_faction || selected_planet.is_being_taken_over)
 								{
 									// then everything is otherized
 									
