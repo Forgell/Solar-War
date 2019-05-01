@@ -226,7 +226,7 @@ namespace Server
 			//update everything
 			for (int i = 0; i < asteroids.Count; i++)
 			{
-				asteroids[i].Update(gametime);
+				//asteroids[i].Update(gametime);
 			}
 			/*for (int i = 0; i < planets.Count; i++)
             {
@@ -245,31 +245,6 @@ namespace Server
 			//old_mouse = m;
 		}
 
-		public void Draw(SpriteBatch spriteBatch)
-		{
-			//draw everything
-
-			//draw sun/star
-			//sun.Draw(spriteBatch);
-			//draw asteroids
-			for (int i = 0; i < asteroids.Count; i++)
-			{
-				asteroids[i].Draw(spriteBatch);
-			}
-			//will need to change planet class to be able to draw each planet
-			/*for (int i = 0; i < planets.Count; i++)
-            {
-                planets[i].Draw(spriteBatch);
-            }*/
-
-			for (int i = 0; i < soloar_orbits.Count; i++)
-			{
-				soloar_orbits[i].Draw(spriteBatch);
-			}
-			//if (planet_is_selected)
-			//{
-				//launching_ships.Draw(spriteBatch);
-			//}
-		}
+		
 	}
 }

@@ -8,7 +8,7 @@ namespace Server
 {
     class Asteroid
     {
-        Random rand;
+        /*Random rand;
         private Texture2D image;
         private Texture2D[] sheet;
         private Texture2D explode;
@@ -101,5 +101,6 @@ namespace Server
         {
             spriteBatch.Draw(image, rect, Color.White);
         }
+    }*/
     }
 }
