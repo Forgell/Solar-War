@@ -211,7 +211,7 @@ namespace Server
                 capture_timer = 0;
                 this.faction_color = ships_color;
                 //switch()
-                if (faction_color == Color.Red)
+                /*if (faction_color == Color.Red)
                 {
                     fileName = "planet-1";
                 }
@@ -226,7 +226,7 @@ namespace Server
                 if (faction_color == Color.Purple)
                 {
                     fileName = "planet-4";
-                }
+                }*/
 
                 is_being_taken_over = false;
             }
