@@ -64,9 +64,9 @@ namespace Client_Solar_War
         /// </summary>
         protected override void Initialize()
         {
-            // instancience of network varibles
-            // star field varibles 
-            starfield = new Starfield(GraphicsDevice, this.Content.Load<Texture2D>("Star"));
+			// instancience of network varibles
+			// star field varibles 
+			starfield = new Starfield(GraphicsDevice, this.Content.Load<Texture2D>("Star"));
 			networking_thread = new Thread(network_communication);
             network = new Networking();
             state = State.START;
@@ -79,6 +79,7 @@ namespace Client_Solar_War
 			screenWidth = GraphicsDevice.Viewport.Width;
 			game = new Game(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight, Content, Color.Green);
 			//game.Load(Content.ServiceProvider);
+			
 			base.Initialize();
         }
 
@@ -262,7 +263,7 @@ namespace Client_Solar_War
 
 			if (state == State.PLAYING)
 			{
-				game.Update(gameTime);
+				//game.Update(gameTime);
 			}
 			// update input feed
 			this.old = console;

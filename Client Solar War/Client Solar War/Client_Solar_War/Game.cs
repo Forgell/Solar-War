@@ -205,7 +205,17 @@ namespace Client_Solar_War
 
 		public void Update_as_Bytes(byte[] map)
 		{
-			
+			int index = 0;
+			for (int i = 0; i < soloar_orbits.Count; i++)
+			{
+				byte[] temp = new byte[soloar_orbits[i].Planets.Count * 5];
+				for (int j = 0; j < temp.Length; j++)
+				{
+					temp[j] = map[index + j];
+				}
+				index += temp.Length;
+				soloar_orbits[i].Update_As_Bytes(temp);
+			}
 		}
 
 		public void Update(GameTime gametime)

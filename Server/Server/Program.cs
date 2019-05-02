@@ -238,10 +238,13 @@ namespace Server
 				{
 					game.Input(mess);
 				}
+				byte[] temp = game.Encode();
 				foreach (Socket socket in clientSockets)
 				{
 					// send
-					socket.Send(game.Encode());
+					
+					//Console.WriteLine(temp);
+					socket.Send(temp);
 				}
 				//Base64FormattingOptions()
 				watch.Stop();

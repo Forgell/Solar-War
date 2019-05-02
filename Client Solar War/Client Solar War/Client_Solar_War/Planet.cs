@@ -66,6 +66,12 @@ namespace Client_Solar_War
 			}
 		}
 
+		public int ID
+		{
+			get { return id; }
+		}
+		private int id;
+
 		private IServiceProvider server;
 
 		private Label ship_label;
@@ -74,6 +80,7 @@ namespace Client_Solar_War
 		public static int Max_AMOUNT_OF_SHIPS_ON_PLANET = 99;
 		public static int TRAVEL_RADIUS = 270 / 2;
 		public static int TOTAL_TIME_TO_CAPTURE = 1200; // as in 60 frames
+		public static int TOTAL_AMOUNT_OF_PLANETS = 0;
 
 		private int index;
 		private Vector2 offset;
@@ -105,7 +112,7 @@ namespace Client_Solar_War
 			this.origin = origin;
 			this.radius = radius;
 			this.fileName = fileName;
-
+			id = ++TOTAL_AMOUNT_OF_PLANETS;
 			if (tex != null)
 			{
 				pos = new Rectangle((int)origin.X + radius, (int)origin.Y, tex[0].Width, tex[0].Height);
@@ -370,6 +377,42 @@ namespace Client_Solar_War
 		private void changeFaction()
 		{
 
+		}
+
+		public static int Byte_To_ID(byte b)
+		{
+			return (b & 248) >> 3;
+		}
+
+		public void Update_As_Bytes(byte[] map)
+		{
+			int id = (map[0] & 248) >> 3;
+			if (id != this.id)
+			{
+				return;
+			}
+			pos.X = ((map[0] & 7) << 8) | map[1];
+			pos.Y = (map[2] << 3) | ((map[3] & 224) >> 5);
+			ships = ((map[3] & 31) << 2) | ((map[4] & 192) >> 6);
+			int byte_color = map[4] & 7;
+			switch (byte_color)
+			{
+				case 0: faction_color = Color.Red;break;
+				case 1: faction_color = Color.Blue; break;
+				case 2: faction_color = Color.Green; break;
+				case 3: faction_color = Color.Purple; break;
+				case 4: faction_color = Color.Black; break;
+			}
+
+			int ships_color_as_bytes = (map[4] & 56) >> 3;
+			switch (ships_color_as_bytes)
+			{
+				case 0: ships_color = Color.Red; break;
+				case 1: ships_color = Color.Blue; break;
+				case 2: ships_color = Color.Green; break;
+				case 3: ships_color = Color.Purple; break;
+				case 4: ships_color = Color.Black; break;
+			}
 		}
 
 		private void incrementShips()

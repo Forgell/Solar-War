@@ -237,6 +237,7 @@ namespace Server
 			{
 				soloar_orbits[i].Update(gametime);
 			}
+			Console.WriteLine(soloar_orbits[0].Planets[0].position.X);
 
 			// Handel player input
 			//handelPlayerInput(m);

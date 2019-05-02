@@ -67,6 +67,19 @@ namespace Client_Solar_War
 		}
 
 
+		public void Update_As_Bytes(byte[] map)
+		{
+			for(int i = 0; i < planets.Count; i++)
+			{
+				byte[] temp = new byte[5];
+				for(int j = 0; j < temp.Length; j++)
+				{
+					temp[j] = map[i * 5 + j];
+				}
+				planets[i].Update_As_Bytes(temp);
+			}
+		}
+
 		public void Load(IServiceProvider server)
 		{
 			foreach (Planet planet in planets)

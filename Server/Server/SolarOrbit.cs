@@ -98,7 +98,7 @@ namespace Server
                 for(int i = index; i < (temp.Length + index); i++)
                 {
 					byte temp2 = temp[i - index];
-					map[index] = temp2;
+					map[i] = temp2;
                 }
                 index += 5;
             }
