@@ -205,6 +205,8 @@ namespace Server_Solar_War
 				soloar_orbits[i].Update(gametime , m);
 			}
 
+			//Console.WriteLine(soloar_orbits[0].Planets[0].position.X);
+
 			// Handel player input
 			handelPlayerInput(m);
 			//change locations of planets as they rotate

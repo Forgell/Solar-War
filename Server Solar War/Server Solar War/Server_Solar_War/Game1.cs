@@ -27,7 +27,7 @@ namespace Server_Solar_War
             graphics = new GraphicsDeviceManager(this);
             graphics.PreferredBackBufferHeight = 1000;
             graphics.PreferredBackBufferWidth = 1800;
-
+			graphics.ApplyChanges();
             Content.RootDirectory = "Content";
 			//Console.WriteLine(Content.ServiceProvider.);
 			
@@ -91,7 +91,7 @@ namespace Server_Solar_War
             // TODO: Add your update logic here
             //asteroid.Update(gameTime);
             game.Update(gameTime);
-
+			//Console.WriteLine(Mouse.GetState().X);
             base.Update(gameTime);
         }
 
