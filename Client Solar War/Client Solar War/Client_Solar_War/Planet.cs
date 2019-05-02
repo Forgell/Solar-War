@@ -288,6 +288,29 @@ namespace Client_Solar_War
 			else
 				Raddis = false;
 		}
+
+		public void UpdateInput(MouseState m)
+		{
+			if (id > 18)
+			{
+				Console.WriteLine(id);
+			}
+			update_radius(m);
+			timer++;
+			if (timer == 10)
+			{
+				index++;
+				timer = 0;
+			}
+			if (index == tex.Length)
+			{
+				index = 0;
+			}
+			int diff = 7;
+			selected_rect.X = pos.X - diff;
+			selected_rect.Y = pos.Y - diff;//, width + diff, height + diff);
+		}
+
 		private void updateShips()
 		{
 			incrementShipTimer++;
@@ -387,21 +410,24 @@ namespace Client_Solar_War
 		public void Update_As_Bytes(byte[] map)
 		{
 			int id = (map[0] & 248) >> 3;
-			if (id != this.id)
-			{
-				return;
-			}
+			this.id = id;
 			pos.X = ((map[0] & 7) << 8) | map[1];
 			pos.Y = (map[2] << 3) | ((map[3] & 224) >> 5);
 			ships = ((map[3] & 31) << 2) | ((map[4] & 192) >> 6);
 			int byte_color = map[4] & 7;
+			Color temp = Color.Black;
 			switch (byte_color)
 			{
-				case 0: faction_color = Color.Red;break;
-				case 1: faction_color = Color.Blue; break;
-				case 2: faction_color = Color.Green; break;
-				case 3: faction_color = Color.Purple; break;
-				case 4: faction_color = Color.Black; break;
+				case 0: temp = Color.Red;fileName = "planet-1"; break;
+				case 1: temp = Color.Blue; fileName = "planet-2"; break;
+				case 2: temp = Color.Green; fileName = "planet-3"; break;
+				case 3: temp = Color.Purple; fileName = "planet-4"; break;
+				case 4: temp = Color.Black; fileName = "planet-5"; break;
+			}
+			if (temp != faction_color)
+			{
+				faction_color = temp;
+				Load(server);
 			}
 
 			int ships_color_as_bytes = (map[4] & 56) >> 3;
@@ -413,6 +439,9 @@ namespace Client_Solar_War
 				case 3: ships_color = Color.Purple; break;
 				case 4: ships_color = Color.Black; break;
 			}
+			ship_label.updateText("" + ships);
+			ship_label.updatePosition(pos.X - 25, pos.Y);
+			ship_label.updateColor(ships_color);
 		}
 
 		private void incrementShips()
@@ -488,10 +517,13 @@ namespace Client_Solar_War
 			DrawShips(spritebatch);
 			//radius
 			if (Raddis)
-				spritebatch.Draw(Radius_Tex, Radius_rect, faction_color);
+				if(faction_color != Color.Black)
+					spritebatch.Draw(Radius_Tex, Radius_rect, faction_color);
+				else
+					spritebatch.Draw(Radius_Tex, Radius_rect, Color.White);
 			if (selected)
 			{
-				spritebatch.Draw(Radius_Tex, selected_rect, Color.Black);
+				spritebatch.Draw(Radius_Tex, selected_rect, Color.White);
 			}
 			if (is_being_taken_over)
 			{
@@ -503,8 +535,9 @@ namespace Client_Solar_War
 		//draw the number of ships at a planet
 		private void DrawShips(SpriteBatch spritebatch)
 		{
+			ship_label.Draw(spritebatch);
 			try {
-				ship_label.Draw(spritebatch);
+				//ship_label.Draw(spritebatch);
 			}catch(Exception e)
 			{
 				Console.WriteLine(e.Message);

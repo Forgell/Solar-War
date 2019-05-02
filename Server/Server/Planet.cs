@@ -75,7 +75,7 @@ namespace Server
         public static int Max_AMOUNT_OF_SHIPS_ON_PLANET = 99;
         public static int TRAVEL_RADIUS = 270 / 2;
         public static int TOTAL_TIME_TO_CAPTURE = 1200; // as in 60 frames
-        public static int TOTAL_NUMBER_OF_PLANETS = 0;
+        public static uint TOTAL_NUMBER_OF_PLANETS = 0;
         private uint id;
         public uint ID
         {
@@ -112,7 +112,11 @@ namespace Server
             this.origin = origin;
             this.radius = radius;
             this.fileName = fileName;
-            id = (uint)++TOTAL_NUMBER_OF_PLANETS;
+            id = ++TOTAL_NUMBER_OF_PLANETS;
+			if (id > 18)
+			{
+				Console.WriteLine("Error: Construction out of bounds -" + TOTAL_NUMBER_OF_PLANETS);
+			}
             int width = 60 / scaler;
             int height = 60 / scaler;
             offset = new Vector2(width / 2.0f, height / 2.0f);
@@ -191,7 +195,10 @@ namespace Server
 
             if (incrementShipTimer == 60)//increase number of ships each second
             {
-
+				if (capture_timer != 0)
+				{
+					capture_timer = capture_timer;
+				}
                 incrementShips();
                 incrementShipTimer = 0;
             }
@@ -268,7 +275,11 @@ namespace Server
         {
             byte[] map = new byte[5];
             map[0] = (byte)(((id & 31) << 3) | (((uint)pos.X & 1792) >> 8)); // first 5 bits are id and the last 3 are the first 11 of pos.X
-            map[1] = (byte)((uint)pos.X & 255); // last 8 of pos.X
+			if (id > 18)
+			{
+				//Console.WriteLine(id);
+			}
+			map[1] = (byte)((uint)pos.X & 255); // last 8 of pos.X
             map[2] = (byte)(((uint)pos.Y & 2040) >> 3); // fist 8 bits are here for pos.Y
             map[3] = (byte)((((uint)pos.Y & 7) << 5 ) | (((uint)ships & 124) >> 2)); // first 3 bits are the last bits of pos.Y and the rest are the first 5 bits of ship
             map[4] = (byte)(((uint)ships & 3) << 6); // first 2 bits are the last 2 bits of ships  2 bits before is the color of the ships on the planet so 1100

@@ -66,6 +66,13 @@ namespace Client_Solar_War
 			return null;
 		}
 
+		public void UpdateInput(MouseState m)
+		{
+			foreach(Planet p in planets)
+			{
+				p.UpdateInput(m);
+			}
+		}
 
 		public void Update_As_Bytes(byte[] map)
 		{

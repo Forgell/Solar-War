@@ -92,8 +92,13 @@ namespace Client_Solar_War
 
 		}
 
+		public void setPlayer(Color faction)
+		{
+			player_faction = faction;
+		}
 
-		public void handelPlayerInput(MouseState mouse)
+
+		public string handelPlayerInput(MouseState mouse)
 		{
 			if (mouse.LeftButton == ButtonState.Pressed && !(old_mouse.LeftButton == ButtonState.Pressed))
 			{
@@ -129,7 +134,30 @@ namespace Client_Solar_War
 								{
 									// then everything is otherized
 
-									transfer_troops(selected_planet, planet_at_position, (int)Math.Round(presentage_of_launching_ships * selected_planet.Ships));
+									//transfer_troops(selected_planet, planet_at_position, (int)Math.Round(presentage_of_launching_ships * selected_planet.Ships));
+									int faction = 0;
+									if (player_faction == Color.Red)
+									{
+										faction = 0;
+									}
+									if (player_faction == Color.Blue)
+									{
+										faction = 1;
+									}
+									if (player_faction == Color.Green)
+									{
+										faction = 2;
+									}
+									if (player_faction == Color.Purple)
+									{
+										faction = 3;
+									}
+									if (player_faction == Color.Black)
+									{
+										faction = 4;
+									}
+									Console.WriteLine(selected_planet.ID + " " + planet_at_position.ID + " " + ((int)Math.Round(presentage_of_launching_ships * selected_planet.Ships)) + " " + faction);
+									return selected_planet.ID + " " + planet_at_position.ID + " " + ((int)Math.Round(presentage_of_launching_ships * selected_planet.Ships)) + " "  + faction;
 								}
 							}
 
@@ -143,6 +171,7 @@ namespace Client_Solar_War
 						}
 					}
 				}
+				
 			}
 
 			
@@ -174,6 +203,7 @@ namespace Client_Solar_War
 				launching_ships.updateColor(selected_planet.Color);
 			}
 
+			return "";
 		}
 
 		private void transfer_troops(Planet first, Planet secound, int amount)
@@ -201,6 +231,20 @@ namespace Client_Solar_War
 
 			launching_ships = new Label("" + presentage_of_launching_ships, new Vector2(), Color.Black, (new ContentManager(server, "Content/").Load<SpriteFont>("SpriteFont1")));
 			//sun.Load(server);
+		}
+
+		public string Update_Input(MouseState m)
+		{
+			
+			foreach (SoloarOrbit orbit in soloar_orbits)
+			{
+				orbit.UpdateInput(m);
+			}
+			string s = handelPlayerInput(m);
+			//change locations of planets as they rotate
+			//sun.Update(gametime);
+			old_mouse = m;
+			return s;
 		}
 
 		public void Update_as_Bytes(byte[] map)

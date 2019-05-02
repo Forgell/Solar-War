@@ -123,6 +123,7 @@ namespace Client_Solar_War
 					{
 						player_number = 1;
 						player_number_label.updateText("You are player number: " + player_number);
+						game.setPlayer(Color.Red);
 					}
 					else
 						player_number_label.updateText("Player 1 is already taken, try again!");
@@ -136,6 +137,7 @@ namespace Client_Solar_War
 					{
 						player_number = 2;
 						player_number_label.updateText("You are player number: " + player_number);
+						game.setPlayer(Color.Blue);
 					}
 					else
 						player_number_label.updateText("Player 2 is already taken, try again!");
@@ -148,6 +150,7 @@ namespace Client_Solar_War
 					{
 						player_number = 3;
 						player_number_label.updateText("You are player number: " + player_number);
+						game.setPlayer(Color.Green);
 					}
 					else
 						player_number_label.updateText("Player 3 is already taken, try again!");
@@ -161,6 +164,7 @@ namespace Client_Solar_War
 					{
 						player_number = 4;
 						player_number_label.updateText("You are player number: " + player_number);
+						game.setPlayer(Color.Purple);
 					}
 					else
 						player_number_label.updateText("Player 4 is already taken, try again!");
@@ -193,8 +197,16 @@ namespace Client_Solar_War
 			//game loop 
 			while (true)
 			{
-				game.Update_as_Bytes(network.GetMap());
-				Thread.Sleep(1);
+				byte[] yolo = network.GetMap();
+				if(yolo[99] == 29)
+				{
+					game.Update_as_Bytes(yolo);
+					string message = game.Update_Input(Mouse.GetState());
+					if (!message.Equals(""))
+						network.send(message);
+					Thread.Sleep(17);
+				}
+				
 			}
 			
 
@@ -227,7 +239,7 @@ namespace Client_Solar_War
 			}
 			// Still connecting to ip adress
 			//OVERIDE
-			if (console.IsKeyDown(Keys.E))
+			if (console.IsKeyDown(Keys.E) && !old.IsKeyDown(Keys.E))
 			{
 				network.send("overide");
 			}

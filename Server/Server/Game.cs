@@ -77,12 +77,11 @@ namespace Server
 
 		public void Input(string message)// all messages are required to be a length of 5
 		{
-			int player_as_number = message[0] - '0';
-			int planet_id_source = message[1] - '0';
-			int amount = (message[2] - '0') * 10 + (message[3] - '0');
-			int planet_id_target = message[4] - '0';
-			//TODO in futre make sure this is a leagl transfer
-			transfer_troops(getPlanetById(planet_id_source) , getPlanetById(planet_id_target) , amount);
+			string[] split = message.Split(' ');
+			int planet_id_souce = int.Parse(split[0]);
+			int planet_id_target = int.Parse(split[1]);
+			int amount = int.Parse(split[2]);
+			transfer_troops(getPlanetById(planet_id_souce) , getPlanetById(planet_id_target) , amount);
 		}
 
 		public byte[] Encode()
