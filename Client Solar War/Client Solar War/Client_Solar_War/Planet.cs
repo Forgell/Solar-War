@@ -204,23 +204,7 @@ namespace Client_Solar_War
 		}
 
 
-		//if it being invaded by a a 
-		/*public void add(Color faction, int amnt) //some class or paerameter like color
-        {
-			if (faction == faction_color)
-			{
-				ships += amnt;
-				if (ships > 99)
-				{
-					ships = 99;
-				}
-			}
-			else
-			{
-				//battle(faction , amnt);
-			}
-        }*/
-
+		
 		public void tranfer_troops(Planet source, int amount)
 		{
 			source.ships -= amount;
@@ -252,32 +236,6 @@ namespace Client_Solar_War
 		}
 
 
-		/*public bool checkRadius()//check radius to be able to move troops
-        {
-            //will use x and y directions then check triangle a squared plus b squared = c squared
-            return false;
-        }
-		*/
-		/*public void Update(GameTime gt, MouseState m)
-        {
-
-            //   radius display
-            mouse_Rect.X = m.X;
-            mouse_Rect.Y = m.Y;
-              if (pos.Intersects(mouse_Rect))
-              
-                {
-                Radius();
-                Raddis = true;
-            }
-            else
-                Raddis = false;
-
-            //Update(gt);
-
-
-        }
-		*/
 
 		private void update_radius(MouseState m)
 		{
@@ -370,46 +328,6 @@ namespace Client_Solar_War
 				is_being_taken_over = false;
 			}
 		}
-		/*public void Update(GameTime gameTime, MouseState m)
-		{
-			// see if the mouse is hovering to show the radius of travel
-			update_radius(m);
-
-			updateShips();
-
-			if (is_being_taken_over)
-			{
-				updateCapture(gameTime);
-			}
-
-			angle += angular_speed;
-			Orbit();
-
-			if (is_being_taken_over)
-			{
-				capture_timer++;
-				if (capture_timer == 180) // hopefully around 2 secounds
-				{
-					changeFaction();
-				}
-			}
-			int diff = 7;
-			selected_rect.X = pos.X - diff;
-			selected_rect.Y = pos.Y - diff;//, width + diff, height + diff);
-			ship_label.updateText("" + ships);
-			ship_label.updatePosition(pos.X - 25, pos.Y);
-			ship_label.updateColor(ships_color);
-		}*/
-
-		private void changeFaction()
-		{
-
-		}
-
-		public static int Byte_To_ID(byte b)
-		{
-			return (b & 248) >> 3;
-		}
 
 		public void Update_As_Bytes(byte[] map)
 		{
@@ -476,45 +394,7 @@ namespace Client_Solar_War
 			selected = false;
 		}
 
-		//If ships of a diferent color than planet is at planet, then ships attack defending ships
-		/*private void attacked()
-        {
-            isAttacked = false;
-            for(int i = 0; i < 4; i++) 
-            //making sure that that the ships in the planet have not started incrementing and that there is another player attacking
-            {
-                
-                if(i == color)
-                {
-                    //do nothing
-                }
-                else
-                {
-                    if (ships[i] > 0)
-                        isAttacked = true;
-                }
-            }
-            if(isAttacked)
-            {
-                for(int i = 0; i < 4; i++) //each color
-                {
-                    if(i != color)
-                    {
-                        for(int j = ships[i]; j > 0 && ships[color] > 0; j--)//attacking or defending groups of ships have not run out of ships
-                        {
-                            ships[color] = ships[color] - 1;
-                            ships[i] = ships[i] - 1;
-                        }
-                        if(ships[color] == 0)
-                        {
-                            //planet has become neutral
-                            color = 4; //4 = neutral
-                        }
-                    }
-                }
-            }
-        }*/
-
+	
 
 		public void Draw(SpriteBatch spritebatch)
 		{

@@ -95,18 +95,6 @@ namespace Client_Solar_War
 			}
 		}
 
-		/*public void Update_as_Bytes(byte[] array)
-		{
-
-		}*/
-
-		/*public void Update(GameTime gameTime, MouseState m)
-		{
-			foreach (Planet planet in planets)
-			{
-				planet.Update(gameTime, m);
-			}
-		}*/
 
 		public void Draw(SpriteBatch spritebatch)
 		{
