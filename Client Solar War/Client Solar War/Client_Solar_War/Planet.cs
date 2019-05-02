@@ -16,7 +16,8 @@ namespace Client_Solar_War
 	{
 		//-1 will be replace with some resonable value
 		//private Random r;
-		private Texture2D[] tex;
+		private Texture2D[][] tex;
+
 		private SpriteFont font;
 		public Rectangle position
 		{
@@ -101,6 +102,7 @@ namespace Client_Solar_War
 		private int radius;
 
 		private Color faction_color;
+		private int faction_num;
 		private bool selected;
 		private Rectangle selected_rect;
 		private bool is_being_taken_over;
@@ -113,11 +115,6 @@ namespace Client_Solar_War
 			this.radius = radius;
 			this.fileName = fileName;
 			id = ++TOTAL_AMOUNT_OF_PLANETS;
-			if (tex != null)
-			{
-				pos = new Rectangle((int)origin.X + radius, (int)origin.Y, tex[0].Width, tex[0].Height);
-			}
-
 			//how to set the size depending on the planet
 			angle = Math.PI / 180.0 * 5.0;
 			timer = 0;
@@ -138,6 +135,7 @@ namespace Client_Solar_War
 			is_being_taken_over = false;
 			capture_timer = 0;
 			ships_color = faction_color;
+			
 		}
 
 		public void setAngle(double angle) // input degeres
@@ -153,18 +151,24 @@ namespace Client_Solar_War
 			//tex = content.Load<Texture2D>(name);
 			fileName = "Sprites/planets/" + fileName + "/";
 			string[] file = Directory.GetFiles("Content/" + fileName);
-			tex = new Texture2D[file.Length];
-			for (int i = 0; i < file.Length; i++)
+			tex = new Texture2D[5][];
+
+			for(int j = 0; j < 5; j++)
 			{
-				tex[i] = content.Load<Texture2D>(file[i].Substring(8, file[i].Length - 4 - 8));
+				tex[j] = new Texture2D[3];
+				for (int i = 0; i < tex[j].Length; i++)
+				{
+					tex[j][i] = content.Load<Texture2D>("Sprites/planets/planet-" + (j + 1) + "/planet-" + ( j + 1) + "-" + (i + 1));
+				}
 			}
+			
 
 			/*tex = new Texture2D[1];
 			tex[0] = Content.Load<Texture2D>("" + fileName);
 			*/
 
-			int width = tex[0].Width / scaler;
-			int height = tex[0].Height / scaler;
+			int width = tex[0][0].Width / scaler;
+			int height = tex[0][0].Width / scaler;
 			offset = new Vector2(width / 2.0f, height / 2.0f);
 
 			pos = new Rectangle((int)origin.X + radius - (int)offset.X, (int)origin.Y - (int)offset.Y, width, height);
@@ -302,7 +306,7 @@ namespace Client_Solar_War
 				index++;
 				timer = 0;
 			}
-			if (index == tex.Length)
+			if (index == tex[0].Length)
 			{
 				index = 0;
 			}
@@ -320,7 +324,7 @@ namespace Client_Solar_War
 				index++;
 				timer = 0;
 			}
-			if (index == tex.Length)
+			if (index == tex[0].Length)
 			{
 				index = 0;
 			}
@@ -366,7 +370,7 @@ namespace Client_Solar_War
 				is_being_taken_over = false;
 			}
 		}
-		public void Update(GameTime gameTime, MouseState m)
+		/*public void Update(GameTime gameTime, MouseState m)
 		{
 			// see if the mouse is hovering to show the radius of travel
 			update_radius(m);
@@ -395,7 +399,7 @@ namespace Client_Solar_War
 			ship_label.updateText("" + ships);
 			ship_label.updatePosition(pos.X - 25, pos.Y);
 			ship_label.updateColor(ships_color);
-		}
+		}*/
 
 		private void changeFaction()
 		{
@@ -416,6 +420,7 @@ namespace Client_Solar_War
 			ships = ((map[3] & 31) << 2) | ((map[4] & 192) >> 6);
 			int byte_color = map[4] & 7;
 			Color temp = Color.Black;
+			faction_num = byte_color;
 			switch (byte_color)
 			{
 				case 0: temp = Color.Red;fileName = "planet-1"; break;
@@ -513,7 +518,7 @@ namespace Client_Solar_War
 
 		public void Draw(SpriteBatch spritebatch)
 		{
-			spritebatch.Draw(tex[index], pos, Color.White);
+			spritebatch.Draw(tex[faction_num][index], pos, Color.White);
 			DrawShips(spritebatch);
 			//radius
 			if (Raddis)

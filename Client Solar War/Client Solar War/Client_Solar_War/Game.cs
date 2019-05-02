@@ -270,16 +270,7 @@ namespace Client_Solar_War
 			{
 				asteroids[i].Update(gametime);
 			}
-			/*for (int i = 0; i < planets.Count; i++)
-            {
-                planets[i].Update(gametime,m);
-				//Console.Write(planets[i].Angle + " ");
-            }*/
-			for (int i = 0; i < soloar_orbits.Count; i++)
-			{
-				soloar_orbits[i].Update(gametime, m);
-			}
-
+			
 			// Handel player input
 			handelPlayerInput(m);
 			//change locations of planets as they rotate

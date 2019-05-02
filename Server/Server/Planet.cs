@@ -195,10 +195,6 @@ namespace Server
 
             if (incrementShipTimer == 60)//increase number of ships each second
             {
-				if (capture_timer != 0)
-				{
-					capture_timer = capture_timer;
-				}
                 incrementShips();
                 incrementShipTimer = 0;
             }
