@@ -42,6 +42,7 @@ namespace Server_Solar_War
         //spriteBatch.DrawString(spriteFont, "", Vector2 position, Color.Red);
         string winText;
         Vector2 winPosition;
+        SpriteFont spriteFont;
 
         public Game(int screenWidth , int screenHeight , ContentManager Content , Color player_faction)
         {
@@ -178,7 +179,7 @@ namespace Server_Solar_War
 			selected_planet = null;
 		}
 
-        public void Load(IServiceProvider server)
+        public void Load(IServiceProvider server, SpriteFont spriteFont)
         {
             for (int i = 0; i < asteroids.Count; i++)
             {
@@ -192,6 +193,8 @@ namespace Server_Solar_War
 			{
 				soloar_orbits[i].Load(server);
 			}
+            
+            this.spriteFont = spriteFont;
 
 			launching_ships = new Label( "" + presentage_of_launching_ships, new Vector2() , Color.Black ,(new ContentManager(server , "Content/").Load<SpriteFont>("SpriteFont1")));
             //sun.Load(server);
@@ -289,13 +292,28 @@ namespace Server_Solar_War
 
             //draw text to show that a player has won
             //red, blue, green, or purple, else black
-            if(colorWon != Color.Black)
+            if(colorWon != Color.Black) //no player has won the game if false
             {
                 winPosition = new Vector2(10, 10);
                 if (colorWon == Color.Red)
                 {
                     winText = "Red player has won!";
-                    //spriteBatch.DrawString(spriteFont, winText, winPosition, Color.Red);
+                    spriteBatch.DrawString(spriteFont, winText, winPosition, Color.Red);
+                }
+                else if (colorWon == Color.Blue)
+                {
+                    winText = "Blue player has won!";
+                    spriteBatch.DrawString(spriteFont, winText, winPosition, Color.Blue);
+                }
+                else if (colorWon == Color.Green)
+                {
+                    winText = "Green player has won!";
+                    spriteBatch.DrawString(spriteFont, winText, winPosition, Color.Green);
+                }
+                else if (colorWon == Color.Purple)
+                {
+                    winText = "Purple player has won!";
+                    spriteBatch.DrawString(spriteFont, winText, winPosition, Color.Purple);
                 }
 
             }
