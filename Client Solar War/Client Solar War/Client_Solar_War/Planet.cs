@@ -398,7 +398,12 @@ namespace Client_Solar_War
 
 		public void Draw(SpriteBatch spritebatch)
 		{
-			spritebatch.Draw(tex[faction_num][index], pos, Color.White);
+			try
+			{
+				spritebatch.Draw(tex[faction_num][index], pos, Color.White);
+			}
+			catch (ArgumentNullException e) { }
+			catch (NullReferenceException e) { }
 			DrawShips(spritebatch);
 			//radius
 			if (Raddis)

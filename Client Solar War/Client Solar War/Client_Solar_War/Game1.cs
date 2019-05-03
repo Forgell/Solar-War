@@ -171,6 +171,7 @@ namespace Client_Solar_War
 				}
 			}
 			// waiting for the game to start
+			Thread.Sleep(2);
 			while (true)
 			{
 				string message = network.getMessage();
@@ -189,7 +190,7 @@ namespace Client_Solar_War
 					//game.Load(Content.ServiceProvider);
 					break;
 				}
-				Thread.Sleep(1);
+				Thread.Sleep(5);
 			}
 
 
@@ -197,14 +198,12 @@ namespace Client_Solar_War
 			//game loop 
 			while (true)
 			{
-				byte[] yolo = network.GetMap();
-				if(yolo[99] == 29)
+				byte[] map = network.GetMap();
+				if(map[99] == 29)
 				{
-					game.Update_as_Bytes(yolo);
-					string message = game.Update_Input(Mouse.GetState());
-					if (!message.Equals(""))
-						network.send(message);
-					Thread.Sleep(17);
+					game.Update_as_Bytes(map);
+					
+					Thread.Sleep(10);
 				}
 				
 			}
@@ -239,7 +238,7 @@ namespace Client_Solar_War
 			}
 			// Still connecting to ip adress
 			//OVERIDE
-			if (console.IsKeyDown(Keys.E) && !old.IsKeyDown(Keys.E))
+			if (console.IsKeyDown(Keys.E) && !old.IsKeyDown(Keys.E) && state == State.WAITING_FOR_ALL_PLAYERS)
 			{
 				network.send("overide");
 			}
@@ -265,6 +264,9 @@ namespace Client_Solar_War
 				case State.PLAYING:
 					// playing the game all of the players are connected
 					update_game(console);
+					string message = game.Update_Input(Mouse.GetState());
+					if (!message.Equals(""))
+						network.send(message);
 					break;
 				case State.CLOSING:
 					// do nothing as the program is closing
