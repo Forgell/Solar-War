@@ -213,13 +213,15 @@ namespace Server_Solar_War
 		public void tranfer_troops(Planet source ,  int amount)
 		{
 			source.ships -= amount;
-			if (source.faction_color == this.faction_color)
+			if (source.faction_color == this.faction_color && !source.is_being_taken_over )
 			{
 				// peacful tranfer
 				this.ships += amount;
 			}
+           
 			else
 			{
+
 				// it is attacking
 				if (this.ships >= amount)
 				{
@@ -312,9 +314,11 @@ namespace Server_Solar_War
 			{
 				// then lets tranfer the planets contoll
 				capture_timer = 0;
-				this.faction_color = ships_color;
-				//switch()
-				if(faction_color == Color.Red){
+                    this.faction_color = ships_color;
+                
+         
+                //switch()
+                if (faction_color == Color.Red){
 					fileName = "planet-1";
 				}
 				if (faction_color == Color.Blue)
@@ -329,8 +333,16 @@ namespace Server_Solar_War
 				{
 					fileName = "planet-4";
 				}
-				
-				Load(server);
+                 if (faction_color == Color.Black)
+                {
+                    faction_color = Color.Green;
+                    updateCapture(gametime);
+
+
+                }
+
+
+                Load(server);
 
 				is_being_taken_over = false;
 			}

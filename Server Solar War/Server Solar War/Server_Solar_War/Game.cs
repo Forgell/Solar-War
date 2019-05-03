@@ -24,8 +24,7 @@ namespace Server_Solar_War
         //used to create planet
         //IServiceProvider d;
         //sun  object
-        Sun sun;
-
+      
 		bool planet_is_selected;
 		Planet selected_planet;
 		MouseState old_mouse;
@@ -89,7 +88,7 @@ namespace Server_Solar_War
 				{
 					// then this planet has been clicked
 					//planet_at_position.select();
-					if (!planet_is_selected && planet_at_position.Color == player_faction )
+					if (!planet_is_selected && planet_at_position.Color == player_faction || planet_at_position.is_being_taken_over && planet_at_position.Ships >0)
 					{
 						planet_at_position.select();
 						selected_planet = planet_at_position;
@@ -113,7 +112,7 @@ namespace Server_Solar_War
 							{
                                 // then troops can  transfer
                                 // we need to check if the selcted planet is his color
-                                if (selected_planet.Color == player_faction || selected_planet.is_being_taken_over)
+                                if (selected_planet.Color == player_faction || selected_planet.is_being_taken_over && selected_planet.Ships >0)
 								{
 									// then everything is otherized
 									
