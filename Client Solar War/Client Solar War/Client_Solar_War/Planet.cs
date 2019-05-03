@@ -16,7 +16,8 @@ namespace Client_Solar_War
 	{
 		//-1 will be replace with some resonable value
 		//private Random r;
-		private Texture2D[] tex;
+		private Texture2D[][] tex;
+
 		private SpriteFont font;
 		public Rectangle position
 		{
@@ -66,6 +67,12 @@ namespace Client_Solar_War
 			}
 		}
 
+		public int ID
+		{
+			get { return id; }
+		}
+		private int id;
+
 		private IServiceProvider server;
 
 		private Label ship_label;
@@ -74,6 +81,7 @@ namespace Client_Solar_War
 		public static int Max_AMOUNT_OF_SHIPS_ON_PLANET = 99;
 		public static int TRAVEL_RADIUS = 270 / 2;
 		public static int TOTAL_TIME_TO_CAPTURE = 1200; // as in 60 frames
+		public static int TOTAL_AMOUNT_OF_PLANETS = 0;
 
 		private int index;
 		private Vector2 offset;
@@ -94,6 +102,7 @@ namespace Client_Solar_War
 		private int radius;
 
 		private Color faction_color;
+		private int faction_num;
 		private bool selected;
 		private Rectangle selected_rect;
 		private bool is_being_taken_over;
@@ -105,12 +114,7 @@ namespace Client_Solar_War
 			this.origin = origin;
 			this.radius = radius;
 			this.fileName = fileName;
-
-			if (tex != null)
-			{
-				pos = new Rectangle((int)origin.X + radius, (int)origin.Y, tex[0].Width, tex[0].Height);
-			}
-
+			id = ++TOTAL_AMOUNT_OF_PLANETS;
 			//how to set the size depending on the planet
 			angle = Math.PI / 180.0 * 5.0;
 			timer = 0;
@@ -131,6 +135,7 @@ namespace Client_Solar_War
 			is_being_taken_over = false;
 			capture_timer = 0;
 			ships_color = faction_color;
+			
 		}
 
 		public void setAngle(double angle) // input degeres
@@ -146,18 +151,24 @@ namespace Client_Solar_War
 			//tex = content.Load<Texture2D>(name);
 			fileName = "Sprites/planets/" + fileName + "/";
 			string[] file = Directory.GetFiles("Content/" + fileName);
-			tex = new Texture2D[file.Length];
-			for (int i = 0; i < file.Length; i++)
+			tex = new Texture2D[5][];
+
+			for(int j = 0; j < 5; j++)
 			{
-				tex[i] = content.Load<Texture2D>(file[i].Substring(8, file[i].Length - 4 - 8));
+				tex[j] = new Texture2D[3];
+				for (int i = 0; i < tex[j].Length; i++)
+				{
+					tex[j][i] = content.Load<Texture2D>("Sprites/planets/planet-" + (j + 1) + "/planet-" + ( j + 1) + "-" + (i + 1));
+				}
 			}
+			
 
 			/*tex = new Texture2D[1];
 			tex[0] = Content.Load<Texture2D>("" + fileName);
 			*/
 
-			int width = tex[0].Width / scaler;
-			int height = tex[0].Height / scaler;
+			int width = tex[0][0].Width / scaler;
+			int height = tex[0][0].Width / scaler;
 			offset = new Vector2(width / 2.0f, height / 2.0f);
 
 			pos = new Rectangle((int)origin.X + radius - (int)offset.X, (int)origin.Y - (int)offset.Y, width, height);
@@ -193,23 +204,7 @@ namespace Client_Solar_War
 		}
 
 
-		//if it being invaded by a a 
-		/*public void add(Color faction, int amnt) //some class or paerameter like color
-        {
-			if (faction == faction_color)
-			{
-				ships += amnt;
-				if (ships > 99)
-				{
-					ships = 99;
-				}
-			}
-			else
-			{
-				//battle(faction , amnt);
-			}
-        }*/
-
+		
 		public void tranfer_troops(Planet source, int amount)
 		{
 			source.ships -= amount;
@@ -241,32 +236,6 @@ namespace Client_Solar_War
 		}
 
 
-		/*public bool checkRadius()//check radius to be able to move troops
-        {
-            //will use x and y directions then check triangle a squared plus b squared = c squared
-            return false;
-        }
-		*/
-		/*public void Update(GameTime gt, MouseState m)
-        {
-
-            //   radius display
-            mouse_Rect.X = m.X;
-            mouse_Rect.Y = m.Y;
-              if (pos.Intersects(mouse_Rect))
-              
-                {
-                Radius();
-                Raddis = true;
-            }
-            else
-                Raddis = false;
-
-            //Update(gt);
-
-
-        }
-		*/
 
 		private void update_radius(MouseState m)
 		{
@@ -281,6 +250,29 @@ namespace Client_Solar_War
 			else
 				Raddis = false;
 		}
+
+		public void UpdateInput(MouseState m)
+		{
+			if (id > 18)
+			{
+				Console.WriteLine(id);
+			}
+			update_radius(m);
+			timer++;
+			if (timer == 10)
+			{
+				index++;
+				timer = 0;
+			}
+			if (index == tex[0].Length)
+			{
+				index = 0;
+			}
+			int diff = 7;
+			selected_rect.X = pos.X - diff;
+			selected_rect.Y = pos.Y - diff;//, width + diff, height + diff);
+		}
+
 		private void updateShips()
 		{
 			incrementShipTimer++;
@@ -290,7 +282,7 @@ namespace Client_Solar_War
 				index++;
 				timer = 0;
 			}
-			if (index == tex.Length)
+			if (index == tex[0].Length)
 			{
 				index = 0;
 			}
@@ -336,40 +328,43 @@ namespace Client_Solar_War
 				is_being_taken_over = false;
 			}
 		}
-		public void Update(GameTime gameTime, MouseState m)
+
+		public void Update_As_Bytes(byte[] map)
 		{
-			// see if the mouse is hovering to show the radius of travel
-			update_radius(m);
-
-			updateShips();
-
-			if (is_being_taken_over)
+			int id = (map[0] & 248) >> 3;
+			this.id = id;
+			pos.X = ((map[0] & 7) << 8) | map[1];
+			pos.Y = (map[2] << 3) | ((map[3] & 224) >> 5);
+			ships = ((map[3] & 31) << 2) | ((map[4] & 192) >> 6);
+			int byte_color = map[4] & 7;
+			Color temp = Color.Black;
+			faction_num = byte_color;
+			switch (byte_color)
 			{
-				updateCapture(gameTime);
+				case 0: temp = Color.Red;fileName = "planet-1"; break;
+				case 1: temp = Color.Blue; fileName = "planet-2"; break;
+				case 2: temp = Color.Green; fileName = "planet-3"; break;
+				case 3: temp = Color.Purple; fileName = "planet-4"; break;
+				case 4: temp = Color.Black; fileName = "planet-5"; break;
+			}
+			if (temp != faction_color)
+			{
+				faction_color = temp;
+				Load(server);
 			}
 
-			angle += angular_speed;
-			Orbit();
-
-			if (is_being_taken_over)
+			int ships_color_as_bytes = (map[4] & 56) >> 3;
+			switch (ships_color_as_bytes)
 			{
-				capture_timer++;
-				if (capture_timer == 180) // hopefully around 2 secounds
-				{
-					changeFaction();
-				}
+				case 0: ships_color = Color.Red; break;
+				case 1: ships_color = Color.Blue; break;
+				case 2: ships_color = Color.Green; break;
+				case 3: ships_color = Color.Purple; break;
+				case 4: ships_color = Color.Black; break;
 			}
-			int diff = 7;
-			selected_rect.X = pos.X - diff;
-			selected_rect.Y = pos.Y - diff;//, width + diff, height + diff);
 			ship_label.updateText("" + ships);
 			ship_label.updatePosition(pos.X - 25, pos.Y);
 			ship_label.updateColor(ships_color);
-		}
-
-		private void changeFaction()
-		{
-
 		}
 
 		private void incrementShips()
@@ -399,56 +394,21 @@ namespace Client_Solar_War
 			selected = false;
 		}
 
-		//If ships of a diferent color than planet is at planet, then ships attack defending ships
-		/*private void attacked()
-        {
-            isAttacked = false;
-            for(int i = 0; i < 4; i++) 
-            //making sure that that the ships in the planet have not started incrementing and that there is another player attacking
-            {
-                
-                if(i == color)
-                {
-                    //do nothing
-                }
-                else
-                {
-                    if (ships[i] > 0)
-                        isAttacked = true;
-                }
-            }
-            if(isAttacked)
-            {
-                for(int i = 0; i < 4; i++) //each color
-                {
-                    if(i != color)
-                    {
-                        for(int j = ships[i]; j > 0 && ships[color] > 0; j--)//attacking or defending groups of ships have not run out of ships
-                        {
-                            ships[color] = ships[color] - 1;
-                            ships[i] = ships[i] - 1;
-                        }
-                        if(ships[color] == 0)
-                        {
-                            //planet has become neutral
-                            color = 4; //4 = neutral
-                        }
-                    }
-                }
-            }
-        }*/
-
+	
 
 		public void Draw(SpriteBatch spritebatch)
 		{
-			spritebatch.Draw(tex[index], pos, Color.White);
+			spritebatch.Draw(tex[faction_num][index], pos, Color.White);
 			DrawShips(spritebatch);
 			//radius
 			if (Raddis)
-				spritebatch.Draw(Radius_Tex, Radius_rect, faction_color);
+				if(faction_color != Color.Black)
+					spritebatch.Draw(Radius_Tex, Radius_rect, faction_color);
+				else
+					spritebatch.Draw(Radius_Tex, Radius_rect, Color.White);
 			if (selected)
 			{
-				spritebatch.Draw(Radius_Tex, selected_rect, Color.Black);
+				spritebatch.Draw(Radius_Tex, selected_rect, Color.White);
 			}
 			if (is_being_taken_over)
 			{
@@ -461,6 +421,14 @@ namespace Client_Solar_War
 		private void DrawShips(SpriteBatch spritebatch)
 		{
 			ship_label.Draw(spritebatch);
+			try {
+				//ship_label.Draw(spritebatch);
+			}catch(Exception e)
+			{
+				Console.WriteLine(e.Message);
+				Console.WriteLine(ship_label + " " + spritebatch);
+				Console.WriteLine();
+			}
 
 		}
 	}

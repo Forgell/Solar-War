@@ -75,7 +75,7 @@ namespace Server
         public static int Max_AMOUNT_OF_SHIPS_ON_PLANET = 99;
         public static int TRAVEL_RADIUS = 270 / 2;
         public static int TOTAL_TIME_TO_CAPTURE = 1200; // as in 60 frames
-        public static int TOTAL_NUMBER_OF_PLANETS = 0;
+        public static uint TOTAL_NUMBER_OF_PLANETS = 0;
         private uint id;
         public uint ID
         {
@@ -112,7 +112,11 @@ namespace Server
             this.origin = origin;
             this.radius = radius;
             this.fileName = fileName;
-            id = (uint)++TOTAL_NUMBER_OF_PLANETS;
+            id = ++TOTAL_NUMBER_OF_PLANETS;
+			if (id > 18)
+			{
+				Console.WriteLine("Error: Construction out of bounds -" + TOTAL_NUMBER_OF_PLANETS);
+			}
             int width = 60 / scaler;
             int height = 60 / scaler;
             offset = new Vector2(width / 2.0f, height / 2.0f);
@@ -186,20 +190,11 @@ namespace Server
         private void updateShips()
         {
             incrementShipTimer++;
-            timer++;
-            if (timer == 10)
-            {
-                index++;
-                timer = 0;
-            }
-            if (index == tex.Length)
-            {
-                index = 0;
-            }
+            
+            
 
             if (incrementShipTimer == 60)//increase number of ships each second
             {
-
                 incrementShips();
                 incrementShipTimer = 0;
             }
@@ -216,7 +211,7 @@ namespace Server
                 capture_timer = 0;
                 this.faction_color = ships_color;
                 //switch()
-                if (faction_color == Color.Red)
+                /*if (faction_color == Color.Red)
                 {
                     fileName = "planet-1";
                 }
@@ -231,7 +226,7 @@ namespace Server
                 if (faction_color == Color.Purple)
                 {
                     fileName = "planet-4";
-                }
+                }*/
 
                 is_being_taken_over = false;
             }
@@ -276,14 +271,18 @@ namespace Server
         {
             byte[] map = new byte[5];
             map[0] = (byte)(((id & 31) << 3) | (((uint)pos.X & 1792) >> 8)); // first 5 bits are id and the last 3 are the first 11 of pos.X
-            map[1] = (byte)((uint)pos.X & 255); // last 8 of pos.X
+			if (id > 18)
+			{
+				//Console.WriteLine(id);
+			}
+			map[1] = (byte)((uint)pos.X & 255); // last 8 of pos.X
             map[2] = (byte)(((uint)pos.Y & 2040) >> 3); // fist 8 bits are here for pos.Y
             map[3] = (byte)((((uint)pos.Y & 7) << 5 ) | (((uint)ships & 124) >> 2)); // first 3 bits are the last bits of pos.Y and the rest are the first 5 bits of ship
-            map[4] = (byte)(((uint)ships & 3) << 6); // first 2 bits are the last 2 bits of ships 
+            map[4] = (byte)(((uint)ships & 3) << 6); // first 2 bits are the last 2 bits of ships  2 bits before is the color of the ships on the planet so 1100
             if (faction_color == Color.Red) // last 2 bits are color
             {
-                map[4] = (byte)(map[4] | 0);
-            }
+                map[4] = (byte)(map[4] | 0);// last 3bits are color
+			}
             if (faction_color == Color.Blue)
             {
                 map[4] = (byte)(map[4] | 1);
@@ -300,7 +299,28 @@ namespace Server
             {
                 map[4] = (byte)(map[4] | 4);
             }
-            return map;
+
+			if (ships_color == Color.Red) 
+			{
+				map[4] = (byte)(map[4] | 0); // 000000
+			}
+			if (ships_color == Color.Blue)
+			{
+				map[4] = (byte)(map[4] | 8); // 001000
+			}
+			if (ships_color == Color.Green)
+			{
+				map[4] = (byte)(map[4] | 16); // 010000
+			}
+			if (ships_color == Color.Purple)
+			{
+				map[4] = (byte)(map[4] | 24); // 011000
+			}
+			if (ships_color == Color.Black)
+			{
+				map[4] = (byte)(map[4] | 32); // 100000
+			}
+			return map;
         }
 
     }

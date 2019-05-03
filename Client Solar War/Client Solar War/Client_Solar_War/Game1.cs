@@ -64,9 +64,9 @@ namespace Client_Solar_War
         /// </summary>
         protected override void Initialize()
         {
-            // instancience of network varibles
-            // star field varibles 
-            starfield = new Starfield(GraphicsDevice, this.Content.Load<Texture2D>("Star"));
+			// instancience of network varibles
+			// star field varibles 
+			starfield = new Starfield(GraphicsDevice, this.Content.Load<Texture2D>("Star"));
 			networking_thread = new Thread(network_communication);
             network = new Networking();
             state = State.START;
@@ -77,6 +77,8 @@ namespace Client_Solar_War
 			player_number = 0;
 			screenHeight = GraphicsDevice.Viewport.Height;
 			screenWidth = GraphicsDevice.Viewport.Width;
+			game = new Game(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight, Content, Color.Green);
+			//game.Load(Content.ServiceProvider);
 			
 			base.Initialize();
         }
@@ -94,6 +96,7 @@ namespace Client_Solar_War
 			player_number_label = new Label("No number assigned", new Vector2(10 , 10) , Color.White , sf);
 			logo = this.Content.Load<Texture2D>("logo");
 			title = new TitleScreen(logo, sf, screenWidth, screenHeight, GraphicsDevice);
+			game.Load(Content.ServiceProvider);
 			// TODO: use this.Content to load your game content here
 		}
 
@@ -120,6 +123,7 @@ namespace Client_Solar_War
 					{
 						player_number = 1;
 						player_number_label.updateText("You are player number: " + player_number);
+						game.setPlayer(Color.Red);
 					}
 					else
 						player_number_label.updateText("Player 1 is already taken, try again!");
@@ -133,6 +137,7 @@ namespace Client_Solar_War
 					{
 						player_number = 2;
 						player_number_label.updateText("You are player number: " + player_number);
+						game.setPlayer(Color.Blue);
 					}
 					else
 						player_number_label.updateText("Player 2 is already taken, try again!");
@@ -145,6 +150,7 @@ namespace Client_Solar_War
 					{
 						player_number = 3;
 						player_number_label.updateText("You are player number: " + player_number);
+						game.setPlayer(Color.Green);
 					}
 					else
 						player_number_label.updateText("Player 3 is already taken, try again!");
@@ -158,6 +164,7 @@ namespace Client_Solar_War
 					{
 						player_number = 4;
 						player_number_label.updateText("You are player number: " + player_number);
+						game.setPlayer(Color.Purple);
 					}
 					else
 						player_number_label.updateText("Player 4 is already taken, try again!");
@@ -178,8 +185,8 @@ namespace Client_Solar_War
 						case 3: temp = Color.Green; break;
 						case 4: temp = Color.Purple; break;
 					}
-					game = new Game(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight, Content, temp);
-					game.Load(Content.ServiceProvider);
+					//game = new Game(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight, Content, temp);
+					//game.Load(Content.ServiceProvider);
 					break;
 				}
 				Thread.Sleep(1);
@@ -190,7 +197,16 @@ namespace Client_Solar_War
 			//game loop 
 			while (true)
 			{
-				game.Update_as_Bytes(network.GetMap());
+				byte[] yolo = network.GetMap();
+				if(yolo[99] == 29)
+				{
+					game.Update_as_Bytes(yolo);
+					string message = game.Update_Input(Mouse.GetState());
+					if (!message.Equals(""))
+						network.send(message);
+					Thread.Sleep(17);
+				}
+				
 			}
 			
 
@@ -223,7 +239,7 @@ namespace Client_Solar_War
 			}
 			// Still connecting to ip adress
 			//OVERIDE
-			if (console.IsKeyDown(Keys.E))
+			if (console.IsKeyDown(Keys.E) && !old.IsKeyDown(Keys.E))
 			{
 				network.send("overide");
 			}
@@ -257,9 +273,9 @@ namespace Client_Solar_War
             //update starfield
             starfield.update(graphics);
 
-			if (game != null)
+			if (state == State.PLAYING)
 			{
-				game.Update(gameTime);
+				//game.Update(gameTime);
 			}
 			// update input feed
 			this.old = console;
@@ -293,14 +309,13 @@ namespace Client_Solar_War
 			spriteBatch.Begin();
             //draw starfield
             
-			if (game!=null)
+			if (state == State.PLAYING)
 			{
 				game.Draw(spriteBatch);
 			}
 			else
 			{
 				starfield.draw(spriteBatch);
-
 				switch (state)
 				{
 					case State.START:

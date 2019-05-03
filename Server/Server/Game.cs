@@ -77,12 +77,11 @@ namespace Server
 
 		public void Input(string message)// all messages are required to be a length of 5
 		{
-			int player_as_number = message[0] - '0';
-			int planet_id_source = message[1] - '0';
-			int amount = (message[2] - '0') * 10 + (message[3] - '0');
-			int planet_id_target = message[4] - '0';
-			//TODO in futre make sure this is a leagl transfer
-			transfer_troops(getPlanetById(planet_id_source) , getPlanetById(planet_id_target) , amount);
+			string[] split = message.Split(' ');
+			int planet_id_souce = int.Parse(split[0]);
+			int planet_id_target = int.Parse(split[1]);
+			int amount = int.Parse(split[2]);
+			transfer_troops(getPlanetById(planet_id_souce) , getPlanetById(planet_id_target) , amount);
 		}
 
 		public byte[] Encode()
@@ -94,7 +93,7 @@ namespace Server
 			{
 				byte[] temp = orbit.Encode();
 				for (int i = index; i < temp.Length + index; i++) {
-					temp[i] = temp[i - index];
+					map[i] = temp[i - index];
 				}
 				index += temp.Length;
 			}
@@ -226,7 +225,7 @@ namespace Server
 			//update everything
 			for (int i = 0; i < asteroids.Count; i++)
 			{
-				asteroids[i].Update(gametime);
+				//asteroids[i].Update(gametime);
 			}
 			/*for (int i = 0; i < planets.Count; i++)
             {
@@ -237,6 +236,7 @@ namespace Server
 			{
 				soloar_orbits[i].Update(gametime);
 			}
+			//Console.WriteLine(soloar_orbits[0].Planets[0].position.X);
 
 			// Handel player input
 			//handelPlayerInput(m);
@@ -245,31 +245,6 @@ namespace Server
 			//old_mouse = m;
 		}
 
-		public void Draw(SpriteBatch spriteBatch)
-		{
-			//draw everything
-
-			//draw sun/star
-			//sun.Draw(spriteBatch);
-			//draw asteroids
-			for (int i = 0; i < asteroids.Count; i++)
-			{
-				asteroids[i].Draw(spriteBatch);
-			}
-			//will need to change planet class to be able to draw each planet
-			/*for (int i = 0; i < planets.Count; i++)
-            {
-                planets[i].Draw(spriteBatch);
-            }*/
-
-			for (int i = 0; i < soloar_orbits.Count; i++)
-			{
-				soloar_orbits[i].Draw(spriteBatch);
-			}
-			//if (planet_is_selected)
-			//{
-				//launching_ships.Draw(spriteBatch);
-			//}
-		}
+		
 	}
 }

@@ -99,11 +99,9 @@ namespace Server
 				{
 					for(int i = 0; i < 4; i++)
 					{
-						clientSockets[i].Send(Encoding.ASCII.GetBytes("Game Start!"));
+						//clientSockets[i].Send(Encoding.ASCII.GetBytes("Game Start!"));
 					}
-					game = new Game( 1800, 1000 );
-					gameTime = new GameTime();
-					game_loop_thread.Start();
+					
 				}
 			}
 			else
@@ -191,7 +189,9 @@ namespace Server
 								{
 									clientSockets[i].Send(Encoding.ASCII.GetBytes("Game Start!"));
 								}
-								game_loop_thread.Start();
+                                //game = new Game(1800, 1000);
+                                //gameTime = new GameTime();
+                                //game_loop_thread.Start();
 							}
 						}
 					}
@@ -201,14 +201,18 @@ namespace Server
                         Console.WriteLine("sent: taken");
                     }
 				}
-				else if (text.Equals("overide"))
+				else if (text.Contains("overide"))
 				{
-					for (int i = 0; i < 4; i++)
+					for (int i = 0; i < clientSockets.Count; i++)
 					{
 						clientSockets[i].Send(Encoding.ASCII.GetBytes("Game Start!"));
 					}
-					game_loop_thread.Start();
-				}
+                    game = new Game(1800, 1000);
+                    gameTime = new GameTime();
+                    game_loop_thread = new Thread(game_loop);
+                    game_loop_thread.Start();
+
+                }
 				else
 				{
 					messages.Add(text);
@@ -230,19 +234,33 @@ namespace Server
 				Stopwatch watch = new Stopwatch();
 				watch.Start();
 				game.Update(gameTime);
-				foreach (string mess in messages)
+				//Console.WriteLine( " ---"+ messages.Count);
+				for (int i = messages.Count - 1; i > -1; i-- )
 				{
-					game.Input(mess);
+					game.Input(messages[i]);
+					messages.Remove(messages[i]);
 				}
+				byte[] temp = game.Encode();
+				temp[99] = 29;
 				foreach (Socket socket in clientSockets)
 				{
 					// send
-					socket.Send(game.Encode());
+					
+					//Console.WriteLine(temp);
+					socket.Send(temp);
 				}
 				//Base64FormattingOptions()
 				watch.Stop();
 				int time = (int)(((1.0 / 60.0) - (watch.ElapsedMilliseconds / Math.Pow(10, 3))) * 1000);
-				Thread.Sleep( time ); // should wait a 60th of a seciund
+				if (time < 0)
+				{
+					Console.WriteLine(watch.ElapsedMilliseconds + " : " + ((1.0 / 60.0 * 1000)));
+				}
+				else
+				{
+					//Thread.Sleep(time); // should wait a 60th of a seciund
+				}
+				Thread.Sleep(17);
 			}
 		}
     }
