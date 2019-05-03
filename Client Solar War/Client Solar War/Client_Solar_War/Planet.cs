@@ -403,6 +403,7 @@ namespace Client_Solar_War
 				spritebatch.Draw(tex[faction_num][index], pos, Color.White);
 			}
 			catch (ArgumentNullException e) { }
+			catch (NullReferenceException e) { }
 			DrawShips(spritebatch);
 			//radius
 			if (Raddis)

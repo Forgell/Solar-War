@@ -238,7 +238,7 @@ namespace Client_Solar_War
 			}
 			// Still connecting to ip adress
 			//OVERIDE
-			if (console.IsKeyDown(Keys.E) && !old.IsKeyDown(Keys.E))
+			if (console.IsKeyDown(Keys.E) && !old.IsKeyDown(Keys.E) && state == State.WAITING_FOR_ALL_PLAYERS)
 			{
 				network.send("overide");
 			}
