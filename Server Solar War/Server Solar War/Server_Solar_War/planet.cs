@@ -333,13 +333,13 @@ namespace Server_Solar_War
 				{
 					fileName = "planet-4";
 				}
-                 if (faction_color == Color.Black)
-                {
-                    faction_color = Color.Green;
-                    updateCapture(gametime);
+                // if (faction_color == Color.Black)
+                //{
+                //    faction_color = Color.Green;
+                //    updateCapture(gametime);
 
 
-                }
+                //}
 
 
                 Load(server);
