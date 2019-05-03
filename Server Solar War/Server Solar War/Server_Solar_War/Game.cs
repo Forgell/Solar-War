@@ -36,10 +36,10 @@ namespace Server_Solar_War
 
         //for checking for a win, player color that has won (or black)
         List<Color> winColor;
-        //Color that has won: red, blue, green, or purple, else black(neutral)
+        //Color that has won: orangeRed, blue, green, or purple, else black(neutral)
         Color colorWon;
         //to draw text for a player winning the game
-        //spriteBatch.DrawString(spriteFont, "", Vector2 position, Color.Red);
+        //spriteBatch.DrawString(spriteFont, "", Vector2 position, Color.OrangeRed);
         string winText;
         Vector2 winPosition;
         SpriteFont spriteFont;
@@ -212,9 +212,9 @@ namespace Server_Solar_War
                 winColor.Add(soloar_orbits[i].isWin());
             }
             //check each player color
-            //red, blue, green, or purple, else black
-            if (checkColorWonRows(winColor, Color.Red))
-                return Color.Red;
+            //orangeRed, blue, green, or purple, else black
+            if (checkColorWonRows(winColor, Color.OrangeRed))
+                return Color.OrangeRed;
             if (checkColorWonRows(winColor, Color.Blue))
                 return Color.Blue;
             if (checkColorWonRows(winColor, Color.Green))
@@ -291,14 +291,14 @@ namespace Server_Solar_War
 			}
 
             //draw text to show that a player has won
-            //red, blue, green, or purple, else black
+            //orangeRed, blue, green, or purple, else black
             if(colorWon != Color.Black) //no player has won the game if false
             {
                 winPosition = new Vector2(10, 10);
-                if (colorWon == Color.Red)
+                if (colorWon == Color.OrangeRed)
                 {
-                    winText = "Red player has won!";
-                    spriteBatch.DrawString(spriteFont, winText, winPosition, Color.Red);
+                    winText = "Orange player has won!";
+                    spriteBatch.DrawString(spriteFont, winText, winPosition, Color.OrangeRed);
                 }
                 else if (colorWon == Color.Blue)
                 {

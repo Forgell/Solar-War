@@ -90,7 +90,7 @@ namespace Server_Solar_War
         //There is also a ship class, but this is the number of ships at this planet.
         private int ships;
         private Vector2[] shipPositions;
-        //private int color; //team that the planet is for {0 = orange, 1 = blue, 2 = green, 3 = purple, 4 = neutral}
+        //private int color; //team that the planet is for {0 = orangeRed, 1 = blue, 2 = green, 3 = purple, 4 = neutral}
         Label label;
         private bool isAttacked;
         private int incrementShipTimer;
@@ -323,7 +323,7 @@ namespace Server_Solar_War
 				capture_timer = 0;
 				this.faction_color = ships_color;
 				//switch()
-				if(faction_color == Color.Red){
+				if(faction_color == Color.OrangeRed){
 					fileName = "planet-1";
 				}
 				if (faction_color == Color.Blue)

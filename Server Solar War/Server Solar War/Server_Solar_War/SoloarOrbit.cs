@@ -36,7 +36,7 @@ namespace Server_Solar_War
 					Color temp = Color.Black;
 					switch (player_start_positions_as_player_numbers)
 					{
-						case 1: temp = Color.Red; break;
+						case 1: temp = Color.OrangeRed; break;
 						case 2: temp = Color.Blue; break;
 						case 3: temp = Color.Green; break;
 						case 4: temp = Color.Purple; break;
@@ -70,7 +70,7 @@ namespace Server_Solar_War
         public Color isWin()
         {
             if (isRedWin())
-                return Color.Red;
+                return Color.OrangeRed;
             else if (isBlueWin())
                 return Color.Blue;
             else if (isGreenWin())
@@ -81,12 +81,12 @@ namespace Server_Solar_War
             return Color.Black;
         }
 
-        //check if player red, blue, green, or purple has won
+        //check if player orangeRed, blue, green, or purple has won
         private bool isRedWin()
         {
             foreach (Planet planet in planets)
             {
-                if (planet.faction != Color.Red)
+                if (planet.faction != Color.OrangeRed)
                     return false;
             }
             return true;
