@@ -125,7 +125,7 @@ namespace Server_Solar_War
             shipPositions = new Vector2[4];
 			
 			this.faction_color = faction_color;
-            mouse_Rect = new Rectangle(0, 0, 5, 5);
+            mouse_Rect = new Rectangle(10, 0, 1, 1);
             //travel_radius = 100;
             selected = false;
 			is_being_taken_over = false;
