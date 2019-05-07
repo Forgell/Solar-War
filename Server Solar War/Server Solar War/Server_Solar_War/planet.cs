@@ -234,7 +234,7 @@ namespace Server_Solar_War
             //if (mouse shown in planet)
             mouse_Rect.X = m.X;
             mouse_Rect.Y = m.Y;
-              if (pos.Intersects(mouse_Rect))
+              if (pos.Intersects(new Rectangle(m.X,m.Y,1,1)))
               
                 {
                         Radius();
