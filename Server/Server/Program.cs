@@ -187,7 +187,7 @@ namespace Server
 							{
 								for (int i = 0; i < 4; i++)
 								{
-									clientSockets[i].Send(Encoding.ASCII.GetBytes("Game Start!"));
+									//clientSockets[i].Send(Encoding.ASCII.GetBytes("Game Start!"));
 								}
                                 //game = new Game(1800, 1000);
                                 //gameTime = new GameTime();
@@ -215,7 +215,9 @@ namespace Server
                 }
 				else
 				{
-					messages.Add(text);
+                    //messages.Add(text);
+                    game.Input(text);
+                    Console.WriteLine("Server done processing request");
 				}
 
 
@@ -235,32 +237,32 @@ namespace Server
 				watch.Start();
 				game.Update(gameTime);
 				//Console.WriteLine( " ---"+ messages.Count);
-				for (int i = messages.Count - 1; i > -1; i-- )
+				/*for (int i = messages.Count - 1; i > -1; i-- )
 				{
 					game.Input(messages[i]);
 					messages.Remove(messages[i]);
-				}
+				}*/
 				byte[] temp = game.Encode();
 				temp[99] = 29;
 				foreach (Socket socket in clientSockets)
 				{
 					// send
-					
 					//Console.WriteLine(temp);
 					socket.Send(temp);
 				}
 				//Base64FormattingOptions()
 				watch.Stop();
-				int time = (int)(((1.0 / 60.0) - (watch.ElapsedMilliseconds / Math.Pow(10, 3))) * 1000);
-				if (time < 0)
+				//byte time = (byte)(((1.0 / 60.0) - (watch.ElapsedMilliseconds / Math.Pow(10, 3))) * 1000);
+                //Console.WriteLine(time);
+                /*if (time < 0)
 				{
 					Console.WriteLine(watch.ElapsedMilliseconds + " : " + ((1.0 / 60.0 * 1000)));
 				}
 				else
 				{
-					//Thread.Sleep(time); // should wait a 60th of a seciund
-				}
-				Thread.Sleep(17);
+					Thread.Sleep(time); // should wait a 60th of a seciund
+				}*/
+				Thread.Sleep((byte)(((1.0 / 60.0) - (watch.ElapsedMilliseconds / Math.Pow(10, 3))) * 1000) - 0);
 			}
 		}
     }

@@ -98,7 +98,7 @@ namespace Client_Solar_War
 		}
 
 
-		public string handelPlayerInput(MouseState mouse)
+		public string handlePlayerInput(MouseState mouse)
 		{
 			if (mouse.LeftButton == ButtonState.Pressed && !(old_mouse.LeftButton == ButtonState.Pressed))
 			{
@@ -240,7 +240,7 @@ namespace Client_Solar_War
 			{
 				orbit.UpdateInput(m);
 			}
-			string s = handelPlayerInput(m);
+			string s = handlePlayerInput(m);
 			//change locations of planets as they rotate
 			//sun.Update(gametime);
 			old_mouse = m;
@@ -272,7 +272,7 @@ namespace Client_Solar_War
 			}
 			
 			// Handel player input
-			handelPlayerInput(m);
+			handlePlayerInput(m);
 			//change locations of planets as they rotate
 			//sun.Update(gametime);
 			old_mouse = m;

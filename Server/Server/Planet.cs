@@ -177,6 +177,7 @@ namespace Server
                 {
                     // stop producing
                     // start a timer
+                    Console.WriteLine("source is taking over");
                     is_being_taken_over = true;
                     this.ships = amount - this.ships;
 
