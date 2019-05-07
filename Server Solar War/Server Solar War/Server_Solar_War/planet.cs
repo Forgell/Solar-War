@@ -239,33 +239,33 @@ namespace Server_Solar_War
                     source.is_being_taken_over = false;
                     this.ships = amount - this.ships;
 
-                    ships_color = source.faction_color;
+                    ships_color = source.ships_color;
 
                 }
             }
-        
+
             else
-			{
+            {
 
-				// it is attacking
-				if (this.ships >= amount)
-				{
-					// the faction holds
-					this.ships -= amount;
-				}
-				else
-				{
-					// stop producing
-					// start a timer
-					is_being_taken_over = true;
-					this.ships = amount - this.ships;
-					
-					ships_color = source.faction_color;
+                // it is attacking
+                if (this.ships >= amount)
+                {
+                    // the faction holds
+                    this.ships -= amount;
+                }
+                else
+                {
+                    // stop producing
+                    // start a timer
+                    is_being_taken_over = true;
+                    this.ships = amount - this.ships;
 
-				}
+                    ships_color = source.ships_color;
 
-			}
-		}
+                }
+
+            }
+        }
 
 
         /*public bool checkRadius()//check radius to be able to move troops
