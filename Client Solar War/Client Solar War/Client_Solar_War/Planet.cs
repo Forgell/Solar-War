@@ -341,16 +341,16 @@ namespace Client_Solar_War
 			faction_num = byte_color;
 			switch (byte_color)
 			{
-				case 0: temp = Color.Red;fileName = "planet-1"; break;
-				case 1: temp = Color.Blue; fileName = "planet-2"; break;
-				case 2: temp = Color.Green; fileName = "planet-3"; break;
-				case 3: temp = Color.Purple; fileName = "planet-4"; break;
-				case 4: temp = Color.Black; fileName = "planet-5"; break;
+				case 0: temp = Color.Red;fileName = "planet-1";     faction_num = 0; break;
+				case 1: temp = Color.Blue; fileName = "planet-2";   faction_num = 1; break;
+				case 2: temp = Color.Green; fileName = "planet-3";  faction_num = 2; break;
+				case 3: temp = Color.Purple; fileName = "planet-4"; faction_num = 3; break;
+				case 4: temp = Color.Black; fileName = "planet-5";  faction_num = 4; break;
 			}
 			if (temp != faction_color)
 			{
 				faction_color = temp;
-				Load(server);
+				//Load(server);
 			}
 
 			int ships_color_as_bytes = (map[4] & 56) >> 3;
@@ -398,7 +398,16 @@ namespace Client_Solar_War
 
 		public void Draw(SpriteBatch spritebatch)
 		{
-			spritebatch.Draw(tex[faction_num][index], pos, Color.White);
+			try {
+				spritebatch.Draw(tex[faction_num][index], pos, Color.White);
+			}catch (Exception e)
+			{
+				Console.WriteLine(e.Message);
+				if (tex[faction_num][index] == null)
+				{
+					Console.WriteLine("--1");
+				}
+			}
 			DrawShips(spritebatch);
 			//radius
 			if (Raddis)
