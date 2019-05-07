@@ -380,7 +380,7 @@ namespace Server_Solar_War
 
 			updateShips();
 
-			if (is_being_taken_over)
+			if (is_being_taken_over || ships>0 && ships_color != faction_color)
 			{
 				updateCapture(gameTime);
 			}
