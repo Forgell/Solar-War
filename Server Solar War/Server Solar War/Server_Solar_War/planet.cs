@@ -53,12 +53,18 @@ namespace Server_Solar_War
 		}
 		private int scaler;
 
-		public Color Color
+		public Color Color //planet color
 		{
 			get { return faction_color; }
 		}
 
-		public int Ships
+        public Color ShipsColor
+        {
+            get { return ships_color; }
+        }
+        private Color ships_color; //ships' color
+
+        public int Ships
 		{
 			get
 			{
@@ -99,7 +105,6 @@ namespace Server_Solar_War
 		public  bool is_being_taken_over;
 		private double capture_timer;
 		private Label capture_label;
-		private Color ships_color;
 		public Planet(string fileName, Vector2 origin,int radius , double angular_speed ,int scaler , Color faction_color) // input degress
         {
             this.origin = origin;
@@ -168,7 +173,7 @@ namespace Server_Solar_War
             //radius tex
             Radius_Tex = content.Load<Texture2D>("Sprites/white-circle");
 			ship_label = new Label("" + ships, new Vector2(pos.X, pos.Y), faction_color, font);
-			capture_label = new Label("" + capture_timer , new Vector2(pos.X , pos.Y) , Color.Bl, font);
+			capture_label = new Label("" + capture_timer , new Vector2(pos.X , pos.Y) , Color.Black, font);
 
 		}
 

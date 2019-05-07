@@ -156,7 +156,7 @@ namespace Server_Solar_War
 				}
 				launching_ships.updateText((int)Math.Round(presentage_of_launching_ships  * selected_planet.Ships)+ "--" + (Math.Round(presentage_of_launching_ships * 100) ) + "%");
 				launching_ships.updatePosition(selected_planet.position.X  + selected_planet.position.Width, selected_planet.position.Y);
-				launching_ships.updateColor(selected_planet.Color);
+				launching_ships.updateColor(selected_planet.ShipsColor);
 			}
 
 		}
