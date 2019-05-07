@@ -379,10 +379,11 @@ namespace Server_Solar_War
 
 			updateShips();
 
-            if(is_being_taken_over && ships == 0) //fixes a bug
+            if(is_being_taken_over && ships == 0) //if ships are transfered, planet is stopped being taken over
             {
                 is_being_taken_over = false;
                 ships_color = faction_color;
+                capture_timer = 0;
             }
 
 			if (is_being_taken_over || ships>0 && ships_color != faction_color)
