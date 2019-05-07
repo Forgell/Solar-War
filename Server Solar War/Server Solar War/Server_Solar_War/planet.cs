@@ -93,7 +93,7 @@ namespace Server_Solar_War
 		private String fileName;
 		private int radius;
 
-        private Color faction_color;
+        private Color faction_color,incoming_color_invading;
         private bool selected;
         private Rectangle selected_rect;
 		public  bool is_being_taken_over;
@@ -210,16 +210,36 @@ namespace Server_Solar_War
 			}
         }*/
 
-		public void tranfer_troops(Planet source ,  int amount)
-		{
-			source.ships -= amount;
-			if (source.faction_color == this.faction_color && !source.is_being_taken_over )
-			{
-				// peacful tranfer
-				this.ships += amount;
-			}
-           
-			else
+        public void tranfer_troops(Planet source, int amount)
+        {
+            source.ships -= amount;
+            if (source.faction_color == this.faction_color && !source.is_being_taken_over)
+            {
+                // peacful tranfer
+                this.ships += amount;
+            }
+            //else (source.faction_color == this.faction_color)
+            //{
+            //    // it is attacking
+            //    if (this.ships >= amount)
+            //    {
+            //        // the faction holds
+            //        this.ships -= amount;
+            //    }
+            //    else
+            //    {
+            //        // stop producing
+            //        // start a timer
+            //        is_being_taken_over = true;
+            //        source.is_being_taken_over = false;
+            //        this.ships = amount - this.ships;
+
+            //        ships_color = source.faction_color;
+
+            //    }
+            //}
+        
+            else
 			{
 
 				// it is attacking
@@ -310,6 +330,7 @@ namespace Server_Solar_War
 			capture_timer++;
 			capture_label.updatePosition(pos.X , pos.Y + pos.Width);
 			capture_label.updateText("" + Math.Round((capture_timer / (TOTAL_TIME_TO_CAPTURE * 1.0)) * 100) + "%");
+            //incoming_invade_color = ships_color;
 			if (capture_timer >= TOTAL_TIME_TO_CAPTURE)
 			{
 				// then lets tranfer the planets contoll
