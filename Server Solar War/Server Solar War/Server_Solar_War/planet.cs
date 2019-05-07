@@ -222,7 +222,7 @@ namespace Server_Solar_War
 		public void tranfer_troops(Planet source ,  int amount)
 		{
 			source.ships -= amount;
-			if (source.faction_color == this.faction_color)
+			if (source.faction_color == this.ships_color)
 			{
 				// peacful tranfer
 				this.ships += amount;
