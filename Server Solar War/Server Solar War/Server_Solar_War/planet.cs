@@ -236,7 +236,6 @@ namespace Server_Solar_War
                     // stop producing
                     // start a timer
                     is_being_taken_over = true;
-                    source.is_being_taken_over = false;
                     this.ships = amount - this.ships;
 
                     ships_color = source.ships_color;
