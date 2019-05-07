@@ -388,14 +388,14 @@ namespace Server_Solar_War
 			angle += angular_speed;
 			Orbit();
 
-			if (is_being_taken_over)
-			{
-				capture_timer++;
-				if (capture_timer == 180) // hopefully around 2 secounds
-				{
-					changeFaction();
-				}
-			}
+			//if (is_being_taken_over)
+			//{
+			//	capture_timer++;
+			//	if (capture_timer == 180) // hopefully around 2 secounds
+			//	{
+			//		changeFaction();
+			//	}
+			//}
 			int diff = 7;
 			selected_rect.X = pos.X - diff;
             selected_rect.Y = pos.Y - diff;//, width + diff, height + diff);
