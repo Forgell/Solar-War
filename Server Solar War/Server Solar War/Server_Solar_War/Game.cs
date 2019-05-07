@@ -88,7 +88,7 @@ namespace Server_Solar_War
 				{
 					// then this planet has been clicked
 					//planet_at_position.select();
-					if (!planet_is_selected && planet_at_position.Color == player_faction || planet_at_position.is_being_taken_over && planet_at_position.Ships >0)
+					if (!planet_is_selected && planet_at_position.Color == player_faction || planet_at_position.is_being_taken_over && planet_at_position.Ships > 0)
 					{
 						planet_at_position.select();
 						selected_planet = planet_at_position;
