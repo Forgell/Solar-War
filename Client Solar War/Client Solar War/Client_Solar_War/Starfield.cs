@@ -67,7 +67,7 @@ namespace Client_Solar_War
 		{
 			foreach (Star star in stars)
 			{
-				star.animate();
+				star.animate(screen);
 			}
 		}
 
