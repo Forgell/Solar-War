@@ -276,6 +276,7 @@ namespace Client_Solar_War
 			if (state != State.PLAYING)
 			{
 				starfield.update(graphics);
+				game.Update(gameTime);
 			}
 			else
 			{

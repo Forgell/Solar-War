@@ -46,6 +46,7 @@ namespace Client_Solar_War
 
 		Label launching_ships;
 		float presentage_of_launching_ships;
+		Background background;
 
 		public Game(int screenWidth, int screenHeight, ContentManager Content, Color player_faction)
 		{
@@ -72,6 +73,7 @@ namespace Client_Solar_War
 			//sun = new Sun((screenWidth/2)-100, (screenHeight/2)-100);
 			number_of_planets = 0;
 			presentage_of_launching_ships = 1;
+			background = new Background();
 		}
 
 		public Planet getPlanet(Rectangle pos)
@@ -231,6 +233,7 @@ namespace Client_Solar_War
 
 			launching_ships = new Label("" + presentage_of_launching_ships, new Vector2(), Color.Black, (new ContentManager(server, "Content/").Load<SpriteFont>("SpriteFont1")));
 			//sun.Load(server);
+			background.Load(new ContentManager(server , "Content/"));
 		}
 
 		public string Update_Input(MouseState m)
@@ -273,6 +276,7 @@ namespace Client_Solar_War
 			
 			// Handel player input
 			handlePlayerInput(m);
+			background.Update();
 			//change locations of planets as they rotate
 			//sun.Update(gametime);
 			old_mouse = m;
@@ -285,6 +289,7 @@ namespace Client_Solar_War
 			//draw sun/star
 			//sun.Draw(spriteBatch);
 			//draw asteroids
+			background.Draw(spriteBatch);
 			for (int i = 0; i < asteroids.Count; i++)
 			{
 				asteroids[i].Draw(spriteBatch);
