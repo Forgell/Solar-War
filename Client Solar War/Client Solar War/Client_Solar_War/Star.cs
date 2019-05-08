@@ -114,10 +114,10 @@ namespace Client_Solar_War
 				{
 					starVel.X += -0.09f;
 				}
-			}
-			if(starPos.X >= screen.Width)
-			{
-				starPos.X = starPos.X - screen.Width;
+				if (starPos.X >= screen.Width)
+				{
+					starPos.X = starPos.X - screen.Width;
+				}
 			}
 		}
 	}

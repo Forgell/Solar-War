@@ -316,8 +316,8 @@ namespace Client_Solar_War
             
 			if (state == State.PLAYING)
 			{
-				game.Draw(spriteBatch);
 				starfield.draw(spriteBatch);
+				game.Draw(spriteBatch);
 			}
 			else
 			{
