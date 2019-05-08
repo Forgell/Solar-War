@@ -252,16 +252,11 @@ namespace Server
 				}
 				//Base64FormattingOptions()
 				watch.Stop();
-				//byte time = (byte)(((1.0 / 60.0) - (watch.ElapsedMilliseconds / Math.Pow(10, 3))) * 1000);
-                //Console.WriteLine(time);
-                /*if (time < 0)
+				if (clientSockets.Count == 0)
 				{
-					Console.WriteLine(watch.ElapsedMilliseconds + " : " + ((1.0 / 60.0 * 1000)));
+					game.close();
+					game_loop_thread.Abort();
 				}
-				else
-				{
-					Thread.Sleep(time); // should wait a 60th of a seciund
-				}*/
 				Thread.Sleep((byte)(((1.0 / 60.0) - (watch.ElapsedMilliseconds / Math.Pow(10, 3))) * 1000) - 0);
 			}
 		}

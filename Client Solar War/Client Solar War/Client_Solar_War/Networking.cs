@@ -47,7 +47,11 @@ namespace Client_Solar_War
 		public byte[] GetMap()
 		{
 			byte[] temp = new byte[100];
-			ClientSocket.Receive(temp);
+			try
+			{
+				ClientSocket.Receive(temp);
+			}catch (Exception e) { Console.WriteLine(e.Message); }
+			
 			return temp;
 		}
 

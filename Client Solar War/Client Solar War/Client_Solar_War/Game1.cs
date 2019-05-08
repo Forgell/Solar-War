@@ -227,8 +227,8 @@ namespace Client_Solar_War
 					network.closeStream(player_number);
 				else
 					network.closeStream();
-				this.Exit();
 				networking_thread.Abort();
+				this.Exit();
 			}
 			if (state == State.START)
 			{
@@ -272,13 +272,16 @@ namespace Client_Solar_War
 					// do nothing as the program is closing
 					return;
 			}
-            //update starfield
-            starfield.update(graphics);
-
-			if (state == State.PLAYING)
+			//update starfield
+			if (state != State.PLAYING)
 			{
-				//game.Update(gameTime);
+				starfield.update(graphics);
 			}
+			else
+			{
+				starfield.animate();
+			}
+
 			// update input feed
 			this.old = console;
             base.Update(gameTime);
@@ -314,6 +317,7 @@ namespace Client_Solar_War
 			if (state == State.PLAYING)
 			{
 				game.Draw(spriteBatch);
+				starfield.draw(spriteBatch);
 			}
 			else
 			{

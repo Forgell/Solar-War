@@ -245,6 +245,9 @@ namespace Server
 			//old_mouse = m;
 		}
 
-		
+		public void close()
+		{
+			Planet.TOTAL_NUMBER_OF_PLANETS = 0;
+		}
 	}
 }

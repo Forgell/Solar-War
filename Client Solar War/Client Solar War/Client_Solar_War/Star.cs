@@ -94,5 +94,11 @@ namespace Client_Solar_War
 			starPos.X += (int)starVel.X;
 			starPos.Y += (int)starVel.Y;
 		}
+
+		public void animate()
+		{
+			starPos.X += (int)(starVel.Y/10.0);
+			starPos.Y += (int)(starVel.X / 4.0);
+		}
 	}
 }
