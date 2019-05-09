@@ -35,7 +35,7 @@ namespace Client_Solar_War
 					Color temp = Color.Black;
 					switch (player_start_positions_as_player_numbers)
 					{
-						case 1: temp = Color.Red; break;
+						case 1: temp = Color.OrangeRed; break;
 						case 2: temp = Color.Blue; break;
 						case 3: temp = Color.Green; break;
 						case 4: temp = Color.Purple; break;
@@ -66,7 +66,60 @@ namespace Client_Solar_War
 			return null;
 		}
 
-		public void UpdateInput(MouseState m)
+        //chack for win
+        public Color isWin()
+        {
+            if (isRedWin())
+                return Color.OrangeRed;
+            else if (isBlueWin())
+                return Color.Blue;
+            else if (isGreenWin())
+                return Color.Green;
+            else if (isPurpleWin())
+                return Color.Purple;
+            //else neutral color has "won"
+            return Color.Black;
+        }
+
+        //check if player orangeRed, blue, green, or purple has won
+        private bool isRedWin()
+        {
+            foreach (Planet planet in planets)
+            {
+                if (planet.faction != Color.OrangeRed)
+                    return false;
+            }
+            return true;
+        }
+        private bool isBlueWin()
+        {
+            foreach (Planet planet in planets)
+            {
+                if (planet.faction != Color.Blue)
+                    return false;
+            }
+            return true;
+        }
+        private bool isGreenWin()
+        {
+            foreach (Planet planet in planets)
+            {
+                if (planet.faction != Color.Green)
+                    return false;
+            }
+            return true;
+        }
+        private bool isPurpleWin()
+        {
+            foreach (Planet planet in planets)
+            {
+                if (planet.faction != Color.Purple)
+                    return false;
+            }
+            return true;
+        }
+
+        public void UpdateInput(MouseState m)
 		{
 			foreach(Planet p in planets)
 			{
