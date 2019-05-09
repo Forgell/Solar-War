@@ -95,7 +95,8 @@ namespace Client_Solar_War
 			text_box = new TextBox(new Vector2(10, 10), sf);
 			player_number_label = new Label("No number assigned", new Vector2(10 , 10) , Color.White , sf);
 			logo = this.Content.Load<Texture2D>("logo");
-			title = new TitleScreen(logo, sf, screenWidth, screenHeight, GraphicsDevice);
+			title = new TitleScreen(screenWidth, screenHeight);
+			title.Load(Content);
 			game.Load(Content.ServiceProvider);
 			// TODO: use this.Content to load your game content here
 		}

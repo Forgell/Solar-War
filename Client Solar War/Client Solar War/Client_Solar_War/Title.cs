@@ -13,32 +13,50 @@ namespace Client_Solar_War
 {
 	class TitleScreen
 	{
-		TitleButton start, join;
-		Texture2D textBanner;
-		Rectangle rectBanner;
-
-		public TitleScreen(Texture2D textBanner, SpriteFont font, int screenWidth, int screenHeight, GraphicsDevice graphics)
+		private TitleButton start, join;
+		private Texture2D solar_text , war_text;
+		private Texture2D planet_text;
+		private Rectangle solar_rect, war_rect, planet_rect , planet_source;
+		private Rectangle screen;
+		private int timer;
+		public TitleScreen(int screenWidth, int screenHeight)
 		{
+			screen = new Rectangle(0 , 0 , screenWidth , screenHeight);
+			timer = 0;
+		}
 
-			this.textBanner = textBanner;
-			int x = screenWidth / 4;
-			int y = screenHeight / 2;
-			this.rectBanner = new Rectangle((int)(screenWidth * 2.80) / 4 - ((screenWidth * 5) / 8), screenHeight / 4 - (screenHeight / 8), (screenWidth * 6) / 7, screenHeight / 4);
-			
-			Console.WriteLine();
-			Console.WriteLine(rectBanner.Y);
-			Console.WriteLine();
-			start = new TitleButton("Start", new Vector2(x, y), font);
+		public void Load(ContentManager Content)
+		{
+			solar_text = Content.Load<Texture2D>("Sprites/text/solar2");
+			war_text = Content.Load<Texture2D>("Sprites/text/war2");
+			planet_text = Content.Load<Texture2D>("Sprites/planets/planet-0");
+			solar_rect = new Rectangle( screen.Width/10 , screen.Height/10 , screen.Width / 2  , (int)((screen.Width / (2.0 * solar_text.Width)) * solar_text.Height) );
+			start = new TitleButton( Content.Load<Texture2D>("Sprites/text/start") , new Rectangle(screen.Width/2 - 75 , screen.Height/2 , 150 ,30));
+			planet_rect = new Rectangle(solar_rect.X + solar_rect.Width/5 , solar_rect.Y , solar_rect.Width/5 , solar_rect.Height);
+			planet_source = new Rectangle(0, 0  , 180 , 180);
+			war_rect = new Rectangle(solar_rect.X + solar_rect.Width + 120 ,solar_rect.Y ,solar_rect.Width /2 , solar_rect.Height);
 		}
 
 		public bool update(int x, int y, bool pressed, GameTime gameTime)
 		{
+			timer++;
+			if (timer >= 30)
+			{
+				planet_source.X += 180;
+				if (planet_source.X >= planet_text.Width)
+				{
+					planet_source.X = 0;
+				}
+				timer = 0;
+			}
 			return start.pressed(x, y) && pressed;
 		}
 
 		public void draw(SpriteBatch spriteBatch, GameTime gameTime)
 		{
-			spriteBatch.Draw(textBanner, rectBanner, Color.White);
+			spriteBatch.Draw(solar_text , solar_rect , Color.White);
+			spriteBatch.Draw(planet_text ,planet_rect , planet_source , Color.White);
+			spriteBatch.Draw(war_text , war_rect , Color.White);
 			start.Draw(spriteBatch);
 		}
 	}
