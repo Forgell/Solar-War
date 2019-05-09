@@ -336,7 +336,20 @@ namespace Server_Solar_War
 
 		public void updateCapture(GameTime gametime)
 		{
-			capture_timer++;
+            int time = 0;
+            if(ships <50)
+            {
+                time = 1;
+            }
+            if(ships >25 && ships<50)
+            {
+                time = 25;
+            }
+            if(ships >50  )
+            {
+                time = 120;
+            }
+			capture_timer+= time;
 			capture_label.updatePosition(pos.X , pos.Y + pos.Width);
 			capture_label.updateText("" + Math.Round((capture_timer / (TOTAL_TIME_TO_CAPTURE * 1.0)) * 100) + "%");
             incoming_color_invading = ships_color;
