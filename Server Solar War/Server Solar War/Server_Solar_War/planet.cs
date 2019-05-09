@@ -86,7 +86,7 @@ namespace Server_Solar_War
         //radius for the planet to invade
         private Texture2D Radius_Tex;
         private Rectangle Radius_rect, mouse_Rect;
-        private Boolean Raddis;
+        private Boolean radiusP;
 
         //There is also a ship class, but this is the number of ships at this planet.
         private int ships;
@@ -302,10 +302,10 @@ namespace Server_Solar_War
 
 			{
 				Radius();
-				Raddis = true;
+				radiusP = true;
 			}
 			else
-				Raddis = false;
+				radiusP = false;
 		}
 		private void updateShips()
 		{
@@ -487,9 +487,9 @@ namespace Server_Solar_War
             spritebatch.Draw(tex[index], pos, Color.White);
             DrawShips(spritebatch);
             //radius
-            if(Raddis)
-                spritebatch.Draw(Radius_Tex,Radius_rect, faction_color);
-            if (selected)
+            if (radiusP) //mouse hovers over planet
+                spritebatch.Draw(Radius_Tex, Radius_rect, faction_color);
+            if (selected)//mouse clicks on planet
             {
                 spritebatch.Draw(Radius_Tex, selected_rect, Color.Black);
             }
