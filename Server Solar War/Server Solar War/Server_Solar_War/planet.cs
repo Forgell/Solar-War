@@ -53,12 +53,18 @@ namespace Server_Solar_War
 		}
 		private int scaler;
 
-		public Color Color
+		public Color Color //planet color
 		{
 			get { return faction_color; }
 		}
 
-		public int Ships
+        public Color ShipsColor
+        {
+            get { return ships_color; }
+        }
+        private Color ships_color; //ships' color
+
+        public int Ships
 		{
 			get
 			{
@@ -85,12 +91,12 @@ namespace Server_Solar_War
         //radius for the planet to invade
         private Texture2D Radius_Tex;
         private Rectangle Radius_rect, mouse_Rect;
-        private Boolean Raddis;
+        private Boolean radiusP;
 
         //There is also a ship class, but this is the number of ships at this planet.
         private int ships;
         private Vector2[] shipPositions;
-        //private int color; //team that the planet is for {0 = orange, 1 = blue, 2 = green, 3 = purple, 4 = neutral}
+        //private int color; //team that the planet is for {0 = orangeRed, 1 = blue, 2 = green, 3 = purple, 4 = neutral}
         Label label;
         private bool isAttacked;
         private int incrementShipTimer;
@@ -98,14 +104,17 @@ namespace Server_Solar_War
 		private String fileName;
 		private int radius;
 
-        private Color faction_color;
+        public Color faction
+        {
+            get { return faction_color; }
+        }
+        private Color faction_color,incoming_color_invading;
         private bool selected;
         private Rectangle selected_rect;
-		private bool is_being_taken_over;
+		public  bool is_being_taken_over;
 		private double capture_timer;
 		private Label capture_label;
 		private Color ships_color;
-
 		public Planet(string fileName, Vector2 origin,int radius , double angular_speed ,int scaler , Color faction_color) // input degress
         {
             this.origin = origin;
@@ -131,7 +140,7 @@ namespace Server_Solar_War
             shipPositions = new Vector2[4];
 			
 			this.faction_color = faction_color;
-            mouse_Rect = new Rectangle(0, 0, 5, 5);
+            mouse_Rect = new Rectangle(10, 0, 1, 1);
             //travel_radius = 100;
             selected = false;
 			is_being_taken_over = false;
@@ -174,7 +183,7 @@ namespace Server_Solar_War
             //radius tex
             Radius_Tex = content.Load<Texture2D>("Sprites/white-circle");
 			ship_label = new Label("" + ships, new Vector2(pos.X, pos.Y), faction_color, font);
-			capture_label = new Label("" + capture_timer , new Vector2(pos.X , pos.Y) , Color.Black , font);
+			capture_label = new Label("" + capture_timer , new Vector2(pos.X , pos.Y) , Color.Black, font);
 
 		}
 
@@ -216,35 +225,56 @@ namespace Server_Solar_War
 			}
         }*/
 
-		public void tranfer_troops(Planet source ,  int amount)
-		{
-			source.ships -= amount;
-			if (source.faction_color == this.ships_color)
-			{
-				// peacful tranfer
-				this.ships += amount;
-			}
-			else
-			{
-				// it is attacking
-				if (this.ships >= amount)
-				{
-					// the faction holds
-					this.ships -= amount;
-				}
-				else
-				{
-					// stop producing
-					// start a timer
-					is_being_taken_over = true;
-					this.ships = amount - this.ships;
-					
-					ships_color = source.faction_color;
+        public void tranfer_troops(Planet source, int amount)
+        {
+            source.ships -= amount;
+            if (source.faction_color == this.ships_color && !source.is_being_taken_over)
+            {
+                // peacful tranfer
+                this.ships += amount;
+            }
+            else if (source.faction_color == this.ships_color)
+            {
+                // it is attacking
+                if (this.ships >= amount)
+                {
+                    // the faction holds
+                    this.ships -= amount;
+                }
+                else
+                {
+                    // stop producing
+                    // start a timer
+                    is_being_taken_over = true;
+                    this.ships = amount - this.ships;
 
-				}
+                    ships_color = source.ships_color;
 
-			}
-		}
+                }
+            }
+
+            else
+            {
+
+                // it is attacking
+                if (this.ships >= amount)
+                {
+                    // the faction holds
+                    this.ships -= amount;
+                }
+                else
+                {
+                    // stop producing
+                    // start a timer
+                    is_being_taken_over = true;
+                    this.ships = amount - this.ships;
+
+                    ships_color = source.ships_color;
+
+                }
+
+            }
+        }
 
 
         /*public bool checkRadius()//check radius to be able to move troops
@@ -282,10 +312,10 @@ namespace Server_Solar_War
 
 			{
 				Radius();
-				Raddis = true;
+				radiusP = true;
 			}
 			else
-				Raddis = false;
+				radiusP = false;
 		}
 		private void updateShips()
 		{
@@ -314,13 +344,14 @@ namespace Server_Solar_War
 			capture_timer++;
 			capture_label.updatePosition(pos.X , pos.Y + pos.Width);
 			capture_label.updateText("" + Math.Round((capture_timer / (TOTAL_TIME_TO_CAPTURE * 1.0)) * 100) + "%");
+            incoming_color_invading = ships_color;
 			if (capture_timer >= TOTAL_TIME_TO_CAPTURE)
 			{
 				// then lets tranfer the planets contoll
 				capture_timer = 0;
 				this.faction_color = ships_color;
 				//switch()
-				if(faction_color == Color.Red){
+				if(faction_color == Color.OrangeRed){
 					fileName = "planet-1";
 				}
 				if (faction_color == Color.Blue)
@@ -335,8 +366,16 @@ namespace Server_Solar_War
 				{
 					fileName = "planet-4";
 				}
-				
-				Load(server);
+                // if (faction_color == Color.Black)
+                //{
+                //    faction_color = Color.Green;
+                //    updateCapture(gametime);
+
+
+                //}
+
+
+                Load(server);
 
 				is_being_taken_over = false;
 			}
@@ -348,7 +387,14 @@ namespace Server_Solar_War
 
 			updateShips();
 
-			if (is_being_taken_over)
+            if(is_being_taken_over && ships == 0) //if ships are transfered, planet is stopped being taken over
+            {
+                is_being_taken_over = false;
+                ships_color = faction_color;
+                capture_timer = 0;
+            }
+
+			if (is_being_taken_over || ships>0 && ships_color != faction_color)
 			{
 				updateCapture(gameTime);
 			}
@@ -356,14 +402,14 @@ namespace Server_Solar_War
 			angle += angular_speed;
 			Orbit();
 
-			/*if (is_being_taken_over)
-			{
-				capture_timer++;
-				if (capture_timer == 180) // hopefully around 2 secounds
-				{
-					changeFaction();
-				}
-			}*/
+			//if (is_being_taken_over)
+			//{
+			//	capture_timer++;
+			//	if (capture_timer == 180) // hopefully around 2 secounds
+			//	{
+			//		changeFaction();
+			//	}
+			//}
 			int diff = 7;
 			selected_rect.X = pos.X - diff;
             selected_rect.Y = pos.Y - diff;//, width + diff, height + diff);
@@ -449,17 +495,17 @@ namespace Server_Solar_War
             spritebatch.Draw(tex[index], pos, Color.White);
             DrawShips(spritebatch);
             //radius
-            if(Raddis)
-                spritebatch.Draw(Radius_Tex,Radius_rect, faction_color);
-            if (selected)
+            if (radiusP) //mouse hovers over planet
+                spritebatch.Draw(Radius_Tex, Radius_rect, faction_color);
+            if (selected)//mouse clicks on planet
             {
-                spritebatch.Draw(Radius_Tex, selected_rect , Color.Black);
+                spritebatch.Draw(Radius_Tex, selected_rect, Color.Black);
             }
-			if (is_being_taken_over)
-			{
-				capture_label.Draw(spritebatch);
-			}
-			
+            if (is_being_taken_over)
+            {
+                capture_label.Draw(spritebatch);
+            }
+
         }
 
         //draw the number of ships at a planet
