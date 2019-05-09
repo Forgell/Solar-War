@@ -13,6 +13,7 @@ using System.Net.Sockets;
 using System.Net;
 using System.Text;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace Client_Solar_War
 {
@@ -96,6 +97,11 @@ namespace Client_Solar_War
 			player_number_label = new Label("No number assigned", new Vector2(10 , 10) , Color.White , sf);
 			logo = this.Content.Load<Texture2D>("logo");
 			title = new TitleScreen(screenWidth, screenHeight);
+			Form f = Form.FromHandle(Window.Handle) as Form;
+			if (f != null)
+			{
+				f.FormClosing += f_FormClosing;
+			}
 			title.Load(Content);
 			game.Load(Content.ServiceProvider);
 			// TODO: use this.Content to load your game content here
@@ -116,7 +122,7 @@ namespace Client_Solar_War
 			while (player_number == 0)
 			{
 				string temp;
-				if (old.IsKeyDown(Keys.D1))
+				if (old.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.D1))
 				{
 					network.send("take1");
 					temp = network.getMessage();
@@ -130,7 +136,7 @@ namespace Client_Solar_War
 						player_number_label.updateText("Player 1 is already taken, try again!");
 					//Find a way to send server a "taken" message for all
 				}
-				else if (old.IsKeyDown(Keys.D2))
+				else if (old.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.D2))
 				{
 					network.send("take2");
 					temp = network.getMessage();
@@ -143,7 +149,7 @@ namespace Client_Solar_War
 					else
 						player_number_label.updateText("Player 2 is already taken, try again!");
 				}
-				else if (old.IsKeyDown(Keys.D3))
+				else if (old.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.D3))
 				{
 					network.send("take3");
 					temp = network.getMessage();
@@ -157,7 +163,7 @@ namespace Client_Solar_War
 						player_number_label.updateText("Player 3 is already taken, try again!");
 
 				}
-				else if (old.IsKeyDown(Keys.D4))
+				else if (old.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.D4))
 				{
 					network.send("take4");
 					temp = network.getMessage();
@@ -191,7 +197,7 @@ namespace Client_Solar_War
 					//game.Load(Content.ServiceProvider);
 					break;
 				}
-				Thread.Sleep(5);
+				Thread.Sleep(3);
 			}
 
 
@@ -222,24 +228,32 @@ namespace Client_Solar_War
 			// Get raw keyboard input
 			KeyboardState console = Keyboard.GetState();
             // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || console.IsKeyDown(Keys.Escape))
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == Microsoft.Xna.Framework.Input.ButtonState.Pressed || console.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Escape))
 			{
-				if (player_number != 0)
-					network.closeStream(player_number);
-				else
-					network.closeStream();
-				networking_thread.Abort();
-				this.Exit();
+				try
+				{
+					if (player_number != 0)
+						network.closeStream(player_number);
+					else
+						network.closeStream();
+					networking_thread.Abort();
+				}
+				catch (Exception e) { }
+				finally
+				{
+					this.Exit();
+				}
+
 			}
 			if (state == State.START)
 			{
 				MouseState m = Mouse.GetState();
-				if (title.update(m.X, m.Y, m.LeftButton == ButtonState.Pressed, gameTime) || console.IsKeyDown(Keys.Enter))
+				if (title.update(m.X, m.Y, m.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed, gameTime) || console.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Enter))
 					state = State.CONNECTING;
 			}
 			// Still connecting to ip adress
 			//OVERIDE
-			if (console.IsKeyDown(Keys.E) && !old.IsKeyDown(Keys.E) && state == State.WAITING_FOR_ALL_PLAYERS)
+			if (console.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.E) && !old.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.E) && state == State.WAITING_FOR_ALL_PLAYERS)
 			{
 				network.send("overide");
 			}
@@ -293,7 +307,7 @@ namespace Client_Solar_War
 		public void update_game(KeyboardState console)
 		{
 			// get the players game input
-			Keys input = KeyboardHelper.getKeyboardGameInput(console , old);
+			Microsoft.Xna.Framework.Input.Keys input = KeyboardHelper.getKeyboardGameInput(console , old);
 			MouseState mouse = Mouse.GetState();
 			// update the game screen
 
@@ -342,6 +356,22 @@ namespace Client_Solar_War
 			
             base.Draw(gameTime);
         }
-		
+		void f_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			try
+			{
+				if (player_number != 0)
+					network.closeStream(player_number);
+				else
+					network.closeStream();
+				networking_thread.Abort();
+			}
+			catch (Exception e1) { }
+			finally
+			{
+				this.Exit();
+			}
+		}
+
 	}
 }
