@@ -113,6 +113,10 @@ namespace Client_Solar_War
 		private double capture_timer;
 		private Label capture_label;
 		private Color ships_color;
+        public Color Ships_Color
+        {
+            get { return ships_color; }
+        }
 		public Planet(string fileName, Vector2 origin, int radius, double angular_speed, int scaler, Color faction_color) // input degress
 		{
 			this.origin = origin;
