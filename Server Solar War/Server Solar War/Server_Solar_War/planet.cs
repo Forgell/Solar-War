@@ -80,7 +80,12 @@ namespace Server_Solar_War
 		public static int Max_AMOUNT_OF_SHIPS_ON_PLANET = 99;
 		public static int TRAVEL_RADIUS = 270 / 2;
 		public static int TOTAL_TIME_TO_CAPTURE = 1200; // as in 60 frames
-
+        public static int TOTAL_NUMBER_OF_PLANETS = 0;
+        private int id;
+        public int ID
+        {
+            get { return id; }
+        }
 		private int index;
 		private Vector2 offset;
         //radius for the planet to invade
@@ -91,7 +96,7 @@ namespace Server_Solar_War
         //There is also a ship class, but this is the number of ships at this planet.
         private int ships;
         private Vector2[] shipPositions;
-        //private int color; //team that the planet is for {0 = orange, 1 = blue, 2 = green, 3 = purple, 4 = neutral}
+        //private int color; //team that the planet is for {0 = orangeRed, 1 = blue, 2 = green, 3 = purple, 4 = neutral}
         Label label;
         private bool isAttacked;
         private int incrementShipTimer;
@@ -99,18 +104,23 @@ namespace Server_Solar_War
 		private String fileName;
 		private int radius;
 
+        public Color faction
+        {
+            get { return faction_color; }
+        }
         private Color faction_color,incoming_color_invading;
         private bool selected;
         private Rectangle selected_rect;
 		public  bool is_being_taken_over;
 		private double capture_timer;
 		private Label capture_label;
+		private Color ships_color;
 		public Planet(string fileName, Vector2 origin,int radius , double angular_speed ,int scaler , Color faction_color) // input degress
         {
             this.origin = origin;
             this.radius = radius;
 			this.fileName = fileName;
-			
+            id = ++TOTAL_NUMBER_OF_PLANETS;
 			if (tex != null)
 			{
 				pos = new Rectangle((int)origin.X + radius, (int)origin.Y, tex[0].Width, tex[0].Height);
@@ -339,11 +349,9 @@ namespace Server_Solar_War
 			{
 				// then lets tranfer the planets contoll
 				capture_timer = 0;
-                    this.faction_color = ships_color;
-                
-         
-                //switch()
-                if (faction_color == Color.Red){
+				this.faction_color = ships_color;
+				//switch()
+				if(faction_color == Color.OrangeRed){
 					fileName = "planet-1";
 				}
 				if (faction_color == Color.Blue)
