@@ -114,7 +114,6 @@ namespace Server_Solar_War
 		public  bool is_being_taken_over;
 		private double capture_timer;
 		private Label capture_label;
-		private Color ships_color;
 		public Planet(string fileName, Vector2 origin,int radius , double angular_speed ,int scaler , Color faction_color) // input degress
         {
             this.origin = origin;
