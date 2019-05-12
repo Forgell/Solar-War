@@ -286,8 +286,8 @@ namespace Client_Solar_War
 			else
 			{
 				starfield.animate();
-				game.Update(gameTime);
-				string message = game.Update_Input(Mouse.GetState());
+				string message = game.Update(gameTime);
+				game.Update_Input();
 				if (!message.Equals(""))
 				{
 					network.send(message);

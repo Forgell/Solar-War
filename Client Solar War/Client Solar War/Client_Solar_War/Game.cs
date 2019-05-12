@@ -235,18 +235,20 @@ namespace Client_Solar_War
 			background.Load(new ContentManager(server , "Content/"));
 		}
 
-		public string Update_Input(MouseState m)
+		public string Update_Input()
 		{
-			
+			MouseState m = Mouse.GetState();
+
 			foreach (SoloarOrbit orbit in soloar_orbits)
 			{
 				orbit.UpdateInput(m);
 			}
-			string s = handlePlayerInput(m);
+			//string s = handlePlayerInput(m);
+			//handlePlayerInput(m);
 			//change locations of planets as they rotate
 			//sun.Update(gametime);
 			old_mouse = m;
-			return s;
+			return handlePlayerInput(m); 
 		}
 
 		public void Update_as_Bytes(byte[] map)
@@ -264,7 +266,7 @@ namespace Client_Solar_War
 			}
 		}
 
-		public void Update(GameTime gametime)
+		public string Update(GameTime gametime)
 		{
 			MouseState m = Mouse.GetState();
 			//update everything
@@ -274,7 +276,7 @@ namespace Client_Solar_War
 			}
 			
 			// Handel player input
-			handlePlayerInput(m);
+			string ss = handlePlayerInput(m);
 			background.Update();
 			foreach(SoloarOrbit s in soloar_orbits)
 			{
@@ -283,6 +285,7 @@ namespace Client_Solar_War
 			//change locations of planets as they rotate
 			//sun.Update(gametime);
 			old_mouse = m;
+			return ss;
 		}
 
 		public void Draw(SpriteBatch spriteBatch)
