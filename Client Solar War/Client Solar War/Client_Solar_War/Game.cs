@@ -57,7 +57,7 @@ namespace Client_Solar_War
 
 			soloar_orbits = new List<SoloarOrbit>();
 			int radius = 200;
-			double angular_speed = 1 / 25.0;
+			double angular_speed = 1 / 50.0;
 			int number_of_planets = 4;
 			for (int i = 0; i < 3; i++)
 			{

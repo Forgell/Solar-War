@@ -267,11 +267,13 @@ namespace Client_Solar_War
                     
                     break;
 				case State.PLAYING:
-					// playing the game all of the players are connected
-					//update_game(console);
-					//string message = game.Update_Input(Mouse.GetState());
-					//if (!message.Equals(""))
-					//	network.send(message);
+					starfield.animate();
+					string message = game.Update(gameTime);
+					game.Update_Input();
+					if (!message.Equals(""))
+					{
+						network.send(message);
+					}
 
 					break;
 				case State.CLOSING:
@@ -283,17 +285,6 @@ namespace Client_Solar_War
 			{
 				starfield.update(graphics);
 			}
-			else
-			{
-				starfield.animate();
-				string message = game.Update(gameTime);
-				game.Update_Input();
-				if (!message.Equals(""))
-				{
-					network.send(message);
-				}
-			}
-			//orbit.Update(gameTime);
 			// update input feed
 			this.old = console;
             base.Update(gameTime);
