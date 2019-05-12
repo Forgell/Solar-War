@@ -74,6 +74,14 @@ namespace Client_Solar_War
 			}
 		}
 
+		public void Update(GameTime gameTime)
+		{
+			foreach(Planet planet in planets)
+			{
+				planet.Orbit();
+			}
+		}
+
 		public void Update_As_Bytes(byte[] map)
 		{
 			for(int i = 0; i < planets.Count; i++)

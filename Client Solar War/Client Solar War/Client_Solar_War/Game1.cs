@@ -48,6 +48,7 @@ namespace Client_Solar_War
 
 		// for playing the game
 		Game game;
+		//Soloar//orbit //orbit;
 		public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -78,8 +79,9 @@ namespace Client_Solar_War
 			screenHeight = GraphicsDevice.Viewport.Height;
 			screenWidth = GraphicsDevice.Viewport.Width;
 			game = new Game(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight, Content, Color.Green);
+			//orbit = new Soloar//orbit(200, 1 / 1.0f, 4, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight, false);
 			//game.Load(Content.ServiceProvider);
-			
+
 			base.Initialize();
         }
 
@@ -98,6 +100,7 @@ namespace Client_Solar_War
 			title = new TitleScreen(screenWidth, screenHeight);
 			title.Load(Content);
 			game.Load(Content.ServiceProvider);
+			//orbit.Load(Content.ServiceProvider);
 			// TODO: use this.Content to load your game content here
 		}
 
@@ -202,6 +205,7 @@ namespace Client_Solar_War
 				byte[] map = network.GetMap();
 				if(map[99] == 29)
 				{
+
 					game.Update_as_Bytes(map);
 					
 					Thread.Sleep(10);
@@ -264,10 +268,11 @@ namespace Client_Solar_War
                     break;
 				case State.PLAYING:
 					// playing the game all of the players are connected
-					update_game(console);
-					string message = game.Update_Input(Mouse.GetState());
-					if (!message.Equals(""))
-						network.send(message);
+					//update_game(console);
+					//string message = game.Update_Input(Mouse.GetState());
+					//if (!message.Equals(""))
+					//	network.send(message);
+
 					break;
 				case State.CLOSING:
 					// do nothing as the program is closing
@@ -277,28 +282,24 @@ namespace Client_Solar_War
 			if (state != State.PLAYING)
 			{
 				starfield.update(graphics);
-				game.Update(gameTime);
 			}
 			else
 			{
 				starfield.animate();
+				game.Update(gameTime);
+				string message = game.Update_Input(Mouse.GetState());
+				if (!message.Equals(""))
+				{
+					network.send(message);
+				}
 			}
-
+			//orbit.Update(gameTime);
 			// update input feed
 			this.old = console;
             base.Update(gameTime);
         }
 
 		
-		public void update_game(KeyboardState console)
-		{
-			// get the players game input
-			Keys input = KeyboardHelper.getKeyboardGameInput(console , old);
-			MouseState mouse = Mouse.GetState();
-			// update the game screen
-
-			// send the server  
-		}
 		
 
 		
@@ -314,8 +315,7 @@ namespace Client_Solar_War
 
 			// TODO: Add your drawing code here
 			spriteBatch.Begin();
-            //draw starfield
-            
+			//draw starfield
 			if (state == State.PLAYING)
 			{
 				starfield.draw(spriteBatch);
@@ -338,6 +338,7 @@ namespace Client_Solar_War
 					default: break;
 				}
 			}
+			//orbit.Draw(spriteBatch);
 			spriteBatch.End();
 			
             base.Draw(gameTime);

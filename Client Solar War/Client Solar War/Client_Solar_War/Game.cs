@@ -71,7 +71,6 @@ namespace Client_Solar_War
 			old_mouse = Mouse.GetState();
 			//sun
 			//sun = new Sun((screenWidth/2)-100, (screenHeight/2)-100);
-			number_of_planets = 0;
 			presentage_of_launching_ships = 1;
 			background = new Background();
 		}
@@ -277,6 +276,10 @@ namespace Client_Solar_War
 			// Handel player input
 			handlePlayerInput(m);
 			background.Update();
+			foreach(SoloarOrbit s in soloar_orbits)
+			{
+				s.Update(gametime);
+			}
 			//change locations of planets as they rotate
 			//sun.Update(gametime);
 			old_mouse = m;
