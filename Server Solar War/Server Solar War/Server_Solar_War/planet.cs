@@ -336,21 +336,10 @@ namespace Server_Solar_War
 
 		public void updateCapture(GameTime gametime)
 		{
-            int time = Ships*2;
-            //time = ship*.5 +10;
+            //double time = Ships*2;
+            double time = ships*.5 +5;
 
-            //if(ships <50)
-            //{
-            //    time = 1;
-            //}
-            //if(ships >25 && ships<50)
-            //{
-            //    time = 25;
-            //}
-            //if(ships >50  )
-            //{
-            //    time = 120;
-            //}
+         
 			capture_timer+= time;
 			capture_label.updatePosition(pos.X , pos.Y + pos.Width);
 			capture_label.updateText("" + Math.Round((capture_timer / (TOTAL_TIME_TO_CAPTURE * 1.0)) * 100) + "%");
