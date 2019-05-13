@@ -157,8 +157,9 @@ namespace Server
 
         }
 
-        public void tranfer_troops(Planet source, int amount)
+        public void tranfer_troops(Planet source, int presentage)
         {
+            int amount = (int)(source.Ships * (presentage / 100.0));
             source.ships -= amount;
             if (source.ships_color == this.ships_color)
             {
@@ -180,7 +181,7 @@ namespace Server
                     Console.WriteLine("source is taking over");
                     is_being_taken_over = true;
                     this.ships = amount - this.ships;
-
+                    capture_timer = 0;
                     ships_color = source.faction_color;
 
                 }
