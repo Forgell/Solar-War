@@ -157,8 +157,9 @@ namespace Server
 
         }
 
-        public void tranfer_troops(Planet source, int amount)
+        public void tranfer_troops(Planet source, int presentage)
         {
+            int amount = (int)(source.Ships * (presentage / 100.0));
             source.ships -= amount;
             if (source.ships_color == this.ships_color)
             {
