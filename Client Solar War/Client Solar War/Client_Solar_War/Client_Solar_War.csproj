@@ -64,6 +64,7 @@
     <Compile Include="Game.cs" />
     <Compile Include="KeyboardHelper.cs" />
     <Compile Include="Label.cs" />
+    <Compile Include="Line.cs" />
     <Compile Include="Networking.cs" />
     <Compile Include="Planet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

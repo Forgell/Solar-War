@@ -157,8 +157,9 @@ namespace Server
 
         }
 
-        public void tranfer_troops(Planet source, int amount)
+        public void tranfer_troops(Planet source, int presentage)
         {
+            int amount = (int)(source.Ships * (presentage / 100.0));
             source.ships -= amount;
             if (source.ships_color == this.ships_color)
             {
@@ -180,7 +181,7 @@ namespace Server
                     Console.WriteLine("source is taking over");
                     is_being_taken_over = true;
                     this.ships = amount - this.ships;
-
+                    capture_timer = 0;
                     ships_color = source.faction_color;
 
                 }
@@ -276,7 +277,7 @@ namespace Server
 			{
 				//Console.WriteLine(id);
 			}
-			map[1] = (byte)((uint)pos.X & 255); // last 8 of pos.X
+			map[1] = (byte)(capture_timer * 100.0 / TOTAL_TIME_TO_CAPTURE); // sends capure presentage
             map[2] = (byte)(((uint)pos.Y & 2040) >> 3); // fist 8 bits are here for pos.Y
             map[3] = (byte)((((uint)pos.Y & 7) << 5 ) | (((uint)ships & 124) >> 2)); // first 3 bits are the last bits of pos.Y and the rest are the first 5 bits of ship
             map[4] = (byte)(((uint)ships & 3) << 6); // first 2 bits are the last 2 bits of ships  2 bits before is the color of the ships on the planet so 1100
