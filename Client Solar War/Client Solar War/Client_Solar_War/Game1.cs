@@ -339,7 +339,6 @@ namespace Client_Solar_War
 			}
 			//orbit.Draw(spriteBatch);
 			spriteBatch.End();
-			
             base.Draw(gameTime);
         }
 		

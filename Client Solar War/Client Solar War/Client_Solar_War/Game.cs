@@ -35,9 +35,7 @@ namespace Client_Solar_War
 		//list of SolarOrbits 
 		List<SoloarOrbit> soloar_orbits;
 		//used to create planet
-		//IServiceProvider d;
-		//sun  object
-		//Sun sun;
+		List<Line> lines;
 
 		bool planet_is_selected;
 		Planet selected_planet;
@@ -47,6 +45,7 @@ namespace Client_Solar_War
 		Label launching_ships;
 		float presentage_of_launching_ships;
 		Background background;
+		Texture2D line_text;
 
 		public Game(int screenWidth, int screenHeight, ContentManager Content, Color player_faction)
 		{
@@ -73,6 +72,7 @@ namespace Client_Solar_War
 			//sun = new Sun((screenWidth/2)-100, (screenHeight/2)-100);
 			presentage_of_launching_ships = 1;
 			background = new Background();
+			lines = new List<Line>();
 		}
 
 		public Planet getPlanet(Rectangle pos)
@@ -217,7 +217,8 @@ namespace Client_Solar_War
 
 		public void Load(IServiceProvider server)
 		{
-			for (int i = 0; i < asteroids.Count; i++)
+			ContentManager Content = new ContentManager(server , "Content/" );
+            for (int i = 0; i < asteroids.Count; i++)
 			{
 				asteroids[i].Load(server, "astriod");
 			}
@@ -230,9 +231,10 @@ namespace Client_Solar_War
 				soloar_orbits[i].Load(server);
 			}
 
-			launching_ships = new Label("" + presentage_of_launching_ships, new Vector2(), Color.Black, (new ContentManager(server, "Content/").Load<SpriteFont>("SpriteFont1")));
+			launching_ships = new Label("" + presentage_of_launching_ships, new Vector2(), Color.Black, Content.Load<SpriteFont>("SpriteFont1"));
 			//sun.Load(server);
-			background.Load(new ContentManager(server , "Content/"));
+			background.Load(Content);
+			line_text = Content.Load<Texture2D>("Star");
 		}
 
 		public string Update_Input()
@@ -295,16 +297,44 @@ namespace Client_Solar_War
 			//draw sun/star
 			//sun.Draw(spriteBatch);
 			//draw asteroids
+			// draw lines first
+			for(int i = 0; i < soloar_orbits.Count; i++)
+			{
+				for(int j = 0; j < soloar_orbits.Count; j++)
+				{
+					if (i == j)
+					{
+						continue;
+					}
+					for(int h = 0; h < soloar_orbits[i].Planets.Count; h++)
+					{
+						for(int g = 0; g < soloar_orbits[j].Planets.Count; g++)
+						{
+
+							Planet one = soloar_orbits[i].Planets[h];
+							Planet two = soloar_orbits[j].Planets[g];
+							if (one.Color == player_faction || two.Color == player_faction)
+							{
+								// see if planets are in range
+								int offset = (one.position.Width / 2); // to calcuale form the center of the planet
+								Vector2 pos_1 = new Vector2(one.position.X + offset, one.position.Y + offset);
+								Vector2 pos_2 = new Vector2(two.position.X + offset, two.position.Y + offset);
+								double dist = Math.Sqrt(Math.Pow(pos_1.X - pos_2.X, 2) + Math.Pow(pos_1.Y - pos_2.Y, 2));
+								if (dist <= Planet.TRAVEL_RADIUS)
+								{
+									DrawLine(spriteBatch, pos_1, pos_2);
+								}
+							}
+							
+						}
+					}
+				}
+			}
 			background.Draw(spriteBatch);
 			for (int i = 0; i < asteroids.Count; i++)
 			{
 				asteroids[i].Draw(spriteBatch);
 			}
-			//will need to change planet class to be able to draw each planet
-			/*for (int i = 0; i < planets.Count; i++)
-            {
-                planets[i].Draw(spriteBatch);
-            }*/
 
 			for (int i = 0; i < soloar_orbits.Count; i++)
 			{
@@ -315,7 +345,32 @@ namespace Client_Solar_War
 				launching_ships.Draw(spriteBatch);
 			}
 		}
+
+		public void DrawLine(SpriteBatch sb, Vector2 start, Vector2 end)
+		{
+			Vector2 edge = end - start;
+			// calculate angle to rotate line
+			float angle =
+				(float)Math.Atan2(edge.Y, edge.X);
+
+
+			sb.Draw(line_text,
+				new Rectangle(// rectangle defines shape of line and position of start of line
+					(int)start.X,
+					(int)start.Y,
+					(int)edge.Length(), //sb will strech the texture to fill this rectangle
+					1), //width of line, change this to make thicker line
+				null,
+				player_faction, //colour of line
+				angle,     //angle of line (calulated above)
+				new Vector2(0, 0), // point in line about which to rotate
+				SpriteEffects.None,
+				0);
+
+		}
 	}
+
+
 
 }
 
