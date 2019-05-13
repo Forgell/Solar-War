@@ -238,6 +238,9 @@ namespace Client_Solar_War
 			ship_label.updateColor(ships_color);
 			angle += angular_speed;
 
+			capture_label.updateColor(ships_color);
+			capture_label.updatePosition(pos.X , pos.Y - pos.Height - 2);
+			capture_label.updateText("" + capture_timer + "%");
 
 			if (faction_color == Color.Black)
 			{
@@ -394,6 +397,7 @@ namespace Client_Solar_War
 			this.id = id;
 			//pos.X = ((map[0] & 7) << 8) | map[1];
 			//pos.Y = (map[2] << 3) | ((map[3] & 224) >> 5);
+			capture_timer = map[1];
 			ships = ((map[3] & 31) << 2) | ((map[4] & 192) >> 6);
 			int byte_color = map[4] & 7;
 			Color temp = Color.Black;
@@ -475,7 +479,7 @@ namespace Client_Solar_War
 			{
 				spritebatch.Draw(Radius_Tex, selected_rect, Color.White);
 			}
-			if (is_being_taken_over)
+			if (is_being_taken_over || capture_timer != 0)
 			{
 				capture_label.Draw(spritebatch);
 			}
