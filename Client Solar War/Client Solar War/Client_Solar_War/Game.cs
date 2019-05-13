@@ -168,6 +168,7 @@ namespace Client_Solar_War
 									{
 										faction = 4;
 									}
+
 									Console.WriteLine(selected_planet.ID + " " + planet_at_position.ID + " " + ((int)Math.Round(presentage_of_launching_ships * selected_planet.Ships)) + " " + faction);
 									return selected_planet.ID + " " + planet_at_position.ID + " " + ((int)Math.Round(presentage_of_launching_ships * selected_planet.Ships)) + " "  + faction;
 								}
