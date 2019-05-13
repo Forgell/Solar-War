@@ -135,7 +135,7 @@ namespace Client_Solar_War
 			while (player_number == 0)
 			{
 				string temp;
-				if (old.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.D1))
+				if (old.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.D1) || old.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.NumPad1))
 				{
 					network.send("take1");
 					temp = network.getMessage();
@@ -149,7 +149,7 @@ namespace Client_Solar_War
 						player_number_label.updateText("Player 1 is already taken, try again!");
 					//Find a way to send server a "taken" message for all
 				}
-				else if (old.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.D2))
+				else if (old.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.D2) || old.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.NumPad2))
 				{
 					network.send("take2");
 					temp = network.getMessage();
@@ -162,7 +162,7 @@ namespace Client_Solar_War
 					else
 						player_number_label.updateText("Player 2 is already taken, try again!");
 				}
-				else if (old.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.D3))
+				else if (old.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.D3) || old.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.NumPad3))
 				{
 					network.send("take3");
 					temp = network.getMessage();
@@ -176,7 +176,7 @@ namespace Client_Solar_War
 						player_number_label.updateText("Player 3 is already taken, try again!");
 
 				}
-				else if (old.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.D4))
+				else if (old.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.D4) || old.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.NumPad4))
 				{
 					network.send("take4");
 					temp = network.getMessage();
