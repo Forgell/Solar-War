@@ -98,7 +98,7 @@ namespace Client_Solar_War
 			starPos.Y += starVel.Y;
 		}
 
-		public void animate(Rectangle screen)
+		public void animate(Rectangle screen) 
 		{
 			// - acceleration then when Vx = 0 translate
 			starPos.X += starVel.X;
