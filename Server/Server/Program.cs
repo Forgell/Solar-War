@@ -246,7 +246,7 @@ namespace Server
 				temp[99] = 29;
 				foreach (Socket socket in clientSockets)
 				{
-					// send
+					//send
 					//Console.WriteLine(temp);
 					socket.Send(temp);
 				}

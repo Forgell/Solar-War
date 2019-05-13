@@ -143,12 +143,43 @@ namespace Client_Solar_War
 			is_being_taken_over = false;
 			capture_timer = 0;
 			ships_color = faction_color;
-			
+			if (faction_color == Color.Black)
+			{
+				faction_num = 4;
+			}
+			if (faction_color == Color.Red)
+			{
+				faction_num = 0;
+			}
+			if (faction_color == Color.Green)
+			{
+				faction_num = 1;
+			}
+			if (faction_color == Color.Blue)
+			{
+				faction_num = 2;
+			}
+			if (faction_color == Color.Purple)
+			{
+				faction_num = 3;
+			}
+
+			//set positoin
+			double x = (origin.X + Math.Cos(angle) * radius) - offset.X;
+			double y = (origin.Y + Math.Sin(angle) * radius) - offset.Y;
+			pos.X = (int)x;
+			pos.Y = (int)y;
+			ships_color = faction_color;
 		}
 
 		public void setAngle(double angle) // input degeres
 		{
 			this.angle = MathHelper.ToRadians((float)angle);
+			// set position
+			double x = (origin.X + Math.Cos(angle) * radius) - offset.X;
+			double y = (origin.Y + Math.Sin(angle) * radius) - offset.Y;
+			pos.X = (int)x;
+			pos.Y = (int)y;
 		}
 
 		public void Load(IServiceProvider serve)
@@ -161,7 +192,7 @@ namespace Client_Solar_War
 			string[] file = Directory.GetFiles("Content/" + fileName);
 			tex = new Texture2D[5][];
 
-			for(int j = 0; j < 5; j++)
+			for(int j = 0; j < tex.Length; j++)
 			{
 				tex[j] = new Texture2D[3];
 				for (int i = 0; i < tex[j].Length; i++)
@@ -201,14 +232,44 @@ namespace Client_Solar_War
 			Radius_rect = new Rectangle(X, y, TRAVEL_RADIUS * 2, TRAVEL_RADIUS * 2);
 		}
 		/**  animation */
-		private void Orbit()
+		public void Orbit()
 		{
 
 			double x = (origin.X + Math.Cos(angle) * radius) - offset.X;
 			double y = (origin.Y + Math.Sin(angle) * radius) - offset.Y;
 			pos.X = (int)x;
 			pos.Y = (int)y;
+			
 
+			ship_label.updateText("" + ships);
+			ship_label.updatePosition(pos.X - 25, pos.Y);
+			ship_label.updateColor(ships_color);
+			angle += angular_speed;
+
+			capture_label.updateColor(ships_color);
+			capture_label.updatePosition(pos.X , pos.Y - pos.Height - 2);
+			capture_label.updateText("" + capture_timer + "%");
+
+			if (faction_color == Color.Black)
+			{
+				faction_num = 4;
+			}
+			if (faction_color == Color.Red)
+			{
+				faction_num = 0;
+			}
+			if (faction_color == Color.Blue)
+			{
+				faction_num = 1;
+			}
+			if (faction_color == Color.Green)
+			{
+				faction_num = 2;
+			}
+			if (faction_color == Color.Purple)
+			{
+				faction_num = 3;
+			}
 		}
 
 
@@ -300,6 +361,8 @@ namespace Client_Solar_War
 			int diff = 7;
 			selected_rect.X = pos.X - diff;
 			selected_rect.Y = pos.Y - diff;//, width + diff, height + diff);
+										   // 
+			Orbit();
 		}
 
 		private void updateShips()
@@ -318,7 +381,6 @@ namespace Client_Solar_War
 
 			if (incrementShipTimer == 60)//increase number of ships each second
 			{
-
 				incrementShips();
 				incrementShipTimer = 0;
 			}
@@ -400,8 +462,9 @@ namespace Client_Solar_War
 		{
 			int id = (map[0] & 248) >> 3;
 			this.id = id;
-			pos.X = ((map[0] & 7) << 8) | map[1];
-			pos.Y = (map[2] << 3) | ((map[3] & 224) >> 5);
+			//pos.X = ((map[0] & 7) << 8) | map[1];
+			//pos.Y = (map[2] << 3) | ((map[3] & 224) >> 5);
+			capture_timer = map[1];
 			ships = ((map[3] & 31) << 2) | ((map[4] & 192) >> 6);
 			int byte_color = map[4] & 7;
 			Color temp = Color.Black;
@@ -478,11 +541,12 @@ namespace Client_Solar_War
 					spritebatch.Draw(Radius_Tex, Radius_rect, faction_color);
 				else
 					spritebatch.Draw(Radius_Tex, Radius_rect, Color.White);
+
 			if (selected)
 			{
 				spritebatch.Draw(Radius_Tex, selected_rect, Color.White);
 			}
-			if (is_being_taken_over)
+			if (is_being_taken_over || capture_timer != 0)
 			{
 				capture_label.Draw(spritebatch);
 			}

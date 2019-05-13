@@ -21,18 +21,18 @@ namespace Client_Solar_War
 		}
 		private string text;
 
-		public SpriteFont Font
+		public Texture2D Font
 		{
 			get { return font; }
 		}
-		private SpriteFont font;
+		private Texture2D font;
 
 		/// <summary>
 		/// this is the only contructor as both the position and the font is needed to be loaded for the draw function to work
 		/// </summary>
 		/// <param name="position"></param>
 		/// <param name="font"></param>
-		public TextBox(Vector2 position , SpriteFont font)
+		public TextBox(Vector2 position , Texture2D font)
 		{
 			this.position = position;
 			this.font = font;
@@ -71,9 +71,26 @@ namespace Client_Solar_War
 		/// Draws the message of text
 		/// </summary>
 		/// <param name="spritebatch"></param>
-		public void Draw(SpriteBatch spritebatch)
+		public void Draw(SpriteBatch spritebatch , int x , int y)
 		{
-			spritebatch.DrawString(font , text , position, Color.White);
+			Rectangle rect = new Rectangle(x , y , 60 , 60);
+			Rectangle dest = new Rectangle( 0 , 0, 60 , 60);
+			foreach(Char c in text)
+			{
+				if (c != '.')
+				{
+					int num = c - '0';
+					dest.X = num * 60;
+					spritebatch.Draw(font , rect , dest , Color.White );
+				}
+				else
+				{
+					dest.X = 60*10;
+					spritebatch.Draw(font, rect, dest, Color.White);
+				}
+				rect.X += rect.Width;
+			}
+			
 		}
 
 

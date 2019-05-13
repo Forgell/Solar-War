@@ -35,9 +35,7 @@ namespace Client_Solar_War
 		//list of SolarOrbits 
 		List<SoloarOrbit> soloar_orbits;
 		//used to create planet
-		//IServiceProvider d;
-		//sun  object
-		//Sun sun;
+		List<Line> lines;
 
 		bool planet_is_selected;
 		Planet selected_planet;
@@ -47,6 +45,7 @@ namespace Client_Solar_War
 		Label launching_ships;
 		float presentage_of_launching_ships;
 		Background background;
+		Texture2D line_text;
 
         //for checking for a win, player color that has won (or black)
         List<Color> winColor;
@@ -67,7 +66,7 @@ namespace Client_Solar_War
 
 			soloar_orbits = new List<SoloarOrbit>();
 			int radius = 200;
-			double angular_speed = 1 / 25.0;
+			double angular_speed = 1 / 50.0;
 			int number_of_planets = 4;
 			for (int i = 0; i < 3; i++)
 			{
@@ -84,6 +83,7 @@ namespace Client_Solar_War
 			number_of_planets = 0;
 			presentage_of_launching_ships = 1;
 			background = new Background();
+			lines = new List<Line>();
 		}
 
 		public Planet getPlanet(Rectangle pos)
@@ -146,28 +146,28 @@ namespace Client_Solar_War
                                 {
                                     // then everything is otherized
 
-                                    //transfer_troops(selected_planet, planet_at_position, (int)Math.Round(presentage_of_launching_ships * selected_planet.Ships));
-                                    int faction = 0;
-                                    if (player_faction == Color.Red)
-                                    {
-                                        faction = 0;
-                                    }
-                                    if (player_faction == Color.Blue)
-                                    {
-                                        faction = 1;
-                                    }
-                                    if (player_faction == Color.Green)
-                                    {
-                                        faction = 2;
-                                    }
-                                    if (player_faction == Color.Purple)
-                                    {
-                                        faction = 3;
-                                    }
-                                    if (player_faction == Color.Black)
-                                    {
-                                        faction = 4;
-                                    }
+									//transfer_troops(selected_planet, planet_at_position, (int)Math.Round(presentage_of_launching_ships * selected_planet.Ships));
+									int faction = 0;
+									if (player_faction == Color.Red)
+									{
+										faction = 0;
+									}
+									if (player_faction == Color.Blue)
+									{
+										faction = 1;
+									}
+									if (player_faction == Color.Green)
+									{
+										faction = 2;
+									}
+									if (player_faction == Color.Purple)
+									{
+										faction = 3;
+									}
+									if (player_faction == Color.Black)
+									{
+										faction = 4;
+									}
                                     int ship_amount = (int)Math.Round(presentage_of_launching_ships * selected_planet.Ships);
                                     if (ship_amount > 99)
                                     {
@@ -175,9 +175,9 @@ namespace Client_Solar_War
                                     }
 
                                     Console.WriteLine(selected_planet.ID + " " + planet_at_position.ID + " " + ((int)Math.Round(presentage_of_launching_ships * selected_planet.Ships)) + " " + faction);
-                                    return selected_planet.ID + " " + planet_at_position.ID + " " + ((int)(presentage_of_launching_ships * 100)) + " " + faction;
-                                }
-                            }
+									return selected_planet.ID + " " + planet_at_position.ID + " " + ((int)(presentage_of_launching_ships *100)) + " "  + faction;
+								}
+							}
 
                         }
                         else
@@ -234,7 +234,8 @@ namespace Client_Solar_War
 
 		public void Load(IServiceProvider server)
 		{
-			for (int i = 0; i < asteroids.Count; i++)
+			ContentManager Content = new ContentManager(server , "Content/" );
+            for (int i = 0; i < asteroids.Count; i++)
 			{
 				asteroids[i].Load(server, "astriod");
 			}
@@ -247,9 +248,10 @@ namespace Client_Solar_War
 				soloar_orbits[i].Load(server);
 			}
 
-			launching_ships = new Label("" + presentage_of_launching_ships, new Vector2(), Color.Black, (new ContentManager(server, "Content/").Load<SpriteFont>("SpriteFont1")));
+			launching_ships = new Label("" + presentage_of_launching_ships, new Vector2(), Color.Black, Content.Load<SpriteFont>("SpriteFont1"));
 			//sun.Load(server);
-			background.Load(new ContentManager(server , "Content/"));
+			background.Load(Content);
+			line_text = Content.Load<Texture2D>("Star");
 		}
 
         //check who wins, return player color of winner, else return black
@@ -289,16 +291,18 @@ namespace Client_Solar_War
 
         public string Update_Input(MouseState m)
 		{
-			
+			MouseState m = Mouse.GetState();
+
 			foreach (SoloarOrbit orbit in soloar_orbits)
 			{
 				orbit.UpdateInput(m);
 			}
-			string s = handlePlayerInput(m);
+			//string s = handlePlayerInput(m);
+			//handlePlayerInput(m);
 			//change locations of planets as they rotate
 			//sun.Update(gametime);
 			old_mouse = m;
-			return s;
+			return handlePlayerInput(m); 
 		}
 
 		public void Update_as_Bytes(byte[] map)
@@ -316,7 +320,7 @@ namespace Client_Solar_War
 			}
 		}
 
-		public void Update(GameTime gametime)
+		public string Update(GameTime gametime)
 		{
             //Win condition
             colorWon = WhoWon();
@@ -329,11 +333,16 @@ namespace Client_Solar_War
 			}
 			
 			// Handel player input
-			handlePlayerInput(m);
+			string ss = handlePlayerInput(m);
 			background.Update();
+			foreach(SoloarOrbit s in soloar_orbits)
+			{
+				s.Update(gametime);
+			}
 			//change locations of planets as they rotate
 			//sun.Update(gametime);
 			old_mouse = m;
+			return ss;
 		}
 
 		public void Draw(SpriteBatch spriteBatch)
@@ -343,16 +352,44 @@ namespace Client_Solar_War
 			//draw sun/star
 			//sun.Draw(spriteBatch);
 			//draw asteroids
+			// draw lines first
+			for(int i = 0; i < soloar_orbits.Count; i++)
+			{
+				for(int j = 0; j < soloar_orbits.Count; j++)
+				{
+					if (i == j)
+					{
+						continue;
+					}
+					for(int h = 0; h < soloar_orbits[i].Planets.Count; h++)
+					{
+						for(int g = 0; g < soloar_orbits[j].Planets.Count; g++)
+						{
+
+							Planet one = soloar_orbits[i].Planets[h];
+							Planet two = soloar_orbits[j].Planets[g];
+							if (one.Color == player_faction || two.Color == player_faction)
+							{
+								// see if planets are in range
+								int offset = (one.position.Width / 2); // to calcuale form the center of the planet
+								Vector2 pos_1 = new Vector2(one.position.X + offset, one.position.Y + offset);
+								Vector2 pos_2 = new Vector2(two.position.X + offset, two.position.Y + offset);
+								double dist = Math.Sqrt(Math.Pow(pos_1.X - pos_2.X, 2) + Math.Pow(pos_1.Y - pos_2.Y, 2));
+								if (dist <= Planet.TRAVEL_RADIUS)
+								{
+									DrawLine(spriteBatch, pos_1, pos_2);
+								}
+							}
+							
+						}
+					}
+				}
+			}
 			background.Draw(spriteBatch);
 			for (int i = 0; i < asteroids.Count; i++)
 			{
 				asteroids[i].Draw(spriteBatch);
 			}
-			//will need to change planet class to be able to draw each planet
-			/*for (int i = 0; i < planets.Count; i++)
-            {
-                planets[i].Draw(spriteBatch);
-            }*/
 
 			for (int i = 0; i < soloar_orbits.Count; i++)
 			{
@@ -389,7 +426,31 @@ namespace Client_Solar_War
                 }
             }
         }
-	}
+        public void DrawLine(SpriteBatch sb, Vector2 start, Vector2 end)
+        {
+            Vector2 edge = end - start;
+            // calculate angle to rotate line
+            float angle =
+                (float)Math.Atan2(edge.Y, edge.X);
+
+
+            sb.Draw(line_text,
+                new Rectangle(// rectangle defines shape of line and position of start of line
+                    (int)start.X,
+                    (int)start.Y,
+                    (int)edge.Length(), //sb will strech the texture to fill this rectangle
+                    1), //width of line, change this to make thicker line
+                null,
+                player_faction, //colour of line
+                angle,     //angle of line (calulated above)
+                new Vector2(0, 0), // point in line about which to rotate
+                SpriteEffects.None,
+                0);
+
+        }
+    }
+
+
 
 }
 
