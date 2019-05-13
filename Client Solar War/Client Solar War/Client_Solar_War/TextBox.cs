@@ -38,7 +38,7 @@ namespace Client_Solar_War
 			this.font = font;
 			text = "";
 		}
-		public TextBox(Vector2 position, SpriteFont font, string str)
+		public TextBox(Vector2 position, Texture2D font, string str)
 		{
 			this.position = position;
 			this.font = font;
