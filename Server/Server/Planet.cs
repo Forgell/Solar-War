@@ -180,7 +180,7 @@ namespace Server
                     Console.WriteLine("source is taking over");
                     is_being_taken_over = true;
                     this.ships = amount - this.ships;
-
+                    capture_timer = 0;
                     ships_color = source.faction_color;
 
                 }
