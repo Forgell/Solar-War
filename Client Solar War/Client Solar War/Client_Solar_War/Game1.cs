@@ -111,11 +111,6 @@ namespace Client_Solar_War
 
 			game_text_text = Content.Load<Texture2D>("Sprites/text/game_final");
 			code_text = Content.Load<Texture2D>("Sprites/text/code");
-			Form f = Form.FromHandle(Window.Handle) as Form;
-			if (f != null)
-			{
-				f.FormClosing += f_FormClosing;
-			}
 			//orbit.Load(Content.ServiceProvider);
 			// TODO: use this.Content to load your game content here
 		}
