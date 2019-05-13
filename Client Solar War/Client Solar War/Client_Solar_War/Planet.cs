@@ -216,13 +216,13 @@ namespace Client_Solar_War
 		public void tranfer_troops(Planet source, int amount)
 		{
 			source.ships -= amount;
-			if (source.faction_color == this.faction_color)
+			if (source.faction_color == this.faction_color && !source.is_being_taken_over)
 			{
 				// peacful tranfer
 				this.ships += amount;
 			}
-			else
-			{
+			else if (source.faction_color == this.ships_color)
+            {
 				// it is attacking
 				if (this.ships >= amount)
 				{
@@ -241,7 +241,28 @@ namespace Client_Solar_War
 				}
 
 			}
-		}
+            else
+            {
+
+                // it is attacking
+                if (this.ships >= amount)
+                {
+                    // the faction holds
+                    this.ships -= amount;
+                }
+                else
+                {
+                    // stop producing
+                    // start a timer
+                    is_being_taken_over = true;
+                    this.ships = amount - this.ships;
+
+                    ships_color = source.ships_color;
+
+                }
+
+            }
+        }
 
 
 
@@ -337,7 +358,45 @@ namespace Client_Solar_War
 			}
 		}
 
-		public void Update_As_Bytes(byte[] map)
+        public void Update(GameTime gameTime, MouseState m)
+        {
+            // see if the mouse is hovering to show the radius of travel
+            update_radius(m);
+
+            updateShips();
+
+            if (is_being_taken_over && ships == 0) //if ships are transfered, planet is stopped being taken over
+            {
+                is_being_taken_over = false;
+                ships_color = faction_color;
+                capture_timer = 0;
+            }
+
+            if (is_being_taken_over || ships > 0 && ships_color != faction_color)
+            {
+                updateCapture(gameTime);
+            }
+
+            angle += angular_speed;
+            Orbit();
+
+            //if (is_being_taken_over)
+            //{
+            //	capture_timer++;
+            //	if (capture_timer == 180) // hopefully around 2 secounds
+            //	{
+            //		changeFaction();
+            //	}
+            //}
+            int diff = 7;
+            selected_rect.X = pos.X - diff;
+            selected_rect.Y = pos.Y - diff;//, width + diff, height + diff);
+            ship_label.updateText("" + ships);
+            ship_label.updatePosition(pos.X - 25, pos.Y);
+            ship_label.updateColor(ships_color);
+        }
+
+        public void Update_As_Bytes(byte[] map)
 		{
 			int id = (map[0] & 248) >> 3;
 			this.id = id;
