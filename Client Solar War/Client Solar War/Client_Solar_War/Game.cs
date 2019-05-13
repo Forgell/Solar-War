@@ -128,54 +128,59 @@ namespace Client_Solar_War
 					else if (planet_is_selected)
 					{
 
-						if (planet_at_position != selected_planet)
-						{
-							// now if there is a secound planet clicked it signifies that the player
-							// is to move his trops or attack
-							// check and see if the planets are within radius of each other 
-							// (x - h)^2 + (y - k)^ 2 = r^2 // cirlce equations but lets use distanc equations instead
-							int offset = (planet_at_position.position.Width / 2); // to calcuale form the center of the planet
-							Vector2 pos_1 = new Vector2(planet_at_position.position.X + offset, planet_at_position.position.Y + offset);
-							Vector2 pos_2 = new Vector2(selected_planet.position.X + offset, selected_planet.position.Y + offset);
-							double dist = Math.Sqrt(Math.Pow(pos_1.X - pos_2.X, 2) + Math.Pow(pos_1.Y - pos_2.Y, 2));
-							if (dist <= Planet.TRAVEL_RADIUS)
-							{
-								// then troops can  transfer
-								// we need to check if the selcted planet is his color
-								if (selected_planet.Ships_Color == player_faction)
-								{
+                        if (planet_at_position != selected_planet)
+                        {
+                            // now if there is a secound planet clicked it signifies that the player
+                            // is to move his trops or attack
+                            // check and see if the planets are within radius of each other 
+                            // (x - h)^2 + (y - k)^ 2 = r^2 // cirlce equations but lets use distanc equations instead
+                            int offset = (planet_at_position.position.Width / 2); // to calcuale form the center of the planet
+                            Vector2 pos_1 = new Vector2(planet_at_position.position.X + offset, planet_at_position.position.Y + offset);
+                            Vector2 pos_2 = new Vector2(selected_planet.position.X + offset, selected_planet.position.Y + offset);
+                            double dist = Math.Sqrt(Math.Pow(pos_1.X - pos_2.X, 2) + Math.Pow(pos_1.Y - pos_2.Y, 2));
+                            if (dist <= Planet.TRAVEL_RADIUS)
+                            {
+                                // then troops can  transfer
+                                // we need to check if the selcted planet is his color
+                                if (selected_planet.Color == player_faction)
+                                {
                                     // then everything is otherized
-                                    transfer_troops(selected_planet, planet_at_position, (int)Math.Round(presentage_of_launching_ships * selected_planet.Ships));
 
+                                    //transfer_troops(selected_planet, planet_at_position, (int)Math.Round(presentage_of_launching_ships * selected_planet.Ships));
                                     int faction = 0;
-									if (player_faction == Color.OrangeRed)
-									{
-										faction = 0;
-									}
-									if (player_faction == Color.Blue)
-									{
-										faction = 1;
-									}
-									if (player_faction == Color.Green)
-									{
-										faction = 2;
-									}
-									if (player_faction == Color.Purple)
-									{
-										faction = 3;
-									}
-									if (player_faction == Color.Black)
-									{
-										faction = 4;
-									}
+                                    if (player_faction == Color.Red)
+                                    {
+                                        faction = 0;
+                                    }
+                                    if (player_faction == Color.Blue)
+                                    {
+                                        faction = 1;
+                                    }
+                                    if (player_faction == Color.Green)
+                                    {
+                                        faction = 2;
+                                    }
+                                    if (player_faction == Color.Purple)
+                                    {
+                                        faction = 3;
+                                    }
+                                    if (player_faction == Color.Black)
+                                    {
+                                        faction = 4;
+                                    }
+                                    int ship_amount = (int)Math.Round(presentage_of_launching_ships * selected_planet.Ships);
+                                    if (ship_amount > 99)
+                                    {
+                                        Console.WriteLine("Error more than accitibel amunt\n--" + presentage_of_launching_ships + "\n--" + selected_planet.Ships);
+                                    }
 
-									Console.WriteLine(selected_planet.ID + " " + planet_at_position.ID + " " + ((int)Math.Round(presentage_of_launching_ships * selected_planet.Ships)) + " " + faction);
-									return selected_planet.ID + " " + planet_at_position.ID + " " + ((int)Math.Round(presentage_of_launching_ships * selected_planet.Ships)) + " "  + faction;
-								}
-							}
+                                    Console.WriteLine(selected_planet.ID + " " + planet_at_position.ID + " " + ((int)Math.Round(presentage_of_launching_ships * selected_planet.Ships)) + " " + faction);
+                                    return selected_planet.ID + " " + planet_at_position.ID + " " + ((int)(presentage_of_launching_ships * 100)) + " " + faction;
+                                }
+                            }
 
-						}
-						else
+                        }
+                        else
 						{
 							// same planet lets deselct
 							planet_is_selected = false;
