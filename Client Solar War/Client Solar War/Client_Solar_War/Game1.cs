@@ -45,10 +45,11 @@ namespace Client_Solar_War
 		Texture2D logo;
 		TitleScreen title;
 		Starfield starfield;
-
 		// for playing the game
 		Game game;
 		//Soloar//orbit //orbit;
+		Texture2D game_text_text , code_text;
+		Rectangle game_rect, code_rect;
 		public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -81,7 +82,8 @@ namespace Client_Solar_War
 			game = new Game(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight, Content, Color.Green);
 			//orbit = new Soloar//orbit(200, 1 / 1.0f, 4, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight, false);
 			//game.Load(Content.ServiceProvider);
-
+			game_rect = new Rectangle(50 , 50 , 240 , 60);
+			code_rect = new Rectangle(game_rect.X + game_rect.Width  + 60, game_rect.Y , game_rect.Width , game_rect.Height);
 			base.Initialize();
         }
 
@@ -94,12 +96,15 @@ namespace Client_Solar_War
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 			sf = this.Content.Load<SpriteFont>("font");
-			text_box = new TextBox(new Vector2(10, 10), sf);
+			text_box = new TextBox(new Vector2(10, 10), Content.Load<Texture2D>("Sprites/text/numbers"));
 			player_number_label = new Label("No number assigned", new Vector2(10 , 10) , Color.White , sf);
 			logo = this.Content.Load<Texture2D>("logo");
 			title = new TitleScreen(screenWidth, screenHeight);
 			title.Load(Content);
 			game.Load(Content.ServiceProvider);
+
+			game_text_text = Content.Load<Texture2D>("Sprites/text/game_final");
+			code_text = Content.Load<Texture2D>("Sprites/text/code");
 			//orbit.Load(Content.ServiceProvider);
 			// TODO: use this.Content to load your game content here
 		}
@@ -321,7 +326,10 @@ namespace Client_Solar_War
 						title.draw(spriteBatch, gameTime);
 						break;
 					case State.CONNECTING:
-						text_box.Draw(spriteBatch);
+						text_box.Draw(spriteBatch , code_rect.X + code_rect.Width + 60 , code_rect.Y);
+
+						spriteBatch.Draw(game_text_text , game_rect , Color.White);
+						spriteBatch.Draw(code_text, code_rect, Color.White);
 						break;
 					case State.WAITING_FOR_ALL_PLAYERS:
 						player_number_label.Draw(spriteBatch);
