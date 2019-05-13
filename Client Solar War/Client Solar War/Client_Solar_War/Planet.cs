@@ -100,15 +100,23 @@ namespace Client_Solar_War
 		private int timer;
 		private String fileName;
 		private int radius;
+        public Color faction
+        {
+            get { return faction_color; }
+        }
+        private Color faction_color;
 
-		private Color faction_color;
-		private int faction_num;
+        private int faction_num;
 		private bool selected;
 		private Rectangle selected_rect;
 		private bool is_being_taken_over;
 		private double capture_timer;
 		private Label capture_label;
 		private Color ships_color;
+        public Color Ships_Color
+        {
+            get { return ships_color; }
+        }
 		public Planet(string fileName, Vector2 origin, int radius, double angular_speed, int scaler, Color faction_color) // input degress
 		{
 			this.origin = origin;
@@ -306,7 +314,7 @@ namespace Client_Solar_War
 				capture_timer = 0;
 				this.faction_color = ships_color;
 				//switch()
-				if (faction_color == Color.Red)
+				if (faction_color == Color.OrangeRed)
 				{
 					fileName = "planet-1";
 				}
@@ -341,7 +349,7 @@ namespace Client_Solar_War
 			faction_num = byte_color;
 			switch (byte_color)
 			{
-				case 0: temp = Color.Red;fileName = "planet-1"; break;
+				case 0: temp = Color.OrangeRed;fileName = "planet-1"; break;
 				case 1: temp = Color.Blue; fileName = "planet-2"; break;
 				case 2: temp = Color.Green; fileName = "planet-3"; break;
 				case 3: temp = Color.Purple; fileName = "planet-4"; break;
@@ -356,7 +364,7 @@ namespace Client_Solar_War
 			int ships_color_as_bytes = (map[4] & 56) >> 3;
 			switch (ships_color_as_bytes)
 			{
-				case 0: ships_color = Color.Red; break;
+				case 0: ships_color = Color.OrangeRed; break;
 				case 1: ships_color = Color.Blue; break;
 				case 2: ships_color = Color.Green; break;
 				case 3: ships_color = Color.Purple; break;

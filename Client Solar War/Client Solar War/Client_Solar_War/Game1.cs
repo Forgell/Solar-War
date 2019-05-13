@@ -130,7 +130,7 @@ namespace Client_Solar_War
 					{
 						player_number = 1;
 						player_number_label.updateText("You are player number: " + player_number);
-						game.setPlayer(Color.Red);
+						game.setPlayer(Color.OrangeRed);
 					}
 					else
 						player_number_label.updateText("Player 1 is already taken, try again!");
@@ -188,7 +188,7 @@ namespace Client_Solar_War
 					Color temp = Color.Black;
 					switch (player_number)
 					{
-						case 1: temp = Color.Red; break;
+						case 1: temp = Color.OrangeRed; break;
 						case 2: temp = Color.Blue; break;
 						case 3: temp = Color.Green; break;
 						case 4: temp = Color.Purple; break;

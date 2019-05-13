@@ -19,6 +19,7 @@ namespace Server_Solar_War
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Game game;
+        SpriteFont spriteFont;
 
         //Asteroid asteroid;
         public Game1()
@@ -62,10 +63,11 @@ namespace Server_Solar_War
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-			game.Load(Services); 
-			//Content.Load<Texture2D>("planet-1-1");
-			// TODO: use this.Content to load your game content here
-		}
+            //Content.Load<Texture2D>("planet-1-1");
+            // TODO: use this.Content to load your game content here
+            spriteFont = this.Content.Load<SpriteFont>("SpriteFont1");
+            game.Load(Services, spriteFont);
+        }
 
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
