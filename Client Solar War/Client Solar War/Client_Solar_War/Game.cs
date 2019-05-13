@@ -44,7 +44,7 @@ namespace Client_Solar_War
 
 		Label launching_ships;
 		float presentage_of_launching_ships;
-		Background background;
+		//Background background;
 		Texture2D line_text;
 
 		public Game(int screenWidth, int screenHeight, ContentManager Content, Color player_faction)
@@ -71,7 +71,7 @@ namespace Client_Solar_War
 			//sun
 			//sun = new Sun((screenWidth/2)-100, (screenHeight/2)-100);
 			presentage_of_launching_ships = 1;
-			background = new Background();
+			//background = new Background();
 			lines = new List<Line>();
 		}
 
@@ -233,7 +233,7 @@ namespace Client_Solar_War
 
 			launching_ships = new Label("" + presentage_of_launching_ships, new Vector2(), Color.Black, Content.Load<SpriteFont>("SpriteFont1"));
 			//sun.Load(server);
-			background.Load(Content);
+			//background.Load(Content);
 			line_text = Content.Load<Texture2D>("Star");
 		}
 
@@ -279,7 +279,7 @@ namespace Client_Solar_War
 			
 			// Handel player input
 			string ss = handlePlayerInput(m);
-			background.Update();
+			//background.Update();
 			foreach(SoloarOrbit s in soloar_orbits)
 			{
 				s.Update(gametime);
@@ -330,7 +330,7 @@ namespace Client_Solar_War
 					}
 				}
 			}
-			background.Draw(spriteBatch);
+			//background.Draw(spriteBatch);
 			for (int i = 0; i < asteroids.Count; i++)
 			{
 				asteroids[i].Draw(spriteBatch);

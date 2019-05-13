@@ -272,7 +272,7 @@ namespace Client_Solar_War
                     
                     break;
 				case State.PLAYING:
-					starfield.animate();
+					starfield.playing(graphics);
 					string message = game.Update(gameTime);
 					game.Update_Input();
 					if (!message.Equals(""))
