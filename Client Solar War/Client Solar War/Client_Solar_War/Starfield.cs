@@ -63,6 +63,14 @@ namespace Client_Solar_War
             }
         }
 
+		public void animate()
+		{
+			foreach (Star star in stars)
+			{
+				star.animate(screen);
+			}
+		}
+
         public void draw(SpriteBatch spriteBatch)
         {
             for (int i = 0; i < stars.Length; i++)

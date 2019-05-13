@@ -23,8 +23,14 @@ namespace Server_Solar_War
         //Asteroid asteroid;
         public Game1()
         {
+            
             graphics = new GraphicsDeviceManager(this);
+            graphics.PreferredBackBufferHeight = 1000;
+            graphics.PreferredBackBufferWidth = 1800;
+			graphics.ApplyChanges();
             Content.RootDirectory = "Content";
+			//Console.WriteLine(Content.ServiceProvider.);
+			
         }
 
         /// <summary>
@@ -36,10 +42,15 @@ namespace Server_Solar_War
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            game = new Game();
+            
+            graphics.PreferredBackBufferHeight = 1000;
+            graphics.PreferredBackBufferWidth = 1800;
+            //graphics.IsFullScreen = true;
+            //graphics.ToggleFullScreen();
+            graphics.ApplyChanges();
+            game = new Game(graphics.PreferredBackBufferWidth , graphics.PreferredBackBufferHeight , Content , Color.Green);
             //asteroid = new Asteroid(new Vector2(200, 200), 50);
             IsMouseVisible = true;
-
             base.Initialize();
         }
 
@@ -51,9 +62,10 @@ namespace Server_Solar_War
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            game.Load(Services); 
-            // TODO: use this.Content to load your game content here
-        }
+			game.Load(Services); 
+			//Content.Load<Texture2D>("planet-1-1");
+			// TODO: use this.Content to load your game content here
+		}
 
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload
@@ -71,14 +83,15 @@ namespace Server_Solar_War
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            
             // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 this.Exit();
 
             // TODO: Add your update logic here
             //asteroid.Update(gameTime);
             game.Update(gameTime);
-
+			//Console.WriteLine(Mouse.GetState().X);
             base.Update(gameTime);
         }
 

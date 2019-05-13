@@ -13,6 +13,7 @@ using System.Net.Sockets;
 using System.Net;
 using System.Text;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace Client_Solar_War
 {
@@ -46,10 +47,14 @@ namespace Client_Solar_War
 		TitleScreen title;
 		Starfield starfield;
 
+		// for playing the game
+		Game game;
 		public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
+			graphics.PreferredBackBufferHeight = 1000;
+			graphics.PreferredBackBufferWidth = 1800;
+			Content.RootDirectory = "Content";
         }
 
         /// <summary>
@@ -60,9 +65,9 @@ namespace Client_Solar_War
         /// </summary>
         protected override void Initialize()
         {
-            // instancience of network varibles
-            // star field varibles 
-            starfield = new Starfield(GraphicsDevice, this.Content.Load<Texture2D>("Star"));
+			// instancience of network varibles
+			// star field varibles 
+			starfield = new Starfield(GraphicsDevice, this.Content.Load<Texture2D>("Star"));
 			networking_thread = new Thread(network_communication);
             network = new Networking();
             state = State.START;
@@ -73,6 +78,9 @@ namespace Client_Solar_War
 			player_number = 0;
 			screenHeight = GraphicsDevice.Viewport.Height;
 			screenWidth = GraphicsDevice.Viewport.Width;
+			game = new Game(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight, Content, Color.Green);
+			//game.Load(Content.ServiceProvider);
+			
 			base.Initialize();
         }
 
@@ -88,7 +96,14 @@ namespace Client_Solar_War
 			text_box = new TextBox(new Vector2(10, 10), sf, "Type in server ip: ");
 			player_number_label = new Label("No number assigned", new Vector2(10 , 10) , Color.White , sf);
 			logo = this.Content.Load<Texture2D>("logo");
-			title = new TitleScreen(logo, sf, screenWidth, screenHeight, GraphicsDevice);
+			title = new TitleScreen(screenWidth, screenHeight);
+			Form f = Form.FromHandle(Window.Handle) as Form;
+			if (f != null)
+			{
+				f.FormClosing += f_FormClosing;
+			}
+			title.Load(Content);
+			game.Load(Content.ServiceProvider);
 			// TODO: use this.Content to load your game content here
 		}
 
@@ -104,51 +119,103 @@ namespace Client_Solar_War
 
 		public void network_communication()
 		{
-			if (player_number == 0)
+			while (player_number == 0)
 			{
-				int temp = network.recieveServerMessage(player_number_label);
-				//KeyboardState kb = Keyboard.GetState();
-				//String temp = network.getMessage();
-				//if (kb.IsKeyDown(Keys.D1) && temp.ToCharArray()[0] == '0')
-				//{
-				//	player_number = 1;
-				//	network.send("take1");
-				//	//Find a way to send server a "taken" message for all
-				//}
-				//else if (kb.IsKeyDown(Keys.D2) && temp.ToCharArray()[1] == '0')
-				//{
-				//	player_number = 2;
-				//	network.send("take2");
-				//}
-				//else if (kb.IsKeyDown(Keys.D3) && temp.ToCharArray()[2] == '0')
-				//{
-				//	player_number = 3;
-				//	network.send("take3");
-				//}
-				//else if (kb.IsKeyDown(Keys.D4) && temp.ToCharArray()[3] == '0')
-				//{
-				//	player_number = 4;
-				//	network.send("take4");
-				//}
-
-				if (temp != 0)
+				string temp;
+				if (old.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.D1))
 				{
-					player_number = temp;
+					network.send("take1");
+					temp = network.getMessage();
+					if (!temp.Equals("taken"))
+					{
+						player_number = 1;
+						player_number_label.updateText("You are player number: " + player_number);
+						game.setPlayer(Color.Red);
+					}
+					else
+						player_number_label.updateText("Player 1 is already taken, try again!");
+					//Find a way to send server a "taken" message for all
+				}
+				else if (old.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.D2))
+				{
+					network.send("take2");
+					temp = network.getMessage();
+					if (!temp.Equals("taken"))
+					{
+						player_number = 2;
+						player_number_label.updateText("You are player number: " + player_number);
+						game.setPlayer(Color.Blue);
+					}
+					else
+						player_number_label.updateText("Player 2 is already taken, try again!");
+				}
+				else if (old.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.D3))
+				{
+					network.send("take3");
+					temp = network.getMessage();
+					if (!temp.Equals("taken"))
+					{
+						player_number = 3;
+						player_number_label.updateText("You are player number: " + player_number);
+						game.setPlayer(Color.Green);
+					}
+					else
+						player_number_label.updateText("Player 3 is already taken, try again!");
+
+				}
+				else if (old.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.D4))
+				{
+					network.send("take4");
+					temp = network.getMessage();
+					if (!temp.Equals("taken"))
+					{
+						player_number = 4;
+						player_number_label.updateText("You are player number: " + player_number);
+						game.setPlayer(Color.Purple);
+					}
+					else
+						player_number_label.updateText("Player 4 is already taken, try again!");
 				}
 			}
-			else
+			// waiting for the game to start
+			Thread.Sleep(2);
+			while (true)
 			{
 				string message = network.getMessage();
-				if (message.Equals(""))
+				if (message.Equals("Game Start!"))
 				{
-					return;
-				}
-				if (message.Equals("Game Start!")) {
 					state = State.PLAYING;
+					Color temp = Color.Black;
+					switch (player_number)
+					{
+						case 1: temp = Color.Red; break;
+						case 2: temp = Color.Blue; break;
+						case 3: temp = Color.Green; break;
+						case 4: temp = Color.Purple; break;
+					}
+					//game = new Game(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight, Content, temp);
+					//game.Load(Content.ServiceProvider);
+					break;
 				}
+				Thread.Sleep(3);
+			}
 
+
+
+			//game loop 
+			while (true)
+			{
+				byte[] map = network.GetMap();
+				if(map[99] == 29)
+				{
+					game.Update_as_Bytes(map);
+					
+					Thread.Sleep(10);
+				}
+				
 			}
 			
+
 		}
 
         /// <summary>
@@ -161,20 +228,35 @@ namespace Client_Solar_War
 			// Get raw keyboard input
 			KeyboardState console = Keyboard.GetState();
             // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || console.IsKeyDown(Keys.Escape))
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == Microsoft.Xna.Framework.Input.ButtonState.Pressed || console.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Escape))
 			{
-				network.closeStream();
-				this.Exit();
-				networking_thread.Abort();
+				try
+				{
+					if (player_number != 0)
+						network.closeStream(player_number);
+					else
+						network.closeStream();
+					networking_thread.Abort();
+				}
+				catch (Exception e) { }
+				finally
+				{
+					this.Exit();
+				}
+
 			}
 			if (state == State.START)
 			{
 				MouseState m = Mouse.GetState();
-				if (title.update(m.X, m.Y, m.LeftButton == ButtonState.Pressed, gameTime) || console.IsKeyDown(Keys.Enter))
+				if (title.update(m.X, m.Y, m.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed, gameTime) || console.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Enter))
 					state = State.CONNECTING;
 			}
 			// Still connecting to ip adress
-
+			//OVERIDE
+			if (console.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.E) && !old.IsKeyDown(Microsoft.Xna.Framework.Input.Keys.E) && state == State.WAITING_FOR_ALL_PLAYERS)
+			{
+				network.send("overide");
+			}
 
 			switch (state)
 			{
@@ -197,14 +279,24 @@ namespace Client_Solar_War
 				case State.PLAYING:
 					// playing the game all of the players are connected
 					update_game(console);
+					string message = game.Update_Input(Mouse.GetState());
+					if (!message.Equals(""))
+						network.send(message);
 					break;
 				case State.CLOSING:
 					// do nothing as the program is closing
 					return;
 			}
-            //update starfield
-            starfield.update(graphics);
-			
+			//update starfield
+			if (state != State.PLAYING)
+			{
+				starfield.update(graphics);
+				game.Update(gameTime);
+			}
+			else
+			{
+				starfield.animate();
+			}
 
 			// update input feed
 			this.old = console;
@@ -215,7 +307,7 @@ namespace Client_Solar_War
 		public void update_game(KeyboardState console)
 		{
 			// get the players game input
-			Keys input = KeyboardHelper.getKeyboardGameInput(console , old);
+			Microsoft.Xna.Framework.Input.Keys input = KeyboardHelper.getKeyboardGameInput(console , old);
 			MouseState mouse = Mouse.GetState();
 			// update the game screen
 
@@ -237,26 +329,49 @@ namespace Client_Solar_War
 			// TODO: Add your drawing code here
 			spriteBatch.Begin();
             //draw starfield
-            starfield.draw(spriteBatch);
-
-            switch (state)
-			{
-				case State.START:
-					title.draw(spriteBatch, gameTime);
-					break;
-				case State.CONNECTING:
-					text_box.Draw(spriteBatch);
-					break;
-				case State.WAITING_FOR_ALL_PLAYERS:
-					player_number_label.Draw(spriteBatch);
-					break;
-				default: break;
-			}
             
+			if (state == State.PLAYING)
+			{
+				starfield.draw(spriteBatch);
+				game.Draw(spriteBatch);
+			}
+			else
+			{
+				starfield.draw(spriteBatch);
+				switch (state)
+				{
+					case State.START:
+						title.draw(spriteBatch, gameTime);
+						break;
+					case State.CONNECTING:
+						text_box.Draw(spriteBatch);
+						break;
+					case State.WAITING_FOR_ALL_PLAYERS:
+						player_number_label.Draw(spriteBatch);
+						break;
+					default: break;
+				}
+			}
 			spriteBatch.End();
 			
             base.Draw(gameTime);
         }
-		
+		void f_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			try
+			{
+				if (player_number != 0)
+					network.closeStream(player_number);
+				else
+					network.closeStream();
+				networking_thread.Abort();
+			}
+			catch (Exception e1) { }
+			finally
+			{
+				this.Exit();
+			}
+		}
+
 	}
 }

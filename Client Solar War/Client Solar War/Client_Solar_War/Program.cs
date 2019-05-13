@@ -15,7 +15,7 @@ namespace Client_Solar_War
                 game.Run();
             }
         }
-    }
+	}
 #endif
 }
 

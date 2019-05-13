@@ -44,6 +44,17 @@ namespace Client_Solar_War
             return 0;
         }
 
+		public byte[] GetMap()
+		{
+			byte[] temp = new byte[100];
+			try
+			{
+				ClientSocket.Receive(temp);
+			}catch (Exception e) { Console.WriteLine(e.Message); }
+			
+			return temp;
+		}
+
         public void closeStream()
         {
             if (ClientSocket.IsBound)
@@ -54,6 +65,16 @@ namespace Client_Solar_War
             }
             //state = State.CLOSING;
         }
+		public void closeStream(int num)
+		{
+			if (ClientSocket.IsBound)
+			{
+				byte[] exit_message_as_bytes = Encoding.ASCII.GetBytes("exit" + num);
+				ClientSocket.Send(exit_message_as_bytes, 0, exit_message_as_bytes.Length, SocketFlags.None);
+				ClientSocket.Close();
+			}
+			//state = State.CLOSING;
+		}
 		public void send(String str)
 		{
 			byte[] message_as_bytes = Encoding.ASCII.GetBytes(str);
@@ -82,6 +103,7 @@ namespace Client_Solar_War
 					IAsyncResult result = ClientSocket.BeginConnect(new IPAddress(ip_adress_as_byte_array), PORT, null, null);
 
 					bool success = result.AsyncWaitHandle.WaitOne(2000, true);
+					//ClientSocket.Connect(new IPAddress(ip_adress_as_byte_array) , PORT);
 
 					if (ClientSocket.Connected)
 					{

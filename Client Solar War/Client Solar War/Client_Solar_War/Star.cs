@@ -10,6 +10,7 @@ namespace Client_Solar_War
 		private Color starColor;
 		private Vector2 starVel, starPos;
 		public static Texture2D defaultTex;
+		private float translation;
 		public Star()
 		{
 			starRect = Rectangle.Empty;
@@ -25,6 +26,7 @@ namespace Client_Solar_War
 			starColor = sc;
 			starPos = sp;
 			starVel = sv;
+			translation = starVel.X;
 		}
 		public Star(Rectangle sr, Color sc, Vector2 sp, Vector2 sv)
 		{
@@ -33,6 +35,7 @@ namespace Client_Solar_War
 			starColor = sc;
 			starPos = sp;
 			starVel = sv;
+			translation = starVel.X;
 		}
 		public Rectangle Rect
 		{
@@ -91,8 +94,31 @@ namespace Client_Solar_War
 		}
 		public void move()
 		{
-			starPos.X += (int)starVel.X;
-			starPos.Y += (int)starVel.Y;
+			starPos.X += starVel.X;
+			starPos.Y += starVel.Y;
+		}
+
+		public void animate(Rectangle screen)
+		{
+			// - acceleration then when Vx = 0 translate
+			starPos.X += starVel.X;
+			starPos.Y += starVel.Y;
+			if (starVel.Y != translation) {
+
+				if (starVel.X <= 0)
+				{
+					starVel.X = 0;
+					starVel.Y += 0.01f;
+				}
+				else
+				{
+					starVel.X += -0.09f;
+				}
+				if (starPos.X >= screen.Width)
+				{
+					starPos.X = starPos.X - screen.Width;
+				}
+			}
 		}
 	}
 }

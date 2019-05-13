@@ -53,7 +53,7 @@ namespace Client
             {
                 array[i] = Byte.Parse(parts[i]);
             }
-            ClientSocket.Connect(new IPAddress(array), port);
+            ClientSocket.Connect(new IPAddress(array), 100);
 			port++;
         }
     }

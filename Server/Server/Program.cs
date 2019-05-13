@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.Net;
 using System.Threading;
+using System.Diagnostics;
+using Microsoft.Xna.Framework;
 
 namespace Server
 {
@@ -22,6 +24,14 @@ namespace Server
 		//private static PlayerState[] player_state = new PlayerState[4];
 		// need to create a game loop so I will use threadgin as a filler? good idea
 		private static Thread game_loop_thread;
+        public static string players_connected_as_string;
+        private static Dictionary<Socket, int> playernums = new Dictionary<Socket, int>(4);
+
+		//private List<string> actions;
+		private static Game game;
+		public static GameTime gameTime;
+
+		private static List<string> messages;
 
         static void Main(string[] args)
         {
@@ -47,6 +57,8 @@ namespace Server
             serverSocket.BeginAccept( AcceptCallback, null);
 			game_loop_thread = new Thread(new ThreadStart(game_loop));
             Console.WriteLine("Server setup complete");
+            players_connected_as_string = "";
+			messages = new List<string>();
         }
 
 
@@ -80,16 +92,16 @@ namespace Server
 				clientSockets.Add(socket);
 				socket.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, socket);
 				Console.WriteLine("Client connected, waiting for request...");
-				clientSockets[clientSockets.Count - 1].Send(Encoding.ASCII.GetBytes("You are player: " + (++TOTAL_PLAYER_NUMBER)));
+				//clientSockets[clientSockets.Count - 1].Send(Encoding.ASCII.GetBytes("You are player: " + (++TOTAL_PLAYER_NUMBER)));
 				//player_state[clientSockets.Count - 1] = PlayerState.ASSIGNING_PLAYER_NUMBER;
 				serverSocket.BeginAccept(AcceptCallback, null);
 				if (clientSockets.Count == 4)
 				{
 					for(int i = 0; i < 4; i++)
 					{
-						clientSockets[i].Send(Encoding.ASCII.GetBytes("Game Start!"));
+						//clientSockets[i].Send(Encoding.ASCII.GetBytes("Game Start!"));
 					}
-					game_loop_thread.Start();
+					
 				}
 			}
 			else
@@ -109,6 +121,8 @@ namespace Server
             }
             catch (SocketException)
             {
+                players_connected_as_string = players_connected_as_string.Remove(players_connected_as_string.IndexOf("" + playernums[current]), 1);
+                playernums.Remove(current);
                 Console.WriteLine("Client forcefully disconnected");
                 // Don't shutdown because the socket may be disposed and its disconnected anyway.
                 current.Close();
@@ -122,13 +136,17 @@ namespace Server
             string text = Encoding.ASCII.GetString(recBuf);
             if (!text.Equals("buffer"))
             {
-                Console.WriteLine("Received Text: " + text);
+                //Console.WriteLine("Received Text: " + text);
             }
-            
+
+            if (text.Equals(""))
+            {
+                return;
+            }
             
             if (text.ToLower() == "exit") // Client wants to exit gracefully
             {
-                // Always Shutdown before closing
+                // Always Shutdown before closing.
                 current.Shutdown(SocketShutdown.Both);
                 current.Close();
                 clientSockets.Remove(current);
@@ -136,27 +154,110 @@ namespace Server
 				TOTAL_PLAYER_NUMBER--;
                 return;
             }
+			else if (text.ToLower().Contains("exit"))
+			{
+                playernums.Remove(current);
+				current.Shutdown(SocketShutdown.Both);
+				current.Close();
+				clientSockets.Remove(current);
+				Console.WriteLine("Client " + text.ToCharArray()[4] + " disconnected");
+				TOTAL_PLAYER_NUMBER--;
+                //Console.WriteLine(players_connected_as_string.IndexOf(text.ToCharArray()[4]));
+                //Console.WriteLine(text.ToCharArray()[4]);
+				players_connected_as_string = players_connected_as_string.Remove(players_connected_as_string.IndexOf(text.ToCharArray()[4]), 1);
+				return;
+			}
             else
             {
-                //Console.WriteLine("Text is an invalid request");
-                byte[] data = Encoding.ASCII.GetBytes(text); // sends the data back at them at current time is just sends buffer back and forth
-                current.Send(data);
-                
+                Console.WriteLine("recieved: " + text);
+                //byte[] data = Encoding.ASCII.GetBytes(text); // sends the data back at them at current time is just sends buffer back and forth
+                //current.Send(data);
+                if (text.Contains("take"))
+                {
+                    int num = text[text.Length - 1] - '0';
+                    if (!players_connected_as_string.Contains("" + num))
+                    {
+                        players_connected_as_string += num;
+                        current.Send(Encoding.ASCII.GetBytes("You are player: " + num));
+                        Console.WriteLine("sent: " + "You are player: " + num);
+                        playernums.Add(current, num);
+						if (playernums.Count == 4)
+						{
+							if (clientSockets.Count == 4)
+							{
+								for (int i = 0; i < 4; i++)
+								{
+									//clientSockets[i].Send(Encoding.ASCII.GetBytes("Game Start!"));
+								}
+                                //game = new Game(1800, 1000);
+                                //gameTime = new GameTime();
+                                //game_loop_thread.Start();
+							}
+						}
+					}
+					else
+                    {
+                        current.Send(Encoding.ASCII.GetBytes("taken"));
+                        Console.WriteLine("sent: taken");
+                    }
+				}
+				else if (text.Contains("overide"))
+				{
+					for (int i = 0; i < clientSockets.Count; i++)
+					{
+						clientSockets[i].Send(Encoding.ASCII.GetBytes("Game Start!"));
+					}
+                    game = new Game(1800, 1000);
+                    gameTime = new GameTime();
+                    game_loop_thread = new Thread(game_loop);
+                    game_loop_thread.Start();
+
+                }
+				else
+				{
+                    //messages.Add(text);
+                    game.Input(text);
+                    Console.WriteLine("Server done processing request");
+				}
+
+
                 //Console.WriteLine("Warning Sent");
             }
             //buffer messages
-			foreach(Socket client in clientSockets){
-				client.Send(new byte[100]);
-			}
+			//foreach(Socket client in clientSockets){
+			//	client.Send(new byte[100]);
+			//}
             current.BeginReceive(buffer, 0, BUFFER_SIZE, SocketFlags.None, ReceiveCallback, current);
         }
 
 		public static void game_loop()
 		{
-			foreach (Socket socket in clientSockets)
-			{
-				byte[] data = Encoding.ASCII.GetBytes("buffer");
-				socket.Send(data);
+			while (true) {
+				Stopwatch watch = new Stopwatch();
+				watch.Start();
+				game.Update(gameTime);
+				//Console.WriteLine( " ---"+ messages.Count);
+				/*for (int i = messages.Count - 1; i > -1; i-- )
+				{
+					game.Input(messages[i]);
+					messages.Remove(messages[i]);
+				}*/
+				byte[] temp = game.Encode();
+				temp[99] = 29;
+				foreach (Socket socket in clientSockets)
+				{
+					// send
+					//Console.WriteLine(temp);
+					socket.Send(temp);
+				}
+				//Base64FormattingOptions()
+				watch.Stop();
+				if (clientSockets.Count == 0)
+				{
+					game.close();
+					game_loop_thread.Abort();
+				}
+				Thread.Sleep((byte)(((1.0 / 60.0) - (watch.ElapsedMilliseconds / Math.Pow(10, 3))) * 1000) - 0);
 			}
 		}
     }
