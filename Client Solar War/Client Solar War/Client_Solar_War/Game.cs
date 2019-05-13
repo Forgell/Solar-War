@@ -144,10 +144,10 @@ namespace Client_Solar_War
 								// we need to check if the selcted planet is his color
 								if (selected_planet.Ships_Color == player_faction)
 								{
-									// then everything is otherized
+                                    // then everything is otherized
+                                    transfer_troops(selected_planet, planet_at_position, (int)Math.Round(presentage_of_launching_ships * selected_planet.Ships));
 
-									//transfer_troops(selected_planet, planet_at_position, (int)Math.Round(presentage_of_launching_ships * selected_planet.Ships));
-									int faction = 0;
+                                    int faction = 0;
 									if (player_faction == Color.OrangeRed)
 									{
 										faction = 0;
