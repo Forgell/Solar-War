@@ -56,6 +56,7 @@ namespace Client_Solar_War
             graphics = new GraphicsDeviceManager(this);
 			graphics.PreferredBackBufferHeight = 1000;
 			graphics.PreferredBackBufferWidth = 1800;
+			Window.Title = "Solar War";
 			Content.RootDirectory = "Content";
         }
 

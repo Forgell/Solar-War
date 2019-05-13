@@ -323,7 +323,6 @@ namespace Client_Solar_War
 		{
             //Win condition
             colorWon = WhoWon();
-
             MouseState m = Mouse.GetState();
 			//update everything
 			for (int i = 0; i < asteroids.Count; i++)

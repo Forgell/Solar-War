@@ -80,26 +80,25 @@ namespace Client_Solar_War
 			byte[] message_as_bytes = Encoding.ASCII.GetBytes(str);
 			ClientSocket.Send(message_as_bytes, 0, message_as_bytes.Length, SocketFlags.None);
 		}
-        /// <summary>
+		/// <summary>
 		/// is run only when the enter key is pressed and attempts to connect to the ip that is inputed by th custom text box
 		/// </summary>
 		public State attemptConnectionToServer(TextBox text_box)
-        {
-            if(text_box.Text.Equals(""))
-            {
-                return State.NULL;
-            }
-            try
-            {
-				string str = text_box.Text.Substring("Type in server ip: ".Length);
-                string[] parts_of_ip_address = str.Split('.');
-                byte[] ip_adress_as_byte_array = new byte[parts_of_ip_address.Length];
-                for (int i = 0; i < parts_of_ip_address.Length; i++)
-                {
-                    ip_adress_as_byte_array[i] = Byte.Parse(parts_of_ip_address[i]);
-                }
-                try
-                {
+		{
+			if (text_box.Text.Equals(""))
+			{
+				return State.NULL;
+			}
+			try
+			{
+				string[] parts_of_ip_address = text_box.Text.Split('.');
+				byte[] ip_adress_as_byte_array = new byte[parts_of_ip_address.Length];
+				for (int i = 0; i < parts_of_ip_address.Length; i++)
+				{
+					ip_adress_as_byte_array[i] = Byte.Parse(parts_of_ip_address[i]);
+				}
+				try
+				{
 					IAsyncResult result = ClientSocket.BeginConnect(new IPAddress(ip_adress_as_byte_array), PORT, null, null);
 
 					bool success = result.AsyncWaitHandle.WaitOne(2000, true);
@@ -118,30 +117,30 @@ namespace Client_Solar_War
 						ClientSocket.Close();
 						ClientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 						throw new ApplicationException("Failed to connect server.");
-						//return State.CONNECTING;
+						return State.CONNECTING;
 					}
-					
 
 
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message);
 
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
-            
+				}
+				catch (Exception e)
+				{
+					Console.WriteLine(e.Message);
 
-            return State.NULL;
-
-        }
+				}
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e.Message);
+			}
 
 
-        /// <summary>
+			return State.NULL;
+
+		}
+
+
+		/// <summary>
 		/// handels  the input from the KeyboardHelper class
 		/// </summary>
 		/// <param name="console"></param>
