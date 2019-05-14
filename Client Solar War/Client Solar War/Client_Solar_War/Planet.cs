@@ -485,7 +485,8 @@ namespace Client_Solar_War
 			}
 			if (is_being_taken_over || capture_timer != 0)
 			{
-				capture_label.Draw(spritebatch);
+				//capture_label.Draw(spritebatch);
+				draw_presentage( (int)capture_timer , new Vector2(capture_label.Position.X +10, capture_label.Position.Y) , spritebatch);
 			}
 
 		}
@@ -494,19 +495,38 @@ namespace Client_Solar_War
 		private void DrawShips(SpriteBatch spritebatch)
 		{
 			////ship_label.Draw(spritebatch);
-			//try {
-			//	//ship_label.Draw(spritebatch);
-			//}catch(Exception e)
-			//{
-			//	Console.WriteLine(e.Message);
-			//	Console.WriteLine(ship_label + " " + spritebatch);
-			//	Console.WriteLine();
-			//}
-			foreach(Char c in ("" + ships))
+			if(ships_color != Color.Black)
+			{
+				draw_numbers(ships , new Vector2(pos.X , pos.Y) , spritebatch);
+			}
+		}
+
+		private void draw_numbers(int number , Vector2 pos , SpriteBatch spritebatch)
+		{
+			int counter = 0;
+			numbers_dest_rect = new Rectangle((int)pos.X - (15 * ("" + ships).Length) - 5, (int)pos.Y, 15, 15);
+			foreach (Char c in ("" + number))
 			{
 				int num = c - '0';
-				numbers_souce_rect = new Rectangle(0 , 0 , 0 , 0);
+				numbers_souce_rect = new Rectangle(num * 60, 0, 60, 60);
+				numbers_dest_rect.X += (15 * counter++);
+				spritebatch.Draw(numbers_text, numbers_dest_rect, numbers_souce_rect, ships_color);
 			}
+		}
+
+		private void draw_presentage(int number, Vector2 pos, SpriteBatch spritebatch)
+		{
+			int width = 10;
+			int counter = 0;
+			numbers_dest_rect = new Rectangle((int)pos.X - (15 * ("" + ships).Length) + 10, (int)pos.Y + 15, width, width);
+			foreach (Char c in ("" + number))
+			{
+				int num = c - '0';
+				numbers_souce_rect = new Rectangle(num * 60, 0, 60, 60);
+				numbers_dest_rect.X += (numbers_dest_rect.Width * counter++);
+				spritebatch.Draw(numbers_text, numbers_dest_rect, numbers_souce_rect, ships_color);
+			}
+			// TODO need to darw the actual presentage but I do not have the image on this branch or cimputer
 		}
 	}
 }

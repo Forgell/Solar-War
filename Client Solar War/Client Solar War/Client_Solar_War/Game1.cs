@@ -54,7 +54,9 @@ namespace Client_Solar_War
         {
             graphics = new GraphicsDeviceManager(this);
 			graphics.PreferredBackBufferHeight = 1000;
-			graphics.PreferredBackBufferWidth = 1800;
+			graphics.PreferredBackBufferWidth  = 1800;
+			//graphics.IsFullScreen = true;
+			graphics.ApplyChanges();
 			Content.RootDirectory = "Content";
         }
 
@@ -124,7 +126,7 @@ namespace Client_Solar_War
 			while (player_number == 0)
 			{
 				string temp;
-				if (old.IsKeyDown(Keys.D1))
+				if (old.IsKeyDown(Keys.D1) || old.IsKeyDown(Keys.NumPad1))
 				{
 					network.send("take1");
 					temp = network.getMessage();
@@ -138,7 +140,7 @@ namespace Client_Solar_War
 						player_number_label.updateText("Player 1 is already taken, try again!");
 					//Find a way to send server a "taken" message for all
 				}
-				else if (old.IsKeyDown(Keys.D2))
+				else if (old.IsKeyDown(Keys.D2) || old.IsKeyDown(Keys.NumPad2))
 				{
 					network.send("take2");
 					temp = network.getMessage();
@@ -151,7 +153,7 @@ namespace Client_Solar_War
 					else
 						player_number_label.updateText("Player 2 is already taken, try again!");
 				}
-				else if (old.IsKeyDown(Keys.D3))
+				else if (old.IsKeyDown(Keys.D3) || old.IsKeyDown(Keys.NumPad3))
 				{
 					network.send("take3");
 					temp = network.getMessage();
@@ -165,7 +167,7 @@ namespace Client_Solar_War
 						player_number_label.updateText("Player 3 is already taken, try again!");
 
 				}
-				else if (old.IsKeyDown(Keys.D4))
+				else if (old.IsKeyDown(Keys.D4) || old.IsKeyDown(Keys.NumPad4))
 				{
 					network.send("take4");
 					temp = network.getMessage();

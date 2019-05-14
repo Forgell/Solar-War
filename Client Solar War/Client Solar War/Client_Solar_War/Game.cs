@@ -46,6 +46,7 @@ namespace Client_Solar_War
 		float presentage_of_launching_ships;
 		//Background background;
 		Texture2D line_text;
+		Texture2D numbers_text;
 
 		public Game(int screenWidth, int screenHeight, ContentManager Content, Color player_faction)
 		{
@@ -241,6 +242,7 @@ namespace Client_Solar_War
 			//sun.Load(server);
 			//background.Load(Content);
 			line_text = Content.Load<Texture2D>("Star");
+			numbers_text = Content.Load<Texture2D>("Sprites/text/numbers");
 		}
 
 		public string Update_Input()
@@ -348,7 +350,18 @@ namespace Client_Solar_War
 			}
 			if (planet_is_selected)
 			{
-				launching_ships.Draw(spriteBatch);
+				//launching_ships.Draw(spriteBatch);
+				// TODO draw the launching ships as the pixel font
+				try
+				{
+					Vector2 launching_ships_label_pos = new Vector2(selected_planet.position.X + selected_planet.position.Width, selected_planet.position.Y + (selected_planet.position.Height / 4));
+					draw_numbers_modified((int)(presentage_of_launching_ships * selected_planet.Ships), launching_ships_label_pos , spriteBatch);
+					launching_ships_label_pos.X += 45;
+					draw_numbers_modified( (int)(presentage_of_launching_ships * 100), launching_ships_label_pos , spriteBatch);
+				}catch(Exception e)
+				{
+					Console.WriteLine(e.Message);
+				}
 			}
 		}
 
@@ -374,9 +387,20 @@ namespace Client_Solar_War
 				0);
 
 		}
+
+		private void draw_numbers_modified(int number, Vector2 pos, SpriteBatch spritebatch)
+		{
+			int counter = 0;
+			Rectangle numbers_dest_rect = new Rectangle((int)pos.X , (int)pos.Y , 15 , 15);
+			Rectangle numbers_souce_rect = new Rectangle();
+			foreach (Char c in ("" + number))
+			{
+				int num = c - '0';
+				numbers_souce_rect = new Rectangle(num * 60, 0, 60, 60);
+				numbers_dest_rect.X = (15 * counter++) + (int)pos.X;
+				spritebatch.Draw(numbers_text, numbers_dest_rect, numbers_souce_rect, player_faction);
+			}
+		}
 	}
-
-
-
 }
 
