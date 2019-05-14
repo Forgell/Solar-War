@@ -113,6 +113,8 @@ namespace Client_Solar_War
 		private Texture2D numbers_text;
 		private Rectangle numbers_souce_rect;
 		private Rectangle numbers_dest_rect;
+
+		private Texture2D selected_text;
 		public Planet(string fileName, Vector2 origin, int radius, double angular_speed, int scaler, Color faction_color) // input degress
 		{
 			this.origin = origin;
@@ -216,6 +218,7 @@ namespace Client_Solar_War
 			ship_label = new Label("" + ships, new Vector2(pos.X, pos.Y), faction_color, font);
 			capture_label = new Label("" + capture_timer, new Vector2(pos.X, pos.Y), Color.Black, font);
 			numbers_text = content.Load<Texture2D>("Sprites/text/numbers");
+			selected_text = content.Load<Texture2D>("Sprites/planets/selected");
 		}
 
 
@@ -481,7 +484,7 @@ namespace Client_Solar_War
 
 			if (selected)
 			{
-				spritebatch.Draw(Radius_Tex, selected_rect, Color.White);
+				spritebatch.Draw(selected_text, selected_rect, Color.White);
 			}
 			if (is_being_taken_over || capture_timer != 0)
 			{
