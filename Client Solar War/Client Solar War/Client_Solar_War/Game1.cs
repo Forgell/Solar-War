@@ -272,7 +272,11 @@ namespace Client_Solar_War
                     
                     break;
 				case State.PLAYING:
-					starfield.playing(graphics);
+					if (starfield.isOnScreen)
+					{
+						starfield.animate(graphics);
+					}
+					
 					string message = game.Update(gameTime);
 					game.Update_Input();
 					if (!message.Equals(""))
@@ -312,31 +316,34 @@ namespace Client_Solar_War
 			// TODO: Add your drawing code here
 			spriteBatch.Begin();
 			//draw starfield
-			if (state == State.PLAYING)
+			
+			
+			switch (state)
 			{
-				starfield.draw(spriteBatch);
-				game.Draw(spriteBatch);
+				case State.START:
+					title.draw(spriteBatch, gameTime);
+					starfield.draw(spriteBatch);
+					break;
+				case State.CONNECTING:
+					starfield.draw(spriteBatch);
+					text_box.Draw(spriteBatch , code_rect.X + code_rect.Width + 60 , code_rect.Y);
+										spriteBatch.Draw(game_text_text , game_rect , Color.White);
+					spriteBatch.Draw(code_text, code_rect, Color.White);
+					break;
+				case State.WAITING_FOR_ALL_PLAYERS:
+					starfield.draw(spriteBatch);
+					player_number_label.Draw(spriteBatch);
+					break;
+				case State.PLAYING:
+					if (starfield.isOnScreen)
+					{
+						starfield.draw(spriteBatch);
+					}
+					game.Draw(spriteBatch);
+					break;
+				default: break;
 			}
-			else
-			{
-				starfield.draw(spriteBatch);
-				switch (state)
-				{
-					case State.START:
-						title.draw(spriteBatch, gameTime);
-						break;
-					case State.CONNECTING:
-						text_box.Draw(spriteBatch , code_rect.X + code_rect.Width + 60 , code_rect.Y);
-
-						spriteBatch.Draw(game_text_text , game_rect , Color.White);
-						spriteBatch.Draw(code_text, code_rect, Color.White);
-						break;
-					case State.WAITING_FOR_ALL_PLAYERS:
-						player_number_label.Draw(spriteBatch);
-						break;
-					default: break;
-				}
-			}
+		
 			//orbit.Draw(spriteBatch);
 			spriteBatch.End();
             base.Draw(gameTime);
