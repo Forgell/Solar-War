@@ -109,6 +109,10 @@ namespace Client_Solar_War
 		private double capture_timer;
 		private Label capture_label;
 		private Color ships_color;
+
+		private Texture2D numbers_text;
+		private Rectangle numbers_souce_rect;
+		private Rectangle numbers_dest_rect;
 		public Planet(string fileName, Vector2 origin, int radius, double angular_speed, int scaler, Color faction_color) // input degress
 		{
 			this.origin = origin;
@@ -211,7 +215,7 @@ namespace Client_Solar_War
 			Radius_Tex = content.Load<Texture2D>("Sprites/white-circle");
 			ship_label = new Label("" + ships, new Vector2(pos.X, pos.Y), faction_color, font);
 			capture_label = new Label("" + capture_timer, new Vector2(pos.X, pos.Y), Color.Black, font);
-
+			numbers_text = content.Load<Texture2D>("Sprites/text/numbers");
 		}
 
 
@@ -489,16 +493,20 @@ namespace Client_Solar_War
 		//draw the number of ships at a planet
 		private void DrawShips(SpriteBatch spritebatch)
 		{
-			ship_label.Draw(spritebatch);
-			try {
-				//ship_label.Draw(spritebatch);
-			}catch(Exception e)
+			////ship_label.Draw(spritebatch);
+			//try {
+			//	//ship_label.Draw(spritebatch);
+			//}catch(Exception e)
+			//{
+			//	Console.WriteLine(e.Message);
+			//	Console.WriteLine(ship_label + " " + spritebatch);
+			//	Console.WriteLine();
+			//}
+			foreach(Char c in ("" + ships))
 			{
-				Console.WriteLine(e.Message);
-				Console.WriteLine(ship_label + " " + spritebatch);
-				Console.WriteLine();
+				int num = c - '0';
+				numbers_souce_rect = new Rectangle(0 , 0 , 0 , 0);
 			}
-
 		}
 	}
 }
