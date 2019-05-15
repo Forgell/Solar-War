@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Client_Solar_War
 {
@@ -20,8 +21,9 @@ namespace Client_Solar_War
             get { return label; }
         }
         private Label label;
-
+		private Texture2D text;
         private Rectangle filler_temp;
+		private Color color;
         public Button(Label label)
         {
             this.label = label;
@@ -29,6 +31,14 @@ namespace Client_Solar_War
             this.rect = new Rectangle((int)label.Position.X, (int)label.Position.Y, (int)size.X, (int)size.Y);
             filler_temp = new Rectangle( 0 , 0 , 1 , 1);
         }
+
+		public Button(Texture2D text , Rectangle pos , Color color)
+		{
+			rect = pos;
+			this.text = text;
+			this.color = color;
+			filler_temp = new Rectangle(0, 0, 1, 1);
+		}
 
         public bool hovering(Vector2 position)
         {
@@ -50,5 +60,18 @@ namespace Client_Solar_War
             filler_temp.Y = mouse.Y;
             return rect.Intersects(filler_temp);
         }
+
+		public bool pressed(MouseState mouse)
+		{
+			return hovering(mouse) && mouse.LeftButton == ButtonState.Pressed;
+		}
+
+		public void Draw(SpriteBatch spritebatch)
+		{
+			if (text != null)
+			{
+				spritebatch.Draw(text ,  rect , color);
+			}
+		}
     }
 }

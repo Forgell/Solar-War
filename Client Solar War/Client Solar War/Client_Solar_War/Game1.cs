@@ -45,6 +45,10 @@ namespace Client_Solar_War
 		Texture2D logo;
 		TitleScreen title;
 		Starfield starfield;
+		Button red_button;
+		Button blue_button;
+		Button green_button;
+		Button purple_button;
 		// for playing the game
 		Game game;
 		//Soloar//orbit //orbit;
@@ -109,6 +113,11 @@ namespace Client_Solar_War
 			code_text = Content.Load<Texture2D>("Sprites/text/code");
 			//orbit.Load(Content.ServiceProvider);
 			// TODO: use this.Content to load your game content here
+			red_button    = new Button(Content.Load<Texture2D>("Sprites/text/red") , new Rectangle(graphics.PreferredBackBufferWidth /2 , graphics.PreferredBackBufferHeight / 2   + 0, 180 , 60) , Color.White);
+			blue_button   = new Button(Content.Load<Texture2D>("Sprites/text/blue"), new Rectangle(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2   + (85*1), 60*4, 60), Color.White);
+			green_button  = new Button(Content.Load<Texture2D>("Sprites/text/green"), new Rectangle(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2  + (85*2), 60*5, 60), Color.White);
+			purple_button = new Button(Content.Load<Texture2D>("Sprites/text/purple"), new Rectangle(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2 + (85*3), 60*6, 60), Color.White);
+
 		}
 
         /// <summary>
@@ -125,8 +134,9 @@ namespace Client_Solar_War
 		{
 			while (player_number == 0)
 			{
+				
 				string temp;
-				if (old.IsKeyDown(Keys.D1) || old.IsKeyDown(Keys.NumPad1))
+				if (red_button.pressed(Mouse.GetState()))
 				{
 					network.send("take1");
 					temp = network.getMessage();
@@ -140,7 +150,7 @@ namespace Client_Solar_War
 						player_number_label.updateText("Player 1 is already taken, try again!");
 					//Find a way to send server a "taken" message for all
 				}
-				else if (old.IsKeyDown(Keys.D2) || old.IsKeyDown(Keys.NumPad2))
+				else if (blue_button.pressed(Mouse.GetState()))
 				{
 					network.send("take2");
 					temp = network.getMessage();
@@ -153,7 +163,7 @@ namespace Client_Solar_War
 					else
 						player_number_label.updateText("Player 2 is already taken, try again!");
 				}
-				else if (old.IsKeyDown(Keys.D3) || old.IsKeyDown(Keys.NumPad3))
+				else if (green_button.pressed(Mouse.GetState()))
 				{
 					network.send("take3");
 					temp = network.getMessage();
@@ -167,7 +177,7 @@ namespace Client_Solar_War
 						player_number_label.updateText("Player 3 is already taken, try again!");
 
 				}
-				else if (old.IsKeyDown(Keys.D4) || old.IsKeyDown(Keys.NumPad4))
+				else if (purple_button.pressed(Mouse.GetState()))
 				{
 					network.send("take4");
 					temp = network.getMessage();
@@ -333,8 +343,19 @@ namespace Client_Solar_War
 					spriteBatch.Draw(code_text, code_rect, Color.White);
 					break;
 				case State.WAITING_FOR_ALL_PLAYERS:
-					starfield.draw(spriteBatch);
-					player_number_label.Draw(spriteBatch);
+					if (player_number == 0)
+					{
+						starfield.draw(spriteBatch);
+						player_number_label.Draw(spriteBatch);
+						red_button.Draw(spriteBatch);
+						blue_button.Draw(spriteBatch);
+						green_button.Draw(spriteBatch);
+						purple_button.Draw(spriteBatch);
+					}
+					else
+					{
+						// draw animation for until game starts
+					}
 					break;
 				case State.PLAYING:
 					if (starfield.isOnScreen)
@@ -345,7 +366,7 @@ namespace Client_Solar_War
 					break;
 				default: break;
 			}
-		
+
 			//orbit.Draw(spriteBatch);
 			spriteBatch.End();
             base.Draw(gameTime);

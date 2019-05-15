@@ -165,6 +165,11 @@ namespace Server
             {
                 // peacful tranfer
                 this.ships += amount;
+				if (this.ships > Max_AMOUNT_OF_SHIPS_ON_PLANET)
+				{
+					source.ships += Max_AMOUNT_OF_SHIPS_ON_PLANET - this.ships;
+					this.ships = Max_AMOUNT_OF_SHIPS_ON_PLANET;
+				}
             }
             else
             {

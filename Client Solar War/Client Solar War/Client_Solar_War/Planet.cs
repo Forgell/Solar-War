@@ -489,7 +489,7 @@ namespace Client_Solar_War
 			if (is_being_taken_over || capture_timer != 0)
 			{
 				//capture_label.Draw(spritebatch);
-				draw_presentage( (int)capture_timer , new Vector2(capture_label.Position.X +10, capture_label.Position.Y) , spritebatch);
+				draw_presentage( (int)capture_timer , new Vector2(pos.X + (pos.Width/2) , pos.Y  - (pos.Height/2)) , spritebatch);
 			}
 
 		}
@@ -521,7 +521,7 @@ namespace Client_Solar_War
 		{
 			int width = 10;
 			int counter = 0;
-			numbers_dest_rect = new Rectangle((int)pos.X - (15 * ("" + ships).Length) + 10, (int)pos.Y + 15, width, width);
+			numbers_dest_rect = new Rectangle((int)pos.X  + (number>9? -width:0), (int)pos.Y, width, width);
 			foreach (Char c in ("" + number))
 			{
 				int num = c - '0';
