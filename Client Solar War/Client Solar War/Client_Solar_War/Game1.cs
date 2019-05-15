@@ -54,6 +54,10 @@ namespace Client_Solar_War
 		//Soloar//orbit //orbit;
 		Texture2D game_text_text , code_text;
 		Rectangle game_rect, code_rect;
+
+		double aimation_rads;
+		Rectangle[] animation_rects;
+		Texture2D animation_text;
 		public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -90,6 +94,15 @@ namespace Client_Solar_War
 			//game.Load(Content.ServiceProvider);
 			game_rect = new Rectangle(50 , 50 , 240 , 60);
 			code_rect = new Rectangle(game_rect.X + game_rect.Width  + 60, game_rect.Y , game_rect.Width , game_rect.Height);
+			// animation of waiting
+			aimation_rads = 0.0;
+			animation_rects = new Rectangle[10];
+			for(int i = 0; i < animation_rects.Length; i++)
+			{
+				int width = 20;
+				int j = i - (i/2);
+				animation_rects[i] = new Rectangle((graphics.PreferredBackBufferWidth / 2) + (j * (width + (width/2))) , graphics.PreferredBackBufferHeight / 2 , width , width);
+			}
 			base.Initialize();
         }
 
@@ -118,6 +131,7 @@ namespace Client_Solar_War
 			green_button  = new Button(Content.Load<Texture2D>("Sprites/text/green"), new Rectangle(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2  + (85*2), 60*5, 60), Color.White);
 			purple_button = new Button(Content.Load<Texture2D>("Sprites/text/purple"), new Rectangle(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2 + (85*3), 60*6, 60), Color.White);
 
+			animation_text = Content.Load<Texture2D>("Sprites/text/numbers");
 		}
 
         /// <summary>
@@ -229,8 +243,16 @@ namespace Client_Solar_War
 				}
 				
 			}
-			
+		}
 
+		private void update_waiting_animation()
+		{
+			aimation_rads += Math.PI / 100;
+			int amp = 20;
+			for(int i = 0; i < animation_rects.Length; i++)
+			{
+				animation_rects[i].Y =(int) (Math.Sin(aimation_rads + ((Math.PI/ 2)) * i) * amp) + (graphics.PreferredBackBufferHeight/2);
+			}
 		}
 
         /// <summary>
@@ -279,8 +301,9 @@ namespace Client_Solar_War
                     }
 					break;
 				case State.WAITING_FOR_ALL_PLAYERS:
-                    //multi threading should take care of the rest
-
+					//multi threading should take care of the rest
+					if (player_number != 0)
+						update_waiting_animation();
                     
                     break;
 				case State.PLAYING:
@@ -355,6 +378,7 @@ namespace Client_Solar_War
 					else
 					{
 						// draw animation for until game starts
+						draw_waiting_animation(spriteBatch);
 					}
 					break;
 				case State.PLAYING:
@@ -372,5 +396,14 @@ namespace Client_Solar_War
             base.Draw(gameTime);
         }
 		
+
+		private void draw_waiting_animation(SpriteBatch spritebatch)
+		{
+			// TODO finish the animation
+			for(int i = 0; i < animation_rects.Length; i++)
+			{
+				spriteBatch.Draw(animation_text ,animation_rects[i] , new Rectangle(0 , 0 , 60 , 60) , Color.White);
+			}
+		}
 	}
 }
