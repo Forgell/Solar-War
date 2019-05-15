@@ -289,7 +289,7 @@ namespace Client_Solar_War
             return true;
         }
 
-        public string Update_Input(MouseState m)
+        public string Update_Input()
 		{
 			MouseState m = Mouse.GetState();
 
