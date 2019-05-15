@@ -57,7 +57,11 @@ namespace Client_Solar_War
 
 		double aimation_rads;
 		Rectangle[] animation_rects;
+		Color[] animation_color;
 		Texture2D animation_text;
+		int animatioin_timer;
+		string players_joined;
+
 		public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -100,9 +104,15 @@ namespace Client_Solar_War
 			for(int i = 0; i < animation_rects.Length; i++)
 			{
 				int width = 20;
-				int j = i - (i/2);
+				int j = i - (animation_rects.Length/2);
 				animation_rects[i] = new Rectangle((graphics.PreferredBackBufferWidth / 2) + (j * (width + (width/2))) , graphics.PreferredBackBufferHeight / 2 , width , width);
 			}
+			animation_color = new Color[animation_rects.Length];
+			for(int i = 0; i < animation_color.Length; i++)
+			{
+				animation_color[i] = Color.White;
+			}
+			players_joined = "";
 			base.Initialize();
         }
 
@@ -168,7 +178,7 @@ namespace Client_Solar_War
 				{
 					network.send("take2");
 					temp = network.getMessage();
-					if (!temp.Equals("taken"))
+					if (temp.Contains("You are player: "))
 					{
 						player_number = 2;
 						player_number_label.updateText("You are player number: " + player_number);
@@ -181,7 +191,7 @@ namespace Client_Solar_War
 				{
 					network.send("take3");
 					temp = network.getMessage();
-					if (!temp.Equals("taken"))
+					if (temp.Contains("You are player: "))
 					{
 						player_number = 3;
 						player_number_label.updateText("You are player number: " + player_number);
@@ -195,7 +205,7 @@ namespace Client_Solar_War
 				{
 					network.send("take4");
 					temp = network.getMessage();
-					if (!temp.Equals("taken"))
+					if (temp.Contains("You are player: "))
 					{
 						player_number = 4;
 						player_number_label.updateText("You are player number: " + player_number);
@@ -225,6 +235,50 @@ namespace Client_Solar_War
 					//game.Load(Content.ServiceProvider);
 					break;
 				}
+				else
+				{
+					Console.WriteLine("received: " + message);
+					// then the message is the players how joined as an int
+					if (players_joined.Equals(""))
+					{
+						network.send("players?");
+					}
+					foreach(Char c in message)
+					{
+						if (!players_joined.Contains(c)) // then this is a new player
+						{
+							players_joined += c;
+							int player_as_num = c - '0';
+							Color player_as_color = Color.Black;
+							switch (player_as_num)
+							{
+								case 1: player_as_color = Color.Red; break;
+								case 2: player_as_color = Color.Blue; break;
+								case 3: player_as_color = Color.Green; break;
+								case 4: player_as_color = Color.Purple; break;
+							}
+							// insert the new color into the animation
+							int temp_counter = 0;
+							for(int i = 0; i < animation_color.Length; i++)
+							{
+								if (animation_color[i] == Color.White)
+								{
+									temp_counter++;
+								}
+								else
+								{
+									temp_counter = 0;
+								}
+								if (temp_counter == 2)
+								{
+									animation_color[i] = player_as_color;
+									break;
+								}
+							}
+						}
+					}
+				}
+				
 				Thread.Sleep(5);
 			}
 
@@ -253,6 +307,27 @@ namespace Client_Solar_War
 			{
 				animation_rects[i].Y =(int) (Math.Sin(aimation_rads + ((Math.PI/ 2)) * i) * amp) + (graphics.PreferredBackBufferHeight/2);
 			}
+			if (players_joined.Equals(""))
+			{
+				network.send("players?"); // need to get an updated list of the players for some reason if nno playes were received
+			}
+			animatioin_timer++;
+			if(animatioin_timer >= 20)
+			{
+				// load the shift the colors
+				Color[] temp = new Color[animation_color.Length];
+				for (int i = 0; i < animation_color.Length; i++)
+				{
+					temp[i] = animation_color[i];
+				}
+				for (int i = 1; i < animation_color.Length; i++)
+				{
+					animation_color[i] = temp[i - 1];
+				}
+				animation_color[0] = temp[animation_color.Length - 1];
+				animatioin_timer = 0;
+			}
+			
 		}
 
         /// <summary>
@@ -402,7 +477,7 @@ namespace Client_Solar_War
 			// TODO finish the animation
 			for(int i = 0; i < animation_rects.Length; i++)
 			{
-				spriteBatch.Draw(animation_text ,animation_rects[i] , new Rectangle(0 , 0 , 60 , 60) , Color.White);
+				spriteBatch.Draw(animation_text ,animation_rects[i] , new Rectangle(0 , 0 , 60 , 60) , animation_color[i]);
 			}
 		}
 	}
