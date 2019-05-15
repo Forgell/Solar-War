@@ -173,6 +173,7 @@ namespace Server
                 //Console.WriteLine(players_connected_as_string.IndexOf(text.ToCharArray()[4]));
                 //Console.WriteLine(text.ToCharArray()[4]);
 				players_connected_as_string = players_connected_as_string.Remove(players_connected_as_string.IndexOf(text.ToCharArray()[4]), 1);
+
 				return;
 			}
             else

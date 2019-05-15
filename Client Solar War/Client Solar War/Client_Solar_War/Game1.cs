@@ -243,7 +243,30 @@ namespace Client_Solar_War
 					{
 						network.send("players?");
 					}
-					foreach(Char c in message)
+					foreach (Char c in players_joined)
+					{
+						if (!message.Contains(c)) // then a player disconnected and needs to be removed
+						{
+							int player_as_num = c - '0';
+							Color player_as_color = Color.Black;
+							switch (player_as_num)
+							{
+								case 1: player_as_color = Color.Red; break;
+								case 2: player_as_color = Color.Blue; break;
+								case 3: player_as_color = Color.Green; break;
+								case 4: player_as_color = Color.Purple; break;
+							}
+							for (int i = 0; i < animation_color.Length; i++)
+							{
+								if (animation_color[i] == player_as_color)
+								{
+									animation_color[i] = Color.White;
+								}
+							}
+						}
+					}
+
+					foreach (Char c in message)
 					{
 						if (!players_joined.Contains(c)) // then this is a new player
 						{
@@ -275,8 +298,9 @@ namespace Client_Solar_War
 									break;
 								}
 							}
-						}
+			 			}
 					}
+					
 				}
 				
 				Thread.Sleep(5);
