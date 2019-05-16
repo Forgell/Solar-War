@@ -349,11 +349,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Sprites\text\begin_button_images\begin0.png">
-      <Name>begin0</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
     <Compile Include="Sprites\text\begin_button_images\begin00.png">
       <Name>begin00</Name>
       <Importer>TextureImporter</Importer>

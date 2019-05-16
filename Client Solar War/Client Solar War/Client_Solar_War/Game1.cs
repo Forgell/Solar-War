@@ -66,8 +66,8 @@ namespace Client_Solar_War
 		public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-			graphics.PreferredBackBufferHeight = 1000;
-			graphics.PreferredBackBufferWidth  = 1800;
+			graphics.PreferredBackBufferHeight = 720;//= 1000;
+			graphics.PreferredBackBufferWidth = 1366;//= 1800;
 			//graphics.IsFullScreen = true;
 			graphics.ApplyChanges();
 			Content.RootDirectory = "Content";
@@ -137,14 +137,68 @@ namespace Client_Solar_War
 			code_text = Content.Load<Texture2D>("Sprites/text/code");
 			//orbit.Load(Content.ServiceProvider);
 			// TODO: use this.Content to load your game content here
-			red_button    = new Button(Content.Load<Texture2D>("Sprites/text/red") , new Rectangle(graphics.PreferredBackBufferWidth /2 , graphics.PreferredBackBufferHeight / 2   + 0, 180 , 60) , Color.White);
-			blue_button   = new Button(Content.Load<Texture2D>("Sprites/text/blue"), new Rectangle(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2   + (85*1), 60*4, 60), Color.White);
-			green_button  = new Button(Content.Load<Texture2D>("Sprites/text/green"), new Rectangle(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2  + (85*2), 60*5, 60), Color.White);
-			purple_button = new Button(Content.Load<Texture2D>("Sprites/text/purple"), new Rectangle(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2 + (85*3), 60*6, 60), Color.White);
+			Texture2D[] texts = new Texture2D[28];
+			for(int i = 0; i < texts.Length; i++)
+			{
+				if ( i < 10)
+				{
+					texts[i] = Content.Load<Texture2D>("Sprites/text/red_button_animation/red0" + i);
+				}
+				else
+				{
+					texts[i] = Content.Load<Texture2D>("Sprites/text/red_button_animation/red" + i);
+				}
+				
+			}
+			red_button    = new Button(texts , new Rectangle(graphics.PreferredBackBufferWidth /2 , graphics.PreferredBackBufferHeight / 2   + 0, 180 , 60) , Color.White);
+			texts = new Texture2D[28];
+			for (int i = 0; i < texts.Length; i++)
+			{
+				if (i < 10)
+				{
+					texts[i] = Content.Load<Texture2D>("Sprites/text/blue_button_animation/blue0" + i);
+					continue;
+				}
+				texts[i] = Content.Load<Texture2D>("Sprites/text/blue_button_animation/blue" + i);
+			}
+			blue_button   = new Button(texts, new Rectangle(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2   + (85*1), 60*4, 60), Color.White);
+			texts = new Texture2D[28];
+			for (int i = 0; i < texts.Length; i++)
+			{
+				if (i < 10)
+				{
+					texts[i] = Content.Load<Texture2D>("Sprites/text/green_button_animation/green0" + i);
+					continue;
+				}
+				texts[i] = Content.Load<Texture2D>("Sprites/text/green_button_animation/green" + i);
+			}
+			green_button  = new Button(texts, new Rectangle(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2  + (85*2), 60*5, 60), Color.White);
+			texts = new Texture2D[27];
+			for (int i = 0; i < texts.Length; i++)
+			{
+				if(i < 10)
+				{
+					texts[i] = Content.Load<Texture2D>("Sprites/text/purple_button_animation/purple0" + i);
+					continue;
+				}
+				texts[i] = Content.Load<Texture2D>("Sprites/text/purple_button_animation/purple" + i);
+			}
+			purple_button = new Button(texts, new Rectangle(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2 + (85*3), 60*6, 60), Color.White);
 
 			animation_text = Content.Load<Texture2D>("Sprites/text/numbers");
 
-			animation_button = new Button(Content.Load<Texture2D>("Sprites/text/begin") , new Rectangle(graphics.PreferredBackBufferWidth/2 - (300 / 2) , 200 , 300 , 60)  , Color.White );
+
+			texts = new Texture2D[82];
+			for (int i = 0; i < texts.Length; i++)
+			{
+				if(i < 10)
+				{
+					texts[i] = Content.Load<Texture2D>("Sprites/text/begin_button_images/begin0" + i);
+					continue;
+				}
+				texts[i] = Content.Load<Texture2D>("Sprites/text/begin_button_images/begin" + i);
+			}
+			animation_button = new Button(texts , new Rectangle(graphics.PreferredBackBufferWidth/2 - (300 / 2) , 200 , 300 , 60)  , Color.White );
 		}
 
         /// <summary>
@@ -405,8 +459,44 @@ namespace Client_Solar_War
 				case State.WAITING_FOR_ALL_PLAYERS:
 					//multi threading should take care of the rest
 					if (player_number != 0)
+					{
 						update_waiting_animation();
-                    
+						animation_button.animate();
+					}
+					else
+					{
+						if (red_button.hovering(Mouse.GetState()))
+						{
+							red_button.animate();
+						}else
+						{
+							red_button.stand_by();
+						}
+						if (blue_button.hovering(Mouse.GetState()))
+						{
+							blue_button.animate();
+						}else
+						{
+							blue_button.stand_by();
+						}
+						if (green_button.hovering(Mouse.GetState()))
+						{
+							green_button.animate();
+						}
+						else
+						{
+							green_button.stand_by();
+						}
+						if (purple_button.hovering(Mouse.GetState()))
+						{
+							purple_button.animate();
+						}
+						else
+						{
+							purple_button.stand_by();
+						}
+					}
+
                     break;
 				case State.PLAYING:
 					if (starfield.isOnScreen)
