@@ -458,8 +458,8 @@ namespace Client_Solar_War
 			switch (state)
 			{
 				case State.START:
-					title.draw(spriteBatch, gameTime);
 					starfield.draw(spriteBatch);
+					title.draw(spriteBatch, gameTime);
 					break;
 				case State.CONNECTING:
 					starfield.draw(spriteBatch);
