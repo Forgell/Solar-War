@@ -115,6 +115,10 @@ namespace Client_Solar_War
 		private Rectangle numbers_dest_rect;
 
 		private Texture2D selected_text;
+
+		private Texture2D caputure_text;
+		private Rectangle capture_rect;
+
 		public Planet(string fileName, Vector2 origin, int radius, double angular_speed, int scaler, Color faction_color) // input degress
 		{
 			this.origin = origin;
@@ -161,6 +165,8 @@ namespace Client_Solar_War
 			{
 				faction_num = 3;
 			}
+
+			capture_rect = new Rectangle(pos.X , pos.Y , 0 , 5);
 
 			//set positoin
 			double x = (origin.X + Math.Cos(angle) * radius) - offset.X;
@@ -219,6 +225,7 @@ namespace Client_Solar_War
 			capture_label = new Label("" + capture_timer, new Vector2(pos.X, pos.Y), Color.Black, font);
 			numbers_text = content.Load<Texture2D>("Sprites/text/numbers");
 			selected_text = content.Load<Texture2D>("Sprites/planets/selected");
+			caputure_text = content.Load<Texture2D>("Star");
 		}
 
 
@@ -238,7 +245,10 @@ namespace Client_Solar_War
 			double y = (origin.Y + Math.Sin(angle) * radius) - offset.Y;
 			pos.X = (int)x;
 			pos.Y = (int)y;
-			
+
+			capture_rect.Width = (int)Math.Round((capture_timer  /100.0 ) * pos.Width);
+			capture_rect.X = pos.X;
+			capture_rect.Y = pos.Y - capture_rect.Height - 5;
 
 			ship_label.updateText("" + ships);
 			ship_label.updatePosition(pos.X - 25, pos.Y);
@@ -489,7 +499,8 @@ namespace Client_Solar_War
 			if (is_being_taken_over || capture_timer != 0)
 			{
 				//capture_label.Draw(spritebatch);
-				draw_presentage( (int)capture_timer , new Vector2(pos.X + (pos.Width/2) , pos.Y  - (pos.Height/2)) , spritebatch);
+				//draw_presentage( (int)capture_timer , new Vector2(pos.X + (pos.Width/2) , pos.Y  - (pos.Height/2)) , spritebatch);
+				spritebatch.Draw(caputure_text , capture_rect , ships_color);
 			}
 
 		}

@@ -66,8 +66,8 @@ namespace Client_Solar_War
 		public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-			graphics.PreferredBackBufferHeight = 720;//= 1000;
-			graphics.PreferredBackBufferWidth = 1366;//= 1800;
+			graphics.PreferredBackBufferHeight = 1000;
+			graphics.PreferredBackBufferWidth = 1800;
 			//graphics.IsFullScreen = true;
 			graphics.ApplyChanges();
 			Content.RootDirectory = "Content";
@@ -150,7 +150,7 @@ namespace Client_Solar_War
 				}
 				
 			}
-			red_button    = new Button(texts , new Rectangle(graphics.PreferredBackBufferWidth /2 , graphics.PreferredBackBufferHeight / 2   + 0, 180 , 60) , Color.White);
+			red_button    = new Button(texts , new Rectangle(graphics.PreferredBackBufferWidth /2 - (180/2) , graphics.PreferredBackBufferHeight / 4   + 0, 180 , 60) , Color.White);
 			texts = new Texture2D[28];
 			for (int i = 0; i < texts.Length; i++)
 			{
@@ -161,7 +161,7 @@ namespace Client_Solar_War
 				}
 				texts[i] = Content.Load<Texture2D>("Sprites/text/blue_button_animation/blue" + i);
 			}
-			blue_button   = new Button(texts, new Rectangle(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2   + (85*1), 60*4, 60), Color.White);
+			blue_button   = new Button(texts, new Rectangle(graphics.PreferredBackBufferWidth / 2 - (60*4 / 2), graphics.PreferredBackBufferHeight / 4   + (85*1), 60*4, 60), Color.White);
 			texts = new Texture2D[28];
 			for (int i = 0; i < texts.Length; i++)
 			{
@@ -172,7 +172,7 @@ namespace Client_Solar_War
 				}
 				texts[i] = Content.Load<Texture2D>("Sprites/text/green_button_animation/green" + i);
 			}
-			green_button  = new Button(texts, new Rectangle(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2  + (85*2), 60*5, 60), Color.White);
+			green_button  = new Button(texts, new Rectangle(graphics.PreferredBackBufferWidth / 2 - (60*5 / 2), graphics.PreferredBackBufferHeight / 4  + (85*2), 60*5, 60), Color.White);
 			texts = new Texture2D[27];
 			for (int i = 0; i < texts.Length; i++)
 			{
@@ -183,7 +183,7 @@ namespace Client_Solar_War
 				}
 				texts[i] = Content.Load<Texture2D>("Sprites/text/purple_button_animation/purple" + i);
 			}
-			purple_button = new Button(texts, new Rectangle(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2 + (85*3), 60*6, 60), Color.White);
+			purple_button = new Button(texts, new Rectangle(graphics.PreferredBackBufferWidth / 2 - (60*6 / 2), graphics.PreferredBackBufferHeight / 4 + (85*3), 60*6, 60), Color.White);
 
 			animation_text = Content.Load<Texture2D>("Sprites/text/numbers");
 
@@ -198,7 +198,7 @@ namespace Client_Solar_War
 				}
 				texts[i] = Content.Load<Texture2D>("Sprites/text/begin_button_images/begin" + i);
 			}
-			animation_button = new Button(texts , new Rectangle(graphics.PreferredBackBufferWidth/2 - (300 / 2) , 200 , 300 , 60)  , Color.White );
+			animation_button = new Button(texts , new Rectangle(graphics.PreferredBackBufferWidth/2 - (150 / 2) , 200 , 150 , 30)  , Color.White );
 		}
 
         /// <summary>
@@ -570,6 +570,7 @@ namespace Client_Solar_War
 					else
 					{
 						// draw animation for until game starts
+						starfield.draw(spriteBatch);
 						draw_waiting_animation(spriteBatch);
 					}
 					break;
