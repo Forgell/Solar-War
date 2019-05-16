@@ -61,6 +61,7 @@ namespace Client_Solar_War
 		Texture2D animation_text;
 		int animatioin_timer;
 		string players_joined;
+		Button animation_button;
 
 		public Game1()
         {
@@ -142,6 +143,8 @@ namespace Client_Solar_War
 			purple_button = new Button(Content.Load<Texture2D>("Sprites/text/purple"), new Rectangle(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2 + (85*3), 60*6, 60), Color.White);
 
 			animation_text = Content.Load<Texture2D>("Sprites/text/numbers");
+
+			animation_button = new Button(Content.Load<Texture2D>("Sprites/text/begin") , new Rectangle(graphics.PreferredBackBufferWidth/2 - (300 / 2) , 200 , 300 , 60)  , Color.White );
 		}
 
         /// <summary>
@@ -381,7 +384,7 @@ namespace Client_Solar_War
 			}
 			// Still connecting to ip adress
 			//OVERIDE
-			if (console.IsKeyDown(Keys.E) && !old.IsKeyDown(Keys.E) && state == State.WAITING_FOR_ALL_PLAYERS)
+			if (animation_button.pressed(Mouse.GetState()) && state == State.WAITING_FOR_ALL_PLAYERS)
 			{
 				network.send("overide");
 			}
@@ -503,6 +506,7 @@ namespace Client_Solar_War
 			{
 				spriteBatch.Draw(animation_text ,animation_rects[i] , new Rectangle(0 , 0 , 60 , 60) , animation_color[i]);
 			}
+			animation_button.Draw(spritebatch);
 		}
 	}
 }
