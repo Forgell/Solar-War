@@ -561,7 +561,6 @@ namespace Client_Solar_War
 					if (player_number == 0)
 					{
 						starfield.draw(spriteBatch);
-						player_number_label.Draw(spriteBatch);
 						red_button.Draw(spriteBatch);
 						blue_button.Draw(spriteBatch);
 						green_button.Draw(spriteBatch);
