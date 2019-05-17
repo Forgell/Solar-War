@@ -167,7 +167,7 @@ namespace Server
                 this.ships += amount;
 				if (this.ships > Max_AMOUNT_OF_SHIPS_ON_PLANET)
 				{
-					source.ships += Max_AMOUNT_OF_SHIPS_ON_PLANET - this.ships;
+					source.ships += this.ships - Max_AMOUNT_OF_SHIPS_ON_PLANET;
 					this.ships = Max_AMOUNT_OF_SHIPS_ON_PLANET;
 				}
             }
