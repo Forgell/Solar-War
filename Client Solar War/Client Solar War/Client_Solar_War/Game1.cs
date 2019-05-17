@@ -62,7 +62,7 @@ namespace Client_Solar_War
 		int animatioin_timer;
 		string players_joined;
 		Button animation_button;
-
+		int iconState;
 		public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -71,7 +71,8 @@ namespace Client_Solar_War
 			//graphics.IsFullScreen = true;
 			graphics.ApplyChanges();
 			Content.RootDirectory = "Content";
-        }
+			
+		}
 
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
@@ -83,6 +84,7 @@ namespace Client_Solar_War
         {
 			// instancience of network varibles
 			// star field varibles 
+			iconState = 0;
 			starfield = new Starfield(GraphicsDevice, this.Content.Load<Texture2D>("Star"));
 			networking_thread = new Thread(network_communication);
             network = new Networking();
@@ -378,6 +380,7 @@ namespace Client_Solar_War
 				}
 				
 			}
+
 		}
 
 		private void update_waiting_animation()
@@ -522,6 +525,24 @@ namespace Client_Solar_War
 				starfield.update(graphics);
 			}
 			// update input feed
+			if((gameTime.TotalGameTime.Seconds & 1) == 0)
+			{
+				switch (iconState)
+				{
+					case 0:
+						((System.Windows.Forms.Form)System.Windows.Forms.Form.FromHandle(Window.Handle)).Icon = new System.Drawing.Icon(@"Content\Icon\icon2.ico");
+						iconState = 1;
+						break;
+					case 1:
+						((System.Windows.Forms.Form)System.Windows.Forms.Form.FromHandle(Window.Handle)).Icon = new System.Drawing.Icon(@"Content\Icon\icon3.ico");
+						iconState = 2;
+						break;
+					case 2:
+						((System.Windows.Forms.Form)System.Windows.Forms.Form.FromHandle(Window.Handle)).Icon = new System.Drawing.Icon(@"Content\Icon\icon1.ico");
+						iconState = 0;
+						break;
+				}
+			}
 			this.old = console;
             base.Update(gameTime);
         }
