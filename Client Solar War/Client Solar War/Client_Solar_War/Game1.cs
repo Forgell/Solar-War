@@ -63,6 +63,7 @@ namespace Client_Solar_War
 		string players_joined;
 		Button animation_button;
 		int iconState;
+		string iconColor;
 		public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -84,6 +85,7 @@ namespace Client_Solar_War
         {
 			// instancience of network varibles
 			// star field varibles 
+			iconColor = "null";
 			iconState = 0;
 			starfield = new Starfield(GraphicsDevice, this.Content.Load<Texture2D>("Star"));
 			networking_thread = new Thread(network_communication);
@@ -242,6 +244,7 @@ namespace Client_Solar_War
 						player_number = 2;
 						player_number_label.updateText("You are player number: " + player_number);
 						game.setPlayer(Color.Blue);
+						iconColor = "blue";
 					}
 					else
 						player_number_label.updateText("Player 2 is already taken, try again!");
@@ -255,6 +258,7 @@ namespace Client_Solar_War
 						player_number = 3;
 						player_number_label.updateText("You are player number: " + player_number);
 						game.setPlayer(Color.Green);
+						iconColor = "green";
 					}
 					else
 						player_number_label.updateText("Player 3 is already taken, try again!");
@@ -269,6 +273,7 @@ namespace Client_Solar_War
 						player_number = 4;
 						player_number_label.updateText("You are player number: " + player_number);
 						game.setPlayer(Color.Purple);
+						iconColor = "purple";
 					}
 					else
 						player_number_label.updateText("Player 4 is already taken, try again!");
@@ -525,20 +530,20 @@ namespace Client_Solar_War
 				starfield.update(graphics);
 			}
 			// update input feed
-			if((gameTime.TotalGameTime.Seconds & 1) == 0)
+			if((gameTime.TotalGameTime.Ticks % 120) == 0)
 			{
 				switch (iconState)
 				{
 					case 0:
-						((System.Windows.Forms.Form)System.Windows.Forms.Form.FromHandle(Window.Handle)).Icon = new System.Drawing.Icon(@"Content\Icon\icon2.ico");
+						((System.Windows.Forms.Form)System.Windows.Forms.Form.FromHandle(Window.Handle)).Icon = new System.Drawing.Icon(@"Content\Icon\" + iconColor + "2.ico");
 						iconState = 1;
 						break;
 					case 1:
-						((System.Windows.Forms.Form)System.Windows.Forms.Form.FromHandle(Window.Handle)).Icon = new System.Drawing.Icon(@"Content\Icon\icon3.ico");
+						((System.Windows.Forms.Form)System.Windows.Forms.Form.FromHandle(Window.Handle)).Icon = new System.Drawing.Icon(@"Content\Icon\" + iconColor + "3.ico");
 						iconState = 2;
 						break;
 					case 2:
-						((System.Windows.Forms.Form)System.Windows.Forms.Form.FromHandle(Window.Handle)).Icon = new System.Drawing.Icon(@"Content\Icon\icon1.ico");
+						((System.Windows.Forms.Form)System.Windows.Forms.Form.FromHandle(Window.Handle)).Icon = new System.Drawing.Icon(@"Content\Icon\" + iconColor + "1.ico");
 						iconState = 0;
 						break;
 				}

@@ -1864,16 +1864,66 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Icon\icon1.ico">
-      <Name>icon1</Name>
+    <None Include="Icon\green1.ico">
+      <Name>green1</Name>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Icon\icon2.ico">
-      <Name>icon2</Name>
+    <None Include="Icon\green2.ico">
+      <Name>green2</Name>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Icon\icon3.ico">
-      <Name>icon3</Name>
+    <None Include="Icon\green3.ico">
+      <Name>green3</Name>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Icon\blue1.ico">
+      <Name>blue1</Name>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Icon\blue2.ico">
+      <Name>blue2</Name>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Icon\blue3.ico">
+      <Name>blue3</Name>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Icon\null1.ico">
+      <Name>null1</Name>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Icon\null2.ico">
+      <Name>null2</Name>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Icon\null3.ico">
+      <Name>null3</Name>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Icon\purple1.ico">
+      <Name>purple1</Name>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Icon\purple2.ico">
+      <Name>purple2</Name>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Icon\purple3.ico">
+      <Name>purple3</Name>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Icon\red1.ico">
+      <Name>red1</Name>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Icon\red2.ico">
+      <Name>red2</Name>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Icon\red3.ico">
+      <Name>red3</Name>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

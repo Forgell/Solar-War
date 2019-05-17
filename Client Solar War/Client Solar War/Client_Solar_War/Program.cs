@@ -12,7 +12,7 @@ namespace Client_Solar_War
         {
             using (Game1 game = new Game1())
             {
-				((System.Windows.Forms.Form)System.Windows.Forms.Form.FromHandle(game.Window.Handle)).Icon = new System.Drawing.Icon(@"Content\Icon\icon1.ico");
+				((System.Windows.Forms.Form)System.Windows.Forms.Form.FromHandle(game.Window.Handle)).Icon = new System.Drawing.Icon(@"Content\Icon\null1.ico");
 				((System.Windows.Forms.Form)System.Windows.Forms.Form.FromHandle(game.Window.Handle)).Text = "Solar War";
 				game.Run();
             }
