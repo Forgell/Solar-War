@@ -215,13 +215,37 @@ namespace Client_Solar_War
         }
 
 
+		private void players_are_open_update()
+		{
+			network.send("players?");
+			//while (true)
+			//{
+				Thread.Sleep(1);
+				string message = network.getMessage();
+				foreach(Char c in message)
+				{
+					int num = c - '0';
+					switch (num)
+					{
+						case 1:red_button.IsVisible    = false; break;
+						case 2:blue_button.IsVisible   = false; break;
+						case 3:red_button.IsVisible    = false; break;
+						case 4:purple_button.IsVisible = false; break;
+					}
+				}
+			//}
+		}
+
 		public void network_communication()
 		{
+			Thread what_players_are_open_thread = new Thread(players_are_open_update);
+			//what_players_are_open_thread.Start();
 			while (player_number == 0)
 			{
 				
+
 				string temp;
-				if (red_button.pressed(Mouse.GetState()))
+				if (red_button.pressed(Mouse.GetState()) && red_button.IsVisible)
 				{
 					network.send("take1");
 					temp = network.getMessage();
@@ -235,7 +259,7 @@ namespace Client_Solar_War
 						player_number_label.updateText("Player 1 is already taken, try again!");
 					//Find a way to send server a "taken" message for all
 				}
-				else if (blue_button.pressed(Mouse.GetState()))
+				else if (blue_button.pressed(Mouse.GetState()) && blue_button.IsVisible)
 				{
 					network.send("take2");
 					temp = network.getMessage();
@@ -249,7 +273,7 @@ namespace Client_Solar_War
 					else
 						player_number_label.updateText("Player 2 is already taken, try again!");
 				}
-				else if (green_button.pressed(Mouse.GetState()))
+				else if (green_button.pressed(Mouse.GetState()) && green_button.IsVisible)
 				{
 					network.send("take3");
 					temp = network.getMessage();
@@ -264,7 +288,7 @@ namespace Client_Solar_War
 						player_number_label.updateText("Player 3 is already taken, try again!");
 
 				}
-				else if (purple_button.pressed(Mouse.GetState()))
+				else if (purple_button.pressed(Mouse.GetState()) && purple_button.IsVisible)
 				{
 					network.send("take4");
 					temp = network.getMessage();
@@ -279,6 +303,7 @@ namespace Client_Solar_War
 						player_number_label.updateText("Player 4 is already taken, try again!");
 				}
 			}
+			what_players_are_open_thread.Abort();
 			// waiting for the game to start
 			Thread.Sleep(2);
 			while (true)

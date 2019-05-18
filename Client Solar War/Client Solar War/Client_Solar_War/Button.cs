@@ -27,6 +27,12 @@ namespace Client_Solar_War
 		private int index;
 		private bool isAnimating;
 		private bool direction_is_up;
+		public bool IsVisible
+		{
+			get { return isVisible; }
+			set { isVisible = value; }
+		}
+		private bool isVisible;
 
         public Button(Label label)
         {
@@ -45,6 +51,7 @@ namespace Client_Solar_War
 			isAnimating = false;
 			index = 0;
 			direction_is_up = false;
+			isVisible = true;
 		}
 
         public bool hovering(Vector2 position)
@@ -103,7 +110,7 @@ namespace Client_Solar_War
 
 		public void Draw(SpriteBatch spritebatch)
 		{
-			if (texts[index] != null)
+			if (texts[index] != null && isVisible)
 			{
 				spritebatch.Draw(texts[index] ,  rect , color);
 			}
