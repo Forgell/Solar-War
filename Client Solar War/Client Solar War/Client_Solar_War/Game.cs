@@ -354,7 +354,8 @@ namespace Client_Solar_War
 				// TODO draw the launching ships as the pixel font
 				try
 				{
-					Vector2 launching_ships_label_pos = new Vector2(selected_planet.position.X + selected_planet.position.Width, selected_planet.position.Y + (selected_planet.position.Height / 4));
+					int offset = 20;
+					Vector2 launching_ships_label_pos = new Vector2(selected_planet.position.X + selected_planet.position.Width + offset, selected_planet.position.Y + (selected_planet.position.Height / 4));
 					draw_numbers_modified((int)(presentage_of_launching_ships * selected_planet.Ships), launching_ships_label_pos , spriteBatch);
 					launching_ships_label_pos.X += 45;
 					draw_numbers_modified( (int)(presentage_of_launching_ships * 100), launching_ships_label_pos , spriteBatch);
