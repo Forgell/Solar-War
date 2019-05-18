@@ -26,6 +26,7 @@ namespace Client_Solar_War
 		private Color color;
 		private int index;
 		private bool isAnimating;
+		private bool direction_is_up;
 
         public Button(Label label)
         {
@@ -43,6 +44,7 @@ namespace Client_Solar_War
 			filler_temp = new Rectangle(0, 0, 1, 1);
 			isAnimating = false;
 			index = 0;
+			direction_is_up = false;
 		}
 
         public bool hovering(Vector2 position)
@@ -73,10 +75,23 @@ namespace Client_Solar_War
 
 		public void animate()
 		{
-			index++;
-			if(index >= texts.Length)
+			if (direction_is_up)
 			{
-				index = 0;
+				index--;
+				if(index <= 0)
+				{
+					index = 0;
+					direction_is_up = false;
+				}
+			}
+			else
+			{
+				index++;
+				if (index >= texts.Length)
+				{
+					index = texts.Length - 1;
+					direction_is_up = true;
+				}
 			}
 		}
 
