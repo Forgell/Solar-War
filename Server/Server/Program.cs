@@ -279,6 +279,36 @@ namespace Server
 				}
 				//Base64FormattingOptions()
 				watch.Stop();
+				// see if game is over
+				if (game.isOver)
+				{
+					Color c = game.getWinner();
+					byte winner = 0;
+					if (c == Color.Red)
+					{
+						winner = 1;
+					}
+					if (c == Color.Blue)
+					{
+						winner = 2;
+					}
+					if (c == Color.Green)
+					{
+						winner = 3;
+					}
+					if (c == Color.Purple)
+					{
+						winner = 4;
+					}
+					byte[] message = new byte[100];
+					message[99] = 50;
+					message[98] = winner;
+					foreach (Socket clinet in clientSockets)
+					{
+						clinet.Send(message);
+					}
+					break;
+				}
 				if (clientSockets.Count == 0)
 				{
 					game.close();

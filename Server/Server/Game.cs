@@ -31,6 +31,37 @@ namespace Server
 		//MouseState old_mouse;		private Color player_faction;
 
 		//Label launching_ships;
+		public bool isOver // if all the ships are the same color excluding black
+		{
+			get
+			{
+				bool flag = true;
+				Color color = Color.Black;
+				foreach(SoloarOrbit s in soloar_orbits)
+				{
+					foreach(Planet p in s.Planets)
+					{
+						if (p.ShipColor != Color.Black)
+						{
+							color = p.ShipColor;
+							break;
+						}
+					}
+				}
+				foreach (SoloarOrbit s in soloar_orbits)
+				{
+					foreach (Planet p in s.Planets)
+					{
+						if (p.ShipColor != color)
+						{
+							flag = false;
+							break;
+						}
+					}
+				}
+				return flag;
+			}
+		}
 		public Game(int screenWidth, int screenHeight)
 		{
 			//planets = new List<Planet>();
@@ -192,6 +223,23 @@ namespace Server
 			}
 
 		}*/
+
+		public Color getWinner()
+		{
+			//Color color = Color.Black;
+			foreach (SoloarOrbit s in soloar_orbits)
+			{
+				foreach (Planet p in s.Planets)
+				{
+					if (p.ShipColor != Color.Black)
+					{
+						//color = p.ShipColor;
+						return p.ShipColor;
+					}
+				}
+			}
+			return Color.Black;
+		}
 
 		private void transfer_troops(Planet first, Planet secound, int amount)
 		{

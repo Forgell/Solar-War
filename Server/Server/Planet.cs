@@ -59,6 +59,11 @@ namespace Server
             get { return faction_color; }
         }
 
+		public Color ShipColor
+		{
+			get { return ships_color; }
+		}
+
         public int Ships
         {
             get
