@@ -228,7 +228,17 @@ namespace Server
 
                 }else if (text.Contains("players?"))
 				{
-					current.Send(Encoding.ASCII.GetBytes(players_connected_as_string));
+					if (players_connected_as_string == "") // no players have chosen
+					{
+						current.Send(Encoding.ASCII.GetBytes("none"));
+						Console.WriteLine("sent: none");
+					}
+					else
+					{
+						current.Send(Encoding.ASCII.GetBytes(players_connected_as_string));
+						Console.WriteLine("sent: " + players_connected_as_string);
+					}
+					
 				}
 				else
 				{

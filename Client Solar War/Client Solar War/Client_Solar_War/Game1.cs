@@ -215,40 +215,20 @@ namespace Client_Solar_War
         }
 
 
-		private void players_are_open_update()
-		{
-			network.send("players?");
-			//while (true)
-			//{
-				Thread.Sleep(1);
-				string message = network.getMessage();
-				foreach(Char c in message)
-				{
-					int num = c - '0';
-					switch (num)
-					{
-						case 1:red_button.IsVisible    = false; break;
-						case 2:blue_button.IsVisible   = false; break;
-						case 3:red_button.IsVisible    = false; break;
-						case 4:purple_button.IsVisible = false; break;
-					}
-				}
-			//}
-		}
+		
 
 		public void network_communication()
 		{
-			Thread what_players_are_open_thread = new Thread(players_are_open_update);
-			//what_players_are_open_thread.Start();
+			
 			while (player_number == 0)
 			{
-				
-
 				string temp;
 				if (red_button.pressed(Mouse.GetState()) && red_button.IsVisible)
 				{
+					//what_players_are_open_thread.Suspend();
 					network.send("take1");
 					temp = network.getMessage();
+					//what_players_are_open_thread.Resume();
 					if (!temp.Equals("taken"))
 					{
 						player_number = 1;
@@ -256,13 +236,18 @@ namespace Client_Solar_War
 						game.setPlayer(Color.Red);
 					}
 					else
+					{
 						player_number_label.updateText("Player 1 is already taken, try again!");
+						red_button.IsVisible = false;
+					}
 					//Find a way to send server a "taken" message for all
 				}
 				else if (blue_button.pressed(Mouse.GetState()) && blue_button.IsVisible)
 				{
+					//what_players_are_open_thread.Suspend();
 					network.send("take2");
 					temp = network.getMessage();
+					//what_players_are_open_thread.Resume();
 					if (temp.Contains("You are player: "))
 					{
 						player_number = 2;
@@ -271,12 +256,17 @@ namespace Client_Solar_War
 						iconColor = "blue";
 					}
 					else
+					{
 						player_number_label.updateText("Player 2 is already taken, try again!");
+						blue_button.IsVisible = false;
+					}
 				}
 				else if (green_button.pressed(Mouse.GetState()) && green_button.IsVisible)
 				{
+					//what_players_are_open_thread.Suspend();
 					network.send("take3");
 					temp = network.getMessage();
+					//what_players_are_open_thread.Resume();
 					if (temp.Contains("You are player: "))
 					{
 						player_number = 3;
@@ -285,13 +275,18 @@ namespace Client_Solar_War
 						iconColor = "green";
 					}
 					else
+					{
 						player_number_label.updateText("Player 3 is already taken, try again!");
+						green_button.IsVisible = false;
+					}
 
 				}
 				else if (purple_button.pressed(Mouse.GetState()) && purple_button.IsVisible)
 				{
+					//what_players_are_open_thread.Suspend();
 					network.send("take4");
 					temp = network.getMessage();
+					//what_players_are_open_thread.Resume();
 					if (temp.Contains("You are player: "))
 					{
 						player_number = 4;
@@ -300,10 +295,14 @@ namespace Client_Solar_War
 						iconColor = "purple";
 					}
 					else
+					{
 						player_number_label.updateText("Player 4 is already taken, try again!");
+						purple_button.IsVisible = false;
+					}
+						
 				}
 			}
-			what_players_are_open_thread.Abort();
+			
 			// waiting for the game to start
 			Thread.Sleep(2);
 			while (true)
