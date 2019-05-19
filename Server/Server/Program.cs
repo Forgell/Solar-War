@@ -303,11 +303,14 @@ namespace Server
 					byte[] message = new byte[100];
 					message[99] = 50;
 					message[98] = winner;
+					game.close();
 					foreach (Socket clinet in clientSockets)
 					{
 						clinet.Send(message);
 					}
-					break;
+					players_connected_as_string = "";
+					playernums = new Dictionary<Socket, int>();
+                    break;
 				}
 				if (clientSockets.Count == 0)
 				{

@@ -245,6 +245,18 @@ namespace Client_Solar_War
 			numbers_text = Content.Load<Texture2D>("Sprites/text/numbers");
 		}
 
+		public void reset()
+		{
+			foreach (SoloarOrbit s in soloar_orbits)
+			{
+				foreach (Planet p in s.Planets) {
+					p.reset();
+				}
+			}
+			selected_planet = null;
+			planet_is_selected = false;
+		}
+
 		public string Update_Input()
 		{
 			MouseState m = Mouse.GetState();

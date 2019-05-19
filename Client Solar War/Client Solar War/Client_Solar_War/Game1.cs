@@ -71,6 +71,8 @@ namespace Client_Solar_War
 		Texture2D[][] planets_text;
 		Rectangle planet_rect;
 		int planet_winner_index , winner_index;
+		Button play_again;
+
 		public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -226,6 +228,8 @@ namespace Client_Solar_War
 				}
 			}
 			winner_text = Content.Load<Texture2D>("Sprites/text/winner");
+
+			play_again = new Button( new Texture2D[] { Content.Load<Texture2D>("Sprites/text/play_again")} , new Rectangle(winner_rect.X  - 60, winner_rect.Y  + winner_rect.Height + 20, 600 , 60) , Color.White);
 		}
 
         /// <summary>
@@ -442,6 +446,15 @@ namespace Client_Solar_War
 					}
 					//Console.WriteLine(winner);
 					state = State.GAMEOVER;
+					game.reset();
+					players_joined = "";
+					// reset animation
+					for(int i = 0; i < animation_color.Length; i++)
+					{
+						animation_color[i] = Color.White;
+					}
+					
+					break;
 				}
 				
 			}
@@ -589,6 +602,17 @@ namespace Client_Solar_War
 							planet_winner_index = 0;
 						}
 					}
+					if (play_again.pressed(Mouse.GetState()))
+					{
+						player_number = 0;
+						state = State.WAITING_FOR_ALL_PLAYERS;
+						try
+						{
+							networking_thread.Abort();
+						}catch (Exception e) { }
+						networking_thread = new Thread(network_communication);
+						networking_thread.Start();
+					}
 					break;
 				case State.CLOSING:
 					// do nothing as the program is closing
@@ -679,6 +703,7 @@ namespace Client_Solar_War
 				case State.GAMEOVER:
 					spriteBatch.Draw(winner_text , winner_rect , Color.White);
 					spriteBatch.Draw(planets_text[winner_index][planet_winner_index] , planet_rect , Color.White);
+					play_again.Draw(spriteBatch);
 					break;
 				default: break;
 			}

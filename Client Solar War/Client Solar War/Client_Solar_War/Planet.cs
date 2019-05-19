@@ -119,6 +119,9 @@ namespace Client_Solar_War
 		private Texture2D caputure_text;
 		private Rectangle capture_rect;
 
+		private Color original_color_faction;
+		private double orignal_angle;
+
 		public Planet(string fileName, Vector2 origin, int radius, double angular_speed, int scaler, Color faction_color) // input degress
 		{
 			this.origin = origin;
@@ -174,11 +177,12 @@ namespace Client_Solar_War
 			pos.X = (int)x;
 			pos.Y = (int)y;
 			ships_color = faction_color;
+			original_color_faction = faction_color;
 		}
 
 		public void setAngle(double angle) // input degeres
 		{
-			this.angle = MathHelper.ToRadians((float)angle);
+			orignal_angle = this.angle = MathHelper.ToRadians((float)angle);
 			// set position
 			double x = (origin.X + Math.Cos(angle) * radius) - offset.X;
 			double y = (origin.Y + Math.Sin(angle) * radius) - offset.Y;
@@ -462,6 +466,34 @@ namespace Client_Solar_War
 			}
 		}
 
+		public void reset()
+		{
+			this.ships = 0;
+			this.capture_timer = 0;
+			this.angle = orignal_angle;
+			this.faction_color = original_color_faction;
+			if (faction_color == Color.Black)
+			{
+				faction_num = 4;
+			}
+			if (faction_color == Color.Red)
+			{
+				faction_num = 0;
+			}
+			if (faction_color == Color.Blue)
+			{
+				faction_num = 1;
+			}
+			if (faction_color == Color.Green)
+			{
+				faction_num = 2;
+			}
+			if (faction_color == Color.Purple)
+			{
+				faction_num = 3;
+			}
+			fileName = "planet-" + faction_num;
+		}
 
 
 		public void select()
