@@ -188,10 +188,10 @@ namespace Server
                 {
                     // stop producing
                     // start a timer
-                    Console.WriteLine("source is taking over");
+                    //Console.WriteLine("source is taking over");
                     is_being_taken_over = true;
                     this.ships = amount - this.ships;
-                    capture_timer = 0;
+                    capture_timer = (int)((this.ships/99.0) * TOTAL_TIME_TO_CAPTURE);
                     ships_color = source.faction_color;
 
                 }
