@@ -253,6 +253,10 @@ namespace Client_Solar_War
 					p.reset();
 				}
 			}
+			if (selected_planet != null)
+			{
+				selected_planet.deselect();
+			}
 			selected_planet = null;
 			planet_is_selected = false;
 		}

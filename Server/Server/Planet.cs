@@ -175,6 +175,14 @@ namespace Server
 					source.ships += this.ships - Max_AMOUNT_OF_SHIPS_ON_PLANET;
 					this.ships = Max_AMOUNT_OF_SHIPS_ON_PLANET;
 				}
+				if (this.is_being_taken_over || capture_timer != 0)
+				{
+					int temp = (int)((this.ships / 99.0) * TOTAL_TIME_TO_CAPTURE);
+					if (temp > capture_timer)
+					{
+						capture_timer = temp;
+					}
+                }
             }
             else
             {
