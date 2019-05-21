@@ -119,7 +119,7 @@ namespace Server
             {
                 received = current.EndReceive(AR);
             }
-            catch (SocketException)
+            catch (Exception e)
             {
                 players_connected_as_string = players_connected_as_string.Remove(players_connected_as_string.IndexOf("" + playernums[current]), 1);
                 playernums.Remove(current);
