@@ -54,7 +54,7 @@ namespace Client_Solar_War
 		//Soloar//orbit //orbit;
 		Texture2D game_text_text , code_text;
 		Rectangle game_rect, code_rect;
-
+		System.Windows.Forms.Form f;
 		double aimation_rads;
 		Rectangle[] animation_rects;
 		Color[] animation_color;
@@ -129,7 +129,7 @@ namespace Client_Solar_War
         protected override void LoadContent()
         {
 			// Create a new SpriteBatch, which can be used to draw textures.
-			System.Windows.Forms.Form  f = new System.Windows.Forms.Form();
+			f = new System.Windows.Forms.Form();
             spriteBatch = new SpriteBatch(GraphicsDevice);
 			sf = this.Content.Load<SpriteFont>("font");
 			text_box = new TextBox(new Vector2(10, 10), Content.Load<Texture2D>("Sprites/text/numbers"));

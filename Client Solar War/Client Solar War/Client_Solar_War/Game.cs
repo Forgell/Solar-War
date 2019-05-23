@@ -142,7 +142,7 @@ namespace Client_Solar_War
 							{
 								// then troops can  transfer
 								// we need to check if the selcted planet is his color
-								if (selected_planet.Ships_Color == player_faction)
+								if (selected_planet.Color == player_faction)
 								{
 									// then everything is otherized
 
