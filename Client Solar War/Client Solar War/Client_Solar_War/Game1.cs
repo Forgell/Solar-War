@@ -128,7 +128,8 @@ namespace Client_Solar_War
         /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
+			// Create a new SpriteBatch, which can be used to draw textures.
+			System.Windows.Forms.Form  f = new System.Windows.Forms.Form();
             spriteBatch = new SpriteBatch(GraphicsDevice);
 			sf = this.Content.Load<SpriteFont>("font");
 			text_box = new TextBox(new Vector2(10, 10), Content.Load<Texture2D>("Sprites/text/numbers"));
@@ -428,6 +429,10 @@ namespace Client_Solar_War
         protected override void Update(GameTime gameTime)
         {
 			// Get raw keyboard input
+			if (f != null)
+			{
+				f.FormClosing += f_FormClosing;
+			}
 			KeyboardState console = Keyboard.GetState();
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || console.IsKeyDown(Keys.Escape))
@@ -624,6 +629,19 @@ namespace Client_Solar_War
 				spriteBatch.Draw(animation_text ,animation_rects[i] , new Rectangle(0 , 0 , 60 , 60) , animation_color[i]);
 			}
 			animation_button.Draw(spritebatch);
+		}
+		void f_FormClosing(object sender, System.Windows.Forms.FormClosingEventArgs e)
+		{
+			try
+			{
+				if (player_number != 0)
+					network.closeStream(player_number);
+				else
+					network.closeStream();
+				networking_thread.Abort();
+				this.Exit();
+			}
+			catch (Exception e1) { this.Exit(); }
 		}
 	}
 }
