@@ -17,11 +17,26 @@ namespace Client_Solar_War
 {
     class Starfield
     {
+		public bool isOnScreen
+		{
+			get
+			{
+				foreach(Star star in stars)
+				{
+					if (star.Pos.Y < screen.Height)
+					{
+						return true;
+					}
+				}
+				return false;
+			}
+		}
+
         Star[] stars;
         Random r;
         int x;
         Rectangle screen;
-
+		
         public Starfield(GraphicsDevice graphics, Texture2D texture)
         {
             screen = new Rectangle(0, 0, graphics.Viewport.Width, graphics.Viewport.Height);
@@ -106,7 +121,7 @@ namespace Client_Solar_War
 				}
 				if (!screen.Contains(new Point((int)stars[i].Pos.X, (int)stars[i].Pos.Y)))
 				{
-					stars[i] = newStar(graphics.GraphicsDevice);
+					//stars[i] = newStar(graphics.GraphicsDevice);
 				}
 			}
 		}

@@ -113,10 +113,16 @@ namespace Client_Solar_War
 		private double capture_timer;
 		private Label capture_label;
 		private Color ships_color;
-        public Color Ships_Color
-        {
-            get { return ships_color; }
-        }
+
+		private Texture2D numbers_text;
+		private Rectangle numbers_souce_rect;
+		private Rectangle numbers_dest_rect;
+
+		private Texture2D selected_text;
+
+		private Texture2D caputure_text;
+		private Rectangle capture_rect;
+
 		public Planet(string fileName, Vector2 origin, int radius, double angular_speed, int scaler, Color faction_color) // input degress
 		{
 			this.origin = origin;
@@ -163,6 +169,8 @@ namespace Client_Solar_War
 			{
 				faction_num = 3;
 			}
+
+			capture_rect = new Rectangle(pos.X , pos.Y , 0 , 5);
 
 			//set positoin
 			double x = (origin.X + Math.Cos(angle) * radius) - offset.X;
@@ -219,7 +227,9 @@ namespace Client_Solar_War
 			Radius_Tex = content.Load<Texture2D>("Sprites/white-circle");
 			ship_label = new Label("" + ships, new Vector2(pos.X, pos.Y), faction_color, font);
 			capture_label = new Label("" + capture_timer, new Vector2(pos.X, pos.Y), Color.Black, font);
-
+			numbers_text = content.Load<Texture2D>("Sprites/text/numbers");
+			selected_text = content.Load<Texture2D>("Sprites/planets/selected");
+			caputure_text = content.Load<Texture2D>("Star");
 		}
 
 
@@ -239,7 +249,10 @@ namespace Client_Solar_War
 			double y = (origin.Y + Math.Sin(angle) * radius) - offset.Y;
 			pos.X = (int)x;
 			pos.Y = (int)y;
-			
+
+			capture_rect.Width = (int)Math.Round((capture_timer  /100.0 ) * pos.Width);
+			capture_rect.X = pos.X;
+			capture_rect.Y = pos.Y - capture_rect.Height - 5;
 
 			ship_label.updateText("" + ships);
 			ship_label.updatePosition(pos.X - 25, pos.Y);
@@ -485,11 +498,13 @@ namespace Client_Solar_War
 
 			if (selected)
 			{
-				spritebatch.Draw(Radius_Tex, selected_rect, Color.White);
+				spritebatch.Draw(selected_text, selected_rect, Color.White);
 			}
 			if (is_being_taken_over || capture_timer != 0)
 			{
-				capture_label.Draw(spritebatch);
+				//capture_label.Draw(spritebatch);
+				//draw_presentage( (int)capture_timer , new Vector2(pos.X + (pos.Width/2) , pos.Y  - (pos.Height/2)) , spritebatch);
+				spritebatch.Draw(caputure_text , capture_rect , ships_color);
 			}
 
 		}
@@ -497,16 +512,39 @@ namespace Client_Solar_War
 		//draw the number of ships at a planet
 		private void DrawShips(SpriteBatch spritebatch)
 		{
-			ship_label.Draw(spritebatch);
-			try {
-				//ship_label.Draw(spritebatch);
-			}catch(Exception e)
+			////ship_label.Draw(spritebatch);
+			if(ships_color != Color.Black)
 			{
-				Console.WriteLine(e.Message);
-				Console.WriteLine(ship_label + " " + spritebatch);
-				Console.WriteLine();
+				draw_numbers(ships , new Vector2(pos.X , pos.Y) , spritebatch);
 			}
+		}
 
+		private void draw_numbers(int number , Vector2 pos , SpriteBatch spritebatch)
+		{
+			int counter = 0;
+			numbers_dest_rect = new Rectangle((int)pos.X - (15 * ("" + ships).Length) - 5, (int)pos.Y, 15, 15);
+			foreach (Char c in ("" + number))
+			{
+				int num = c - '0';
+				numbers_souce_rect = new Rectangle(num * 60, 0, 60, 60);
+				numbers_dest_rect.X += (15 * counter++);
+				spritebatch.Draw(numbers_text, numbers_dest_rect, numbers_souce_rect, ships_color);
+			}
+		}
+
+		private void draw_presentage(int number, Vector2 pos, SpriteBatch spritebatch)
+		{
+			int width = 10;
+			int counter = 0;
+			numbers_dest_rect = new Rectangle((int)pos.X  + (number>9? -width:0), (int)pos.Y, width, width);
+			foreach (Char c in ("" + number))
+			{
+				int num = c - '0';
+				numbers_souce_rect = new Rectangle(num * 60, 0, 60, 60);
+				numbers_dest_rect.X += (numbers_dest_rect.Width * counter++);
+				spritebatch.Draw(numbers_text, numbers_dest_rect, numbers_souce_rect, ships_color);
+			}
+			// TODO need to darw the actual presentage but I do not have the image on this branch or cimputer
 		}
 	}
 }

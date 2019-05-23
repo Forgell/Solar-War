@@ -141,6 +141,14 @@ namespace Server
 
             if (text.Equals(""))
             {
+				if (game_loop_thread.ThreadState != System.Threading.ThreadState.Running)
+				{
+					foreach (Socket client in clientSockets)
+					{
+						client.Send(Encoding.ASCII.GetBytes(players_connected_as_string));
+					}
+				}
+				
                 return;
             }
             
@@ -165,6 +173,7 @@ namespace Server
                 //Console.WriteLine(players_connected_as_string.IndexOf(text.ToCharArray()[4]));
                 //Console.WriteLine(text.ToCharArray()[4]);
 				players_connected_as_string = players_connected_as_string.Remove(players_connected_as_string.IndexOf(text.ToCharArray()[4]), 1);
+
 				return;
 			}
             else
@@ -194,6 +203,11 @@ namespace Server
                                 //game_loop_thread.Start();
 							}
 						}
+						foreach(Socket cleint in clientSockets)
+						{
+							cleint.Send(Encoding.ASCII.GetBytes(players_connected_as_string));
+						}
+						current.Send(Encoding.ASCII.GetBytes(players_connected_as_string));
 					}
 					else
                     {
@@ -212,7 +226,10 @@ namespace Server
                     game_loop_thread = new Thread(game_loop);
                     game_loop_thread.Start();
 
-                }
+                }else if (text.Contains("players?"))
+				{
+					current.Send(Encoding.ASCII.GetBytes(players_connected_as_string));
+				}
 				else
 				{
                     //messages.Add(text);

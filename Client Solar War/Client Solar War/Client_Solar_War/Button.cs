@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Client_Solar_War
 {
@@ -20,8 +21,12 @@ namespace Client_Solar_War
             get { return label; }
         }
         private Label label;
-
+		private Texture2D[] texts;
         private Rectangle filler_temp;
+		private Color color;
+		private int index;
+		private bool isAnimating;
+
         public Button(Label label)
         {
             this.label = label;
@@ -29,6 +34,16 @@ namespace Client_Solar_War
             this.rect = new Rectangle((int)label.Position.X, (int)label.Position.Y, (int)size.X, (int)size.Y);
             filler_temp = new Rectangle( 0 , 0 , 1 , 1);
         }
+
+		public Button(Texture2D[] texts , Rectangle pos , Color color)
+		{
+			rect = pos;
+			this.texts = texts;
+			this.color = color;
+			filler_temp = new Rectangle(0, 0, 1, 1);
+			isAnimating = false;
+			index = 0;
+		}
 
         public bool hovering(Vector2 position)
         {
@@ -50,5 +65,33 @@ namespace Client_Solar_War
             filler_temp.Y = mouse.Y;
             return rect.Intersects(filler_temp);
         }
+
+		public bool pressed(MouseState mouse)
+		{
+			return hovering(mouse) && mouse.LeftButton == ButtonState.Pressed;
+		}
+
+		public void animate()
+		{
+			index++;
+			if(index >= texts.Length)
+			{
+				index = 0;
+			}
+		}
+
+		public void stand_by()
+		{
+			isAnimating = false;
+			index = 0;
+		}
+
+		public void Draw(SpriteBatch spritebatch)
+		{
+			if (texts[index] != null)
+			{
+				spritebatch.Draw(texts[index] ,  rect , color);
+			}
+		}
     }
 }
