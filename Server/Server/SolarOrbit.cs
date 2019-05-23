@@ -22,6 +22,8 @@ namespace Server
             this.planets = planets;
         }
 
+		
+
         public SoloarOrbit(int radius, double angular_speed, int number_of_planets, int screenWidth, int screenHeight, bool is_player_start_ring)
         {
             planets = new List<Planet>();

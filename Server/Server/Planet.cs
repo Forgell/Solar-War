@@ -59,6 +59,11 @@ namespace Server
             get { return faction_color; }
         }
 
+		public Color ShipColor
+		{
+			get { return ships_color; }
+		}
+
         public int Ships
         {
             get
@@ -170,6 +175,14 @@ namespace Server
 					source.ships += this.ships - Max_AMOUNT_OF_SHIPS_ON_PLANET;
 					this.ships = Max_AMOUNT_OF_SHIPS_ON_PLANET;
 				}
+				if (this.is_being_taken_over || capture_timer != 0)
+				{
+					int temp = (int)((this.ships / 99.0) * TOTAL_TIME_TO_CAPTURE);
+					if (temp > capture_timer)
+					{
+						capture_timer = temp;
+					}
+                }
             }
             else
             {
@@ -183,10 +196,10 @@ namespace Server
                 {
                     // stop producing
                     // start a timer
-                    Console.WriteLine("source is taking over");
+                    //Console.WriteLine("source is taking over");
                     is_being_taken_over = true;
                     this.ships = amount - this.ships;
-                    capture_timer = 0;
+                    capture_timer = (int)((this.ships/99.0) * TOTAL_TIME_TO_CAPTURE);
                     ships_color = source.faction_color;
 
                 }

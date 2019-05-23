@@ -18,7 +18,7 @@ namespace Client_Solar_War
 {
 	enum State
 	{
-		CONNECTING, WAITING_FOR_ALL_PLAYERS , CLOSING , NULL, START , PLAYING
+		CONNECTING, WAITING_FOR_ALL_PLAYERS , CLOSING , NULL, START , PLAYING , GAMEOVER 
 	}
 
 
@@ -64,6 +64,15 @@ namespace Client_Solar_War
 		Button animation_button;
 		int iconState;
 		string iconColor;
+
+		Color winner;
+		Texture2D winner_text;
+		Rectangle winner_rect;
+		Texture2D[][] planets_text;
+		Rectangle planet_rect;
+		int planet_winner_index , winner_index;
+		Button play_again;
+
 		public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -119,6 +128,10 @@ namespace Client_Solar_War
 				animation_color[i] = Color.White;
 			}
 			players_joined = "";
+			winner = Color.Black;
+			winner_rect = new Rectangle(graphics.PreferredBackBufferWidth / 2 - 180 , graphics.PreferredBackBufferHeight / 2 - 30 , 360  , 60);
+			planet_winner_index = 0;
+			planet_rect = new Rectangle(winner_rect.X + winner_rect.Width , winner_rect.Y  , 60 , 60);
 			base.Initialize();
         }
 
@@ -205,6 +218,20 @@ namespace Client_Solar_War
 				texts[i] = Content.Load<Texture2D>("Sprites/text/begin_button_images/begin" + i);
 			}
 			animation_button = new Button(texts , new Rectangle(graphics.PreferredBackBufferWidth/2 - (150 / 2) , 200 , 150 , 30)  , Color.White );
+
+			// loading the end screen for the winner
+			planets_text = new Texture2D[4][];
+			for(int i = 0; i < 4; i++)
+			{
+				planets_text[i] = new Texture2D[3];
+				for(int j = 0; j < 3; j++)
+				{
+					planets_text[i][j] = Content.Load<Texture2D>("Sprites/planets/planet-" + (i + 1) + "/planet-" + (i+1) + "-" + (j+1));
+				}
+			}
+			winner_text = Content.Load<Texture2D>("Sprites/text/winner");
+
+			play_again = new Button( new Texture2D[] { Content.Load<Texture2D>("Sprites/text/play_again")} , new Rectangle(winner_rect.X  - 60, winner_rect.Y  + winner_rect.Height + 20, 600 , 60) , Color.White);
 		}
 
         /// <summary>
@@ -217,16 +244,20 @@ namespace Client_Solar_War
         }
 
 
+		
+
 		public void network_communication()
 		{
+			
 			while (player_number == 0)
 			{
-				
 				string temp;
-				if (red_button.pressed(Mouse.GetState()))
+				if (red_button.pressed(Mouse.GetState()) && red_button.IsVisible)
 				{
+					//what_players_are_open_thread.Suspend();
 					network.send("take1");
 					temp = network.getMessage();
+					//what_players_are_open_thread.Resume();
 					if (!temp.Equals("taken"))
 					{
 						player_number = 1;
@@ -234,13 +265,18 @@ namespace Client_Solar_War
 						game.setPlayer(Color.OrangeRed);
 					}
 					else
+					{
 						player_number_label.updateText("Player 1 is already taken, try again!");
+						red_button.IsVisible = false;
+					}
 					//Find a way to send server a "taken" message for all
 				}
-				else if (blue_button.pressed(Mouse.GetState()))
+				else if (blue_button.pressed(Mouse.GetState()) && blue_button.IsVisible)
 				{
+					//what_players_are_open_thread.Suspend();
 					network.send("take2");
 					temp = network.getMessage();
+					//what_players_are_open_thread.Resume();
 					if (temp.Contains("You are player: "))
 					{
 						player_number = 2;
@@ -249,12 +285,17 @@ namespace Client_Solar_War
 						iconColor = "blue";
 					}
 					else
+					{
 						player_number_label.updateText("Player 2 is already taken, try again!");
+						blue_button.IsVisible = false;
+					}
 				}
-				else if (green_button.pressed(Mouse.GetState()))
+				else if (green_button.pressed(Mouse.GetState()) && green_button.IsVisible)
 				{
+					//what_players_are_open_thread.Suspend();
 					network.send("take3");
 					temp = network.getMessage();
+					//what_players_are_open_thread.Resume();
 					if (temp.Contains("You are player: "))
 					{
 						player_number = 3;
@@ -263,13 +304,18 @@ namespace Client_Solar_War
 						iconColor = "green";
 					}
 					else
+					{
 						player_number_label.updateText("Player 3 is already taken, try again!");
+						green_button.IsVisible = false;
+					}
 
 				}
-				else if (purple_button.pressed(Mouse.GetState()))
+				else if (purple_button.pressed(Mouse.GetState()) && purple_button.IsVisible)
 				{
+					//what_players_are_open_thread.Suspend();
 					network.send("take4");
 					temp = network.getMessage();
+					//what_players_are_open_thread.Resume();
 					if (temp.Contains("You are player: "))
 					{
 						player_number = 4;
@@ -278,9 +324,14 @@ namespace Client_Solar_War
 						iconColor = "purple";
 					}
 					else
+					{
 						player_number_label.updateText("Player 4 is already taken, try again!");
+						purple_button.IsVisible = false;
+					}
+						
 				}
 			}
+			
 			// waiting for the game to start
 			Thread.Sleep(2);
 			while (true)
@@ -384,6 +435,28 @@ namespace Client_Solar_War
 					game.Update_as_Bytes(map);
 					
 					Thread.Sleep(10);
+				}
+				else if(map[99] == 50) // game over
+				{
+					winner_index = map[98] - 1;
+					switch (map[98]) {
+						case 1:winner = Color.Red;
+							break;// red
+						case 2:winner = Color.Blue; break;// blue
+						case 3:winner = Color.Green; break;// green
+						case 4:winner = Color.Purple; break;// purple
+					}
+					//Console.WriteLine(winner);
+					state = State.GAMEOVER;
+					game.reset();
+					players_joined = "";
+					// reset animation
+					for(int i = 0; i < animation_color.Length; i++)
+					{
+						animation_color[i] = Color.White;
+					}
+					
+					break;
 				}
 				
 			}
@@ -526,6 +599,27 @@ namespace Client_Solar_War
 					}
 
 					break;
+				case State.GAMEOVER:
+					if (gameTime.TotalGameTime.Ticks % 30 == 0)
+					{
+						planet_winner_index++;
+						if(planet_winner_index == planets_text[winner_index].Length)
+						{
+							planet_winner_index = 0;
+						}
+					}
+					if (play_again.pressed(Mouse.GetState()))
+					{
+						player_number = 0;
+						state = State.WAITING_FOR_ALL_PLAYERS;
+						try
+						{
+							networking_thread.Abort();
+						}catch (Exception e) { }
+						networking_thread = new Thread(network_communication);
+						networking_thread.Start();
+					}
+					break;
 				case State.CLOSING:
 					// do nothing as the program is closing
 					return;
@@ -611,6 +705,11 @@ namespace Client_Solar_War
 						starfield.draw(spriteBatch);
 					}
 					game.Draw(spriteBatch);
+					break;
+				case State.GAMEOVER:
+					spriteBatch.Draw(winner_text , winner_rect , Color.White);
+					spriteBatch.Draw(planets_text[winner_index][planet_winner_index] , planet_rect , Color.White);
+					play_again.Draw(spriteBatch);
 					break;
 				default: break;
 			}

@@ -119,7 +119,7 @@ namespace Server
             {
                 received = current.EndReceive(AR);
             }
-            catch (SocketException)
+            catch (Exception e)
             {
                 players_connected_as_string = players_connected_as_string.Remove(players_connected_as_string.IndexOf("" + playernums[current]), 1);
                 playernums.Remove(current);
@@ -228,7 +228,17 @@ namespace Server
 
                 }else if (text.Contains("players?"))
 				{
-					current.Send(Encoding.ASCII.GetBytes(players_connected_as_string));
+					if (players_connected_as_string == "") // no players have chosen
+					{
+						current.Send(Encoding.ASCII.GetBytes("none"));
+						Console.WriteLine("sent: none");
+					}
+					else
+					{
+						current.Send(Encoding.ASCII.GetBytes(players_connected_as_string));
+						Console.WriteLine("sent: " + players_connected_as_string);
+					}
+					
 				}
 				else
 				{
@@ -269,6 +279,39 @@ namespace Server
 				}
 				//Base64FormattingOptions()
 				watch.Stop();
+				// see if game is over
+				if (game.isOver)
+				{
+					Color c = game.getWinner();
+					byte winner = 0;
+					if (c == Color.Red)
+					{
+						winner = 1;
+					}
+					if (c == Color.Blue)
+					{
+						winner = 2;
+					}
+					if (c == Color.Green)
+					{
+						winner = 3;
+					}
+					if (c == Color.Purple)
+					{
+						winner = 4;
+					}
+					byte[] message = new byte[100];
+					message[99] = 50;
+					message[98] = winner;
+					game.close();
+					foreach (Socket clinet in clientSockets)
+					{
+						clinet.Send(message);
+					}
+					players_connected_as_string = "";
+					playernums = new Dictionary<Socket, int>();
+                    break;
+				}
 				if (clientSockets.Count == 0)
 				{
 					game.close();
