@@ -209,7 +209,7 @@ namespace Client_Solar_War
 				tex[j] = new Texture2D[3];
 				for (int i = 0; i < tex[j].Length; i++)
 				{
-					tex[j][i] = content.Load<Texture2D>("Sprites/planets/planet-" + (j + 1) + "/planet-" + ( j + 1) + "-" + (i + 1));
+					tex[j][i] = content.Load<Texture2D>("Sprites/planets/planet-" + (j + 1) + "/planet-" + (j + 1) + "-" + (i + 1));
 				}
 			}
 			

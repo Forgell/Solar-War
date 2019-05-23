@@ -15,11 +15,20 @@ namespace Client_Solar_War
         public static readonly int PORT = 100;
 
 		public string getMessage() {
-			byte[] server_message_as_bytes = new byte[100];
-			ClientSocket.Receive(server_message_as_bytes); //(server_message_as_bytes, 0, server_message_as_bytes.Length, SocketFlags.None);
-			server_message_as_bytes = server_message_as_bytes.Where(val => val != 0).ToArray();
-			string server_message_as_string = Encoding.ASCII.GetString(server_message_as_bytes);
-			return server_message_as_string;
+			try
+			{
+				byte[] server_message_as_bytes = new byte[100];
+				ClientSocket.Receive(server_message_as_bytes); //(server_message_as_bytes, 0, server_message_as_bytes.Length, SocketFlags.None);
+				server_message_as_bytes = server_message_as_bytes.Where(val => val != 0).ToArray();
+				string server_message_as_string = Encoding.ASCII.GetString(server_message_as_bytes);
+				return server_message_as_string;
+			}
+			catch(Exception e)
+			{
+				ClientSocket.Dispose();
+				return "exit";
+			}
+
 		}
 
 

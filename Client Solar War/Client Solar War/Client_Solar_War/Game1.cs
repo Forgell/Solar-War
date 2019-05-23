@@ -72,7 +72,7 @@ namespace Client_Solar_War
 		Rectangle planet_rect;
 		int planet_winner_index , winner_index;
 		Button play_again;
-
+		bool exit;
 		public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -337,6 +337,8 @@ namespace Client_Solar_War
 			Thread.Sleep(2);
 			while (true)
 			{
+				if (exit)
+					break;
 				string message = network.getMessage();
 				if (message.Equals("Game Start!"))
 				{
@@ -422,6 +424,7 @@ namespace Client_Solar_War
 				}
 				
 				Thread.Sleep(5);
+
 			}
 
 
@@ -429,6 +432,8 @@ namespace Client_Solar_War
 			//game loop 
 			while (true)
 			{
+				if (exit)
+					break;
 				byte[] map = network.GetMap();
 				if(map[99] == 29)
 				{
@@ -502,155 +507,179 @@ namespace Client_Solar_War
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-			// Get raw keyboard input
-			if (f != null)
+			try
 			{
-				f.FormClosing += f_FormClosing;
-			}
-			KeyboardState console = Keyboard.GetState();
-            // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || console.IsKeyDown(Keys.Escape))
-			{
-				if (player_number != 0)
-					network.closeStream(player_number);
-				else
-					network.closeStream();
-				networking_thread.Abort();
-				this.Exit();
-			}
-			if (state == State.START)
-			{
-				MouseState m = Mouse.GetState();
-				if (title.update(m.X, m.Y, m.LeftButton == ButtonState.Pressed, gameTime) || console.IsKeyDown(Keys.Enter))
-					state = State.CONNECTING;
-			}
-			// Still connecting to ip adress
-			//OVERIDE
-			if (animation_button.pressed(Mouse.GetState()) && state == State.WAITING_FOR_ALL_PLAYERS)
-			{
-				network.send("overide");
-			}
+				// Get raw keyboard input
+				if (f != null)
+				{
+					f.FormClosing += f_FormClosing;
+				}
+				KeyboardState console = Keyboard.GetState();
+				// Allows the game to exit
+				if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || console.IsKeyDown(Keys.Escape))
+				{
+					if (player_number != 0)
+						network.closeStream(player_number);
+					else
+						network.closeStream();
+					networking_thread.Abort();
+					exit = true;
+					this.Exit();
+				}
+				if (state == State.START)
+				{
+					MouseState m = Mouse.GetState();
+					if (title.update(m.X, m.Y, m.LeftButton == ButtonState.Pressed, gameTime) || console.IsKeyDown(Keys.Enter))
+						state = State.CONNECTING;
+				}
+				// Still connecting to ip adress
+				//OVERIDE
+				if (animation_button.pressed(Mouse.GetState()) && state == State.WAITING_FOR_ALL_PLAYERS)
+				{
+					network.send("overide");
+				}
 
-			switch (state)
-			{
-				case State.CONNECTING:
-					State temp_state = network.getConnectingInput(console, old , text_box);
-                    if(temp_state != State.NULL)
-                    {
-                        state = temp_state;
-						if (state == State.WAITING_FOR_ALL_PLAYERS)
+				switch (state)
+				{
+					case State.CONNECTING:
+						State temp_state = network.getConnectingInput(console, old, text_box);
+						if (temp_state != State.NULL)
 						{
+							state = temp_state;
+							if (state == State.WAITING_FOR_ALL_PLAYERS)
+							{
+								networking_thread.Start();
+							}
+						}
+						break;
+					case State.WAITING_FOR_ALL_PLAYERS:
+						//multi threading should take care of the rest
+						if (player_number != 0)
+						{
+							update_waiting_animation();
+							animation_button.animate();
+						}
+						else
+						{
+							if (red_button.hovering(Mouse.GetState()))
+							{
+								red_button.animate();
+							}
+							else
+							{
+								red_button.stand_by();
+							}
+							if (blue_button.hovering(Mouse.GetState()))
+							{
+								blue_button.animate();
+							}
+							else
+							{
+								blue_button.stand_by();
+							}
+							if (green_button.hovering(Mouse.GetState()))
+							{
+								green_button.animate();
+							}
+							else
+							{
+								green_button.stand_by();
+							}
+							if (purple_button.hovering(Mouse.GetState()))
+							{
+								purple_button.animate();
+							}
+							else
+							{
+								purple_button.stand_by();
+							}
+						}
+
+						break;
+					case State.PLAYING:
+						if (starfield.isOnScreen)
+						{
+							starfield.animate(graphics);
+						}
+
+						string message = game.Update(gameTime);
+						game.Update_Input();
+						if (!message.Equals(""))
+						{
+							network.send(message);
+						}
+
+						break;
+					case State.GAMEOVER:
+						if (gameTime.TotalGameTime.Ticks % 30 == 0)
+						{
+							planet_winner_index++;
+							if (planet_winner_index == planets_text[winner_index].Length)
+							{
+								planet_winner_index = 0;
+							}
+						}
+						if (play_again.pressed(Mouse.GetState()))
+						{
+							player_number = 0;
+							state = State.WAITING_FOR_ALL_PLAYERS;
+							try
+							{
+								networking_thread.Abort();
+							}
+							catch (Exception e) { }
+							networking_thread = new Thread(network_communication);
 							networking_thread.Start();
 						}
-                    }
-					break;
-				case State.WAITING_FOR_ALL_PLAYERS:
-					//multi threading should take care of the rest
-					if (player_number != 0)
-					{
-						update_waiting_animation();
-						animation_button.animate();
-					}
-					else
-					{
-						if (red_button.hovering(Mouse.GetState()))
-						{
-							red_button.animate();
-						}else
-						{
-							red_button.stand_by();
-						}
-						if (blue_button.hovering(Mouse.GetState()))
-						{
-							blue_button.animate();
-						}else
-						{
-							blue_button.stand_by();
-						}
-						if (green_button.hovering(Mouse.GetState()))
-						{
-							green_button.animate();
-						}
-						else
-						{
-							green_button.stand_by();
-						}
-						if (purple_button.hovering(Mouse.GetState()))
-						{
-							purple_button.animate();
-						}
-						else
-						{
-							purple_button.stand_by();
-						}
-					}
-
-                    break;
-				case State.PLAYING:
-					if (starfield.isOnScreen)
-					{
-						starfield.animate(graphics);
-					}
-					
-					string message = game.Update(gameTime);
-					game.Update_Input();
-					if (!message.Equals(""))
-					{
-						network.send(message);
-					}
-
-					break;
-				case State.GAMEOVER:
-					if (gameTime.TotalGameTime.Ticks % 30 == 0)
-					{
-						planet_winner_index++;
-						if(planet_winner_index == planets_text[winner_index].Length)
-						{
-							planet_winner_index = 0;
-						}
-					}
-					if (play_again.pressed(Mouse.GetState()))
-					{
-						player_number = 0;
-						state = State.WAITING_FOR_ALL_PLAYERS;
-						try
-						{
-							networking_thread.Abort();
-						}catch (Exception e) { }
-						networking_thread = new Thread(network_communication);
-						networking_thread.Start();
-					}
-					break;
-				case State.CLOSING:
-					// do nothing as the program is closing
-					return;
-			}
-			//update starfield
-			if (state != State.PLAYING)
-			{
-				starfield.update(graphics);
-			}
-			// update input feed
-			if((gameTime.TotalGameTime.Ticks % 120) == 0)
-			{
-				switch (iconState)
+						break;
+					case State.CLOSING:
+						// do nothing as the program is closing
+						return;
+				}
+				//update starfield
+				if (state != State.PLAYING)
 				{
-					case 0:
-						((System.Windows.Forms.Form)System.Windows.Forms.Form.FromHandle(Window.Handle)).Icon = new System.Drawing.Icon(@"Content\Icon\" + iconColor + "2.ico");
-						iconState = 1;
-						break;
-					case 1:
-						((System.Windows.Forms.Form)System.Windows.Forms.Form.FromHandle(Window.Handle)).Icon = new System.Drawing.Icon(@"Content\Icon\" + iconColor + "3.ico");
-						iconState = 2;
-						break;
-					case 2:
-						((System.Windows.Forms.Form)System.Windows.Forms.Form.FromHandle(Window.Handle)).Icon = new System.Drawing.Icon(@"Content\Icon\" + iconColor + "1.ico");
-						iconState = 0;
-						break;
+					starfield.update(graphics);
+				}
+				// update input feed
+				if ((gameTime.TotalGameTime.Ticks % 120) == 0)
+				{
+					switch (iconState)
+					{
+						case 0:
+							((System.Windows.Forms.Form)System.Windows.Forms.Form.FromHandle(Window.Handle)).Icon = new System.Drawing.Icon(@"Content\Icon\" + iconColor + "2.ico");
+							iconState = 1;
+							break;
+						case 1:
+							((System.Windows.Forms.Form)System.Windows.Forms.Form.FromHandle(Window.Handle)).Icon = new System.Drawing.Icon(@"Content\Icon\" + iconColor + "3.ico");
+							iconState = 2;
+							break;
+						case 2:
+							((System.Windows.Forms.Form)System.Windows.Forms.Form.FromHandle(Window.Handle)).Icon = new System.Drawing.Icon(@"Content\Icon\" + iconColor + "1.ico");
+							iconState = 0;
+							break;
+					}
+				}
+				this.old = console;
+				base.Update(gameTime);
+			}
+			catch(Exception e)
+			{
+				try
+				{
+					if (player_number != 0)
+						network.closeStream(player_number);
+					else
+						network.closeStream();
+					networking_thread.Abort();
+					exit = true;
+					this.Exit();
+				}
+				catch (Exception e1) {
+					exit = true;
+					this.Exit();
 				}
 			}
-			this.old = console;
-            base.Update(gameTime);
         }
 
 		
@@ -665,6 +694,7 @@ namespace Client_Solar_War
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
+			try {
             GraphicsDevice.Clear(Color.Black);
 
 			// TODO: Add your drawing code here
@@ -718,7 +748,25 @@ namespace Client_Solar_War
 			//orbit.Draw(spriteBatch);
 			spriteBatch.End();
             base.Draw(gameTime);
-        }
+			}
+			catch (Exception e)
+			{
+				try
+				{
+					if (player_number != 0)
+						network.closeStream(player_number);
+					else
+						network.closeStream();
+					networking_thread.Abort();
+					exit = true;
+					this.Exit();
+				}
+				catch (Exception e1) {
+					exit = true;
+					this.Exit();
+				}
+			}
+		}
 		
 
 		private void draw_waiting_animation(SpriteBatch spritebatch)
@@ -739,9 +787,13 @@ namespace Client_Solar_War
 				else
 					network.closeStream();
 				networking_thread.Abort();
+				exit = true;
 				this.Exit();
 			}
-			catch (Exception e1) { this.Exit(); }
+			catch (Exception e1) {
+				exit = true;
+				this.Exit();
+			}
 		}
 	}
 }
