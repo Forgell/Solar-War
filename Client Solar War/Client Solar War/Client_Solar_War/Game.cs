@@ -85,7 +85,22 @@ namespace Client_Solar_War
 			//background = new Background();
 			lines = new List<Line>();
 		}
-
+		public void reset()
+		{
+			foreach (SoloarOrbit s in soloar_orbits)
+			{
+				foreach (Planet p in s.Planets)
+				{
+					p.reset();
+				}
+			}
+			if (selected_planet != null)
+			{
+				selected_planet.deselect();
+			}
+			selected_planet = null;
+			planet_is_selected = false;
+		}
 		public Planet getPlanet(Rectangle pos)
 		{
 			// this methoud is out of date all planets are now held within the solar obrits list

@@ -263,6 +263,7 @@ namespace Client_Solar_War
 						player_number = 1;
 						player_number_label.updateText("You are player number: " + player_number);
 						game.setPlayer(Color.OrangeRed);
+						iconColor = "red";
 					}
 					else
 					{
