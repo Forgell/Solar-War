@@ -273,9 +273,17 @@ namespace Server
 				temp[99] = 29;
 				foreach (Socket socket in clientSockets)
 				{
-					//send
-					//Console.WriteLine(temp);
-					socket.Send(temp);
+					try
+					{
+						//send
+						//Console.WriteLine(temp);
+						socket.Send(temp);
+					}
+					catch(Exception e)
+					{
+						socket.Dispose();
+						clientSockets.Remove(socket);
+					}
 				}
 				//Base64FormattingOptions()
 				watch.Stop();
